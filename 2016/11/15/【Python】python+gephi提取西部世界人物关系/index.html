@@ -14,10 +14,13 @@
 <meta property="og:site_name" content="Melody">
 <meta property="og:description" content="由于最近一部英剧《西部世界》挺火，在实验楼中看到有关人物关系提取的教程，所以尝试对其进行了人物关系的简单抽取，用到了第三方的jieba分词器，和数据分析软件gephi 环境准备： 操作系统：linux ubuntu python: 2.7 第三方模块：分词器jieba 分析软件：gephi-0.9.1  首先先通过各大搜索引擎搜索获得主要的人物wdict.txt  德洛丽丝 100 nr艾伯纳西">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-07-21T16:49:17.663Z">
+<meta property="og:image" content="http://yoursite.com/img/3.png">
+<meta property="og:image" content="http://yoursite.com/img/4.png">
+<meta property="og:updated_time" content="2017-08-30T14:27:41.289Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【python】python+gephi对《西部世界》进行人物关系提取">
 <meta name="twitter:description" content="由于最近一部英剧《西部世界》挺火，在实验楼中看到有关人物关系提取的教程，所以尝试对其进行了人物关系的简单抽取，用到了第三方的jieba分词器，和数据分析软件gephi 环境准备： 操作系统：linux ubuntu python: 2.7 第三方模块：分词器jieba 分析软件：gephi-0.9.1  首先先通过各大搜索引擎搜索获得主要的人物wdict.txt  德洛丽丝 100 nr艾伯纳西">
+<meta name="twitter:image" content="http://yoursite.com/img/3.png">
     
     
         
@@ -161,8 +164,9 @@
 <p>注意：为在gephi中生成相应的节点<br>节点表格中的第一行格式为<code>Id Label Weight</code><br>边表格中的第一行格式为<code>Source Target Weight</code>  </p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 节点表</span></div><div class="line"><span class="keyword">with</span> codecs.open(<span class="string">"westworld.txt"</span>, <span class="string">"w"</span>, <span class="string">"gbk"</span>) <span class="keyword">as</span> f:</div><div class="line">    f.write(<span class="string">"Id Label Weight\r\n"</span>)</div><div class="line">    <span class="keyword">for</span> name, times <span class="keyword">in</span> names.items():</div><div class="line">        f.write(name + <span class="string">" "</span> + name + <span class="string">" "</span> + str(times) + <span class="string">"\r\n"</span>)</div><div class="line"><span class="comment"># 关系表</span></div><div class="line"><span class="keyword">with</span> codecs.open(<span class="string">"westworld.txt"</span>, <span class="string">"w"</span>, <span class="string">"gbk"</span>) <span class="keyword">as</span> f:</div><div class="line">    f.write(<span class="string">"Source Target Weight\r\n"</span>)</div><div class="line">    <span class="keyword">for</span> name, edges <span class="keyword">in</span> relationships.items():</div><div class="line">        <span class="keyword">for</span> v, w <span class="keyword">in</span> edges.items():</div><div class="line">            <span class="keyword">if</span> w &gt; <span class="number">3</span>:</div><div class="line">                f.write(name + <span class="string">" "</span> + v + <span class="string">" "</span> + str(w) + <span class="string">"\r\n"</span>)</div></pre></td></tr></table></figure>
-<h2 id="接下来就是讲数据导入gephi中进行分析"><a href="#接下来就是讲数据导入gephi中进行分析" class="headerlink" title="接下来就是讲数据导入gephi中进行分析"></a>接下来就是讲数据导入gephi中进行分析</h2><p>对导入后的数据进行平均化和模块化处理</p>
-<h2 id="最后的结果"><a href="#最后的结果" class="headerlink" title="最后的结果"></a>最后的结果</h2>
+<h2 id="接下来就是讲数据导入gephi中进行分析"><a href="#接下来就是讲数据导入gephi中进行分析" class="headerlink" title="接下来就是讲数据导入gephi中进行分析"></a>接下来就是讲数据导入gephi中进行分析</h2><p>对导入后的数据进行平均化和模块化处理<br><img src="../../../../img/3.png" alt="img1">  </p>
+<h2 id="最后的结果"><a href="#最后的结果" class="headerlink" title="最后的结果"></a>最后的结果</h2><p><img src="../../../../img/4.png" alt="img1"></p>
+
   </div>
 </article>
 
