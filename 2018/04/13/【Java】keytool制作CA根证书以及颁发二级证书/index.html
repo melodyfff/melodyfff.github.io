@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="keytool制作CA根证书以及颁发二级证书  1234567891011121314151617[xinchen@localhost ~]# keytool -help  -certreq            生成证书请求   -changealias        更改条目的别名   -delete             删除条目   -exportcert         导出证书">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Java】keytool制作CA根证书以及颁发二级证书">
+<meta property="og:url" content="http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="keytool制作CA根证书以及颁发二级证书  1234567891011121314151617[xinchen@localhost ~]# keytool -help  -certreq            生成证书请求   -changealias        更改条目的别名   -delete             删除条目   -exportcert         导出证书">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-13T15:04:16.478Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Java】keytool制作CA根证书以及颁发二级证书">
+<meta name="twitter:description" content="keytool制作CA根证书以及颁发二级证书  1234567891011121314151617[xinchen@localhost ~]# keytool -help  -certreq            生成证书请求   -changealias        更改条目的别名   -delete             删除条目   -exportcert         导出证书">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【Java】keytool制作CA根证书以及颁发二级证书</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2018/04/06/【algorithm】剑指office习题/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&text=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&is_video=false&description=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】keytool制作CA根证书以及颁发二级证书&body=Check out this article: http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&name=【Java】keytool制作CA根证书以及颁发二级证书&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#制作CAS证书"><span class="toc-number">1.</span> <span class="toc-text">制作CAS证书</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Java】keytool制作CA根证书以及颁发二级证书
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Melody</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2018-04-12T16:00:00.000Z" itemprop="datePublished">2018-04-13</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>keytool制作CA根证书以及颁发二级证书</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">[xinchen@localhost ~]<span class="comment"># keytool -help </span></div><div class="line"></div><div class="line"> -certreq            生成证书请求  </div><div class="line"> -changealias        更改条目的别名  </div><div class="line"> -delete             删除条目  </div><div class="line"> -exportcert         导出证书  </div><div class="line"> -genkeypair         生成密钥对  </div><div class="line"> -genseckey          生成密钥  </div><div class="line"> -gencert            根据证书请求生成证书  </div><div class="line"> -importcert         导入证书或证书链  </div><div class="line"> -importkeystore     从其他密钥库导入一个或所有条目  </div><div class="line"> -keypasswd          更改条目的密钥口令  </div><div class="line"> -list               列出密钥库中的条目  </div><div class="line"> -printcert          打印证书内容  </div><div class="line"> -printcertreq       打印证书请求的内容  </div><div class="line"> -printcrl           打印 CRL 文件的内容  </div><div class="line"> -storepasswd        更改密钥库的存储口令</div></pre></td></tr></table></figure>
+<ul>
+<li><code>keytool</code> 是jdk提供的工具，该工具名为”keytool“</li>
+<li>alias www.mydomain.com 此处”www.mydomain.com“为别名，可以是任意字符，只要不提示错误即可。因一个证书库中可以存放多个证书，通过别名标识证书。</li>
+<li><code>keyalg</code> RSA 此处”RSA“为密钥的算法。可以选择的密钥算法有：RSA、DSA、EC。<br>– keysize 4096 此处”4096“为密钥长度。keysize与keyalg默认对应关系： <ul>
+<li>2048 (when using -genkeypair and -keyalg is “RSA”) </li>
+<li>1024 (when using -genkeypair and -keyalg is “DSA”) </li>
+<li>256 (when using -genkeypair and -keyalg is “EC”)</li>
+</ul>
+</li>
+<li><code>keypass</code> mypassword 此处”mypassword “为本条目的密码(私钥的密码)。最好与storepass一致。</li>
+<li><code>sigalg</code> SHA256withRSA 此处”SHA256withRSA“为签名算法。keyalg=RSA时，签名算法有：MD5withRSA、SHA1withRSA、SHA256withRSA、SHA384withRSA、SHA512withRSA。keyalg=DSA时，签名算法有：SHA1withDSA、SHA256withDSA。此处需要注意：MD5和SHA1的签名算法已经不安全。</li>
+<li><code>dname</code> “cn=www.mydomain.com,ou=xxx,o=xxx,l=Beijing,st=Beijing,c=CN” 在此填写证书信息。”CN=名字与姓氏/域名,OU=组织单位名称,O=组织名称,L=城市或区域名称,ST=州或省份名称,C=单位的两字母国家代码”</li>
+<li><code>validity</code> 3650 此处”3650“为证书有效期天数。</li>
+<li><code>keystore</code> <code>www.xinchen.com_keystore.jks</code> 此处<code>www.xinchen.com_keystore.jks</code>为密钥库的名称。此处也给出绝对路径。默认在当前目录创建证书库。</li>
+<li><code>storetype</code> JKS 此处”JKS “为证书库类型。可用的证书库类型为：JKS、PKCS12等。jdk9以前，默认为JKS。自jdk9开始，默认为PKCS12。</li>
+<li>storepass mypassword 此处”mypassword “为证书库密码(私钥的密码)。最好与keypass 一致。</li>
+</ul>
+<h2 id="制作CAS证书"><a href="#制作CAS证书" class="headerlink" title="制作CAS证书"></a>制作CAS证书</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 密钥生成</span></div><div class="line"><span class="comment"># 密码：123456 一路回车</span></div><div class="line">keytool -genkeypair -keyalg RSA -keysize 2048 -sigalg SHA1withRSA -validity 36500 -<span class="built_in">alias</span> xinchen.sso.com -keystore d:/tomcat.keystore -dname <span class="string">"CN=passport.sso.com,OU=xinchen,O=xc,L=ChonQing,ST=ChonQing,C=CN"</span></div><div class="line"></div><div class="line"><span class="comment"># 证书生成</span></div><div class="line"><span class="comment"># 密码：123456</span></div><div class="line">keytool -exportcert -<span class="built_in">alias</span> xinchen.sso.com -keystore d:/tomcat.keystore  -file d:/tomcat.cer -rfc</div><div class="line"></div><div class="line"><span class="comment"># 导入cacerts证书库</span></div><div class="line"><span class="comment"># 默认密码：changeit</span></div><div class="line">keytool -import -<span class="built_in">alias</span> xinchen.sso.com -keystore %JAVA_HOME%\jre\lib\security\cacerts -file d:/tomcat.cer -trustcacerts</div><div class="line"></div><div class="line"><span class="comment"># 检查是否导入成功</span></div><div class="line">keytool -list -keystore <span class="string">"%JAVA_HOME%\jre\lib\security\cacerts"</span> | findstr/i server</div></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#制作CAS证书"><span class="toc-number">1.</span> <span class="toc-text">制作CAS证书</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&text=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&is_video=false&description=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】keytool制作CA根证书以及颁发二级证书&body=Check out this article: http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&title=【Java】keytool制作CA根证书以及颁发二级证书"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/04/13/【Java】keytool制作CA根证书以及颁发二级证书/&name=【Java】keytool制作CA根证书以及颁发二级证书&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
