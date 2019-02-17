@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="外观模式(Facade Pattern)  外观模式：为子系统中的一组接口提供一个统一的入口。外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。Facade Pattern: Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interfac">
+<meta name="keywords" content="Design Patterns">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Design Patterns】外观模式">
+<meta property="og:url" content="http://yoursite.com/2019/02/17/【Design Patterns】外观模式/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="外观模式(Facade Pattern)  外观模式：为子系统中的一组接口提供一个统一的入口。外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。Facade Pattern: Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interfac">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/img/W3sDesign_Facade_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://yoursite.com/img/Example_of_Facade_design_pattern_in_UML.png">
+<meta property="og:image" content="http://yoursite.com/img/facade-patter.png">
+<meta property="og:updated_time" content="2019-02-17T15:20:24.291Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Design Patterns】外观模式">
+<meta name="twitter:description" content="外观模式(Facade Pattern)  外观模式：为子系统中的一组接口提供一个统一的入口。外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。Facade Pattern: Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interfac">
+<meta name="twitter:image" content="http://yoursite.com/img/W3sDesign_Facade_Design_Pattern_UML.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【Design Patterns】外观模式</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/02/12/【Design Patterns】代理模式/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&text=【Design Patterns】外观模式"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&is_video=false&description=【Design Patterns】外观模式"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】外观模式&body=Check out this article: http://yoursite.com/2019/02/17/【Design Patterns】外观模式/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&name=【Design Patterns】外观模式&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#外观模式-Facade-Pattern"><span class="toc-number">1.</span> <span class="toc-text">外观模式(Facade Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Facade-Pattern-可以解决哪些问题"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">Facade Pattern 可以解决哪些问题?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Facade-Pattern描述了什么解决方案"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">Facade Pattern描述了什么解决方案?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用法"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#几种对比"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">几种对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UML"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">UML</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Facade-Pattern例子"><span class="toc-number">1.1.</span> <span class="toc-text">Facade Pattern例子</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UML-1"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">UML</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#子系统部分"><span class="toc-number">1.1.0.2.</span> <span class="toc-text">子系统部分</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Facade类"><span class="toc-number">1.1.0.3.</span> <span class="toc-text">Facade类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#场景类"><span class="toc-number">1.1.0.4.</span> <span class="toc-text">场景类</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Design Patterns】外观模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Melody</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-02-16T16:00:00.000Z" itemprop="datePublished">2019-02-17</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Design-Patterns/">Design Patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="外观模式-Facade-Pattern"><a href="#外观模式-Facade-Pattern" class="headerlink" title="外观模式(Facade Pattern)"></a>外观模式(Facade Pattern)</h1><p><img src="../../../../img/W3sDesign_Facade_Design_Pattern_UML.jpg" alt=""></p>
+<blockquote>
+<p>外观模式：为子系统中的一组接口提供一个统一的入口。外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。<br>Facade Pattern: Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use.</p>
+<p>类型： 结构型</p>
+</blockquote>
+<h4 id="Facade-Pattern-可以解决哪些问题"><a href="#Facade-Pattern-可以解决哪些问题" class="headerlink" title="Facade Pattern 可以解决哪些问题?"></a>Facade Pattern 可以解决哪些问题?</h4><ul>
+<li>为了使复杂的子系统更易于使用，应为子系统中的一组接口提供简单的接口。</li>
+<li>系统非常复杂或难以理解，每个级别的分层软件都需要一个入口点，或者子系统的抽象和实现是紧密耦合的。</li>
+</ul>
+<h4 id="Facade-Pattern描述了什么解决方案"><a href="#Facade-Pattern描述了什么解决方案" class="headerlink" title="Facade Pattern描述了什么解决方案?"></a>Facade Pattern描述了什么解决方案?</h4><ul>
+<li>根据（通过委托）子系统中的接口实现一个简单的接口.</li>
+<li>可以在转发请求之前/之后执行附加功能。</li>
+</ul>
+<h4 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h4><ul>
+<li>当需要更简单或更简单的底层对象接口时，使用<code>Facade</code>。</li>
+<li>或者，当包装器必须遵循特定接口并且必须<code>支持多态行为</code>时，可以使用<code>适配器</code>。</li>
+<li>一个装饰使得可以添加或更改在运行时的(接口/方法)的行为。</li>
+</ul>
+<h4 id="几种对比"><a href="#几种对比" class="headerlink" title="几种对比"></a>几种对比</h4><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th style="text-align:left">Intent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adapter</td>
+<td style="text-align:left">Converts one interface to another so that it matches what the client is expecting</td>
+</tr>
+<tr>
+<td>Decorator</td>
+<td style="text-align:left">Dynamically adds responsibility to the interface by wrapping the original code</td>
+</tr>
+<tr>
+<td>Facade</td>
+<td style="text-align:left">Provides a simplified interface</td>
+</tr>
+</tbody>
+</table>
+<h4 id="UML"><a href="#UML" class="headerlink" title="UML"></a>UML</h4><p><img src="../../../../img/Example_of_Facade_design_pattern_in_UML.png" alt=""></p>
+<h2 id="Facade-Pattern例子"><a href="#Facade-Pattern例子" class="headerlink" title="Facade Pattern例子"></a>Facade Pattern例子</h2><h4 id="UML-1"><a href="#UML-1" class="headerlink" title="UML"></a>UML</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">@startuml facade</div><div class="line">package Computer&#123;</div><div class="line"></div><div class="line">class CPU&#123;</div><div class="line">    + freeze(): void</div><div class="line">    + jump(long position): void</div><div class="line">    + execute(): void</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Memory&#123;</div><div class="line">    + load(long position, byte[] data): void</div><div class="line">&#125;</div><div class="line"></div><div class="line">class HardDrive&#123;</div><div class="line">    + read(long lba, int size): byte[]</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">class ComputerFacade&#123;</div><div class="line">    - final processor: CPU</div><div class="line">    - final ram: Memory</div><div class="line">    - final hd: HardDrive</div><div class="line">    + ComputerFacade()</div><div class="line">    + start(): void</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Client&#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Client ..&gt; ComputerFacade</div><div class="line"></div><div class="line">ComputerFacade ..&gt; CPU</div><div class="line">ComputerFacade ..&gt; Memory</div><div class="line">ComputerFacade ..&gt; HardDrive</div><div class="line">@enduml</div></pre></td></tr></table></figure>
+<p><img src="../../../../img/facade-patter.png" alt=""></p>
+<h4 id="子系统部分"><a href="#子系统部分" class="headerlink" title="子系统部分"></a>子系统部分</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CPU</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">freeze</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"CPU freeze..."</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">jump</span><span class="params">(<span class="keyword">long</span> position)</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"CPU jump to "</span>+position);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"CPU execute..."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Memory</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">load</span><span class="params">(<span class="keyword">long</span> position,<span class="keyword">byte</span>[] data)</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"Memory at "</span>+ position+<span class="string">" load data :"</span>+data);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HardDrive</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] read(<span class="keyword">long</span> lba, <span class="keyword">int</span> size)&#123;</div><div class="line">        System.out.println(<span class="string">"HardDrive read "</span>+lba+<span class="string">" size:"</span>+size);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">0X000000</span>&#125;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="Facade类"><a href="#Facade类" class="headerlink" title="Facade类"></a>Facade类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ComputerFacade</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> BOOT_ADDRESS = <span class="number">0X000000</span>;</div><div class="line"></div><div class="line">    <span class="comment">/** 磁盘地址 */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> BOOT_SECTOR = <span class="number">0X0000c</span>;</div><div class="line">    <span class="comment">/** 磁盘大小 */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> SECTOR_SIZE = <span class="number">8225280</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> CPU processor;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Memory ram;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> HardDrive hd;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ComputerFacade</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.processor = <span class="keyword">new</span> CPU();</div><div class="line">        <span class="keyword">this</span>.ram = <span class="keyword">new</span> Memory();</div><div class="line">        <span class="keyword">this</span>.hd = <span class="keyword">new</span> HardDrive();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// cpu解冻</span></div><div class="line">        processor.freeze();</div><div class="line">        <span class="comment">// 内存加载</span></div><div class="line">        ram.load(BOOT_ADDRESS, hd.read(BOOT_SECTOR, SECTOR_SIZE));</div><div class="line">        processor.jump(BOOT_ADDRESS);</div><div class="line">        processor.execute();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="场景类"><a href="#场景类" class="headerlink" title="场景类"></a>场景类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ComputerFacade computer = <span class="keyword">new</span> ComputerFacade();</div><div class="line">        computer.start();</div><div class="line">        <span class="comment">// CPU freeze...</span></div><div class="line">        <span class="comment">// HardDrive read 12 size:8225280</span></div><div class="line">        <span class="comment">// Memory at 0 load data :[B@2b193f2d</span></div><div class="line">        <span class="comment">// CPU jump to 0</span></div><div class="line">        <span class="comment">// CPU execute...</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#外观模式-Facade-Pattern"><span class="toc-number">1.</span> <span class="toc-text">外观模式(Facade Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Facade-Pattern-可以解决哪些问题"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">Facade Pattern 可以解决哪些问题?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Facade-Pattern描述了什么解决方案"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">Facade Pattern描述了什么解决方案?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用法"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#几种对比"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">几种对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UML"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">UML</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Facade-Pattern例子"><span class="toc-number">1.1.</span> <span class="toc-text">Facade Pattern例子</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UML-1"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">UML</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#子系统部分"><span class="toc-number">1.1.0.2.</span> <span class="toc-text">子系统部分</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Facade类"><span class="toc-number">1.1.0.3.</span> <span class="toc-text">Facade类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#场景类"><span class="toc-number">1.1.0.4.</span> <span class="toc-text">场景类</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&text=【Design Patterns】外观模式"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&is_video=false&description=【Design Patterns】外观模式"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】外观模式&body=Check out this article: http://yoursite.com/2019/02/17/【Design Patterns】外观模式/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&title=【Design Patterns】外观模式"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/02/17/【Design Patterns】外观模式/&name=【Design Patterns】外观模式&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
