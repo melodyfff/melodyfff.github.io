@@ -14,13 +14,13 @@
 <meta property="og:site_name" content="Melody">
 <meta property="og:description" content="策略器模式(Strategy Pattern)  定义： 策略模式的用意是针对一组算法，将每一个算法封装到具有共同接口的独立的类中，从而使得它们可以在运行时相互替换。  类型： 行为模式 UML 1234567891011121314151617181920212223@startumlclass Context&amp;#123;    - strategy: Strategy    + execute">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/img/img/W3sDesign_Strategy_Design_Pattern_UML.jpg">
-<meta property="og:image" content="http://yoursite.com/img/img/stategy_uml.png">
-<meta property="og:updated_time" content="2019-04-01T15:21:41.506Z">
+<meta property="og:image" content="http://yoursite.com/img/W3sDesign_Strategy_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://yoursite.com/img/stategy_uml.png">
+<meta property="og:updated_time" content="2019-04-01T15:23:59.916Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【Design Patterns】策略模式">
 <meta name="twitter:description" content="策略器模式(Strategy Pattern)  定义： 策略模式的用意是针对一组算法，将每一个算法封装到具有共同接口的独立的类中，从而使得它们可以在运行时相互替换。  类型： 行为模式 UML 1234567891011121314151617181920212223@startumlclass Context&amp;#123;    - strategy: Strategy    + execute">
-<meta name="twitter:image" content="http://yoursite.com/img/img/W3sDesign_Strategy_Design_Pattern_UML.jpg">
+<meta name="twitter:image" content="http://yoursite.com/img/W3sDesign_Strategy_Design_Pattern_UML.jpg">
     
     
         
@@ -137,14 +137,14 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h1 id="策略器模式-Strategy-Pattern"><a href="#策略器模式-Strategy-Pattern" class="headerlink" title="策略器模式(Strategy Pattern)"></a>策略器模式(Strategy Pattern)</h1><p><img src="../../../../img/img/W3sDesign_Strategy_Design_Pattern_UML.jpg" alt=""></p>
+    <h1 id="策略器模式-Strategy-Pattern"><a href="#策略器模式-Strategy-Pattern" class="headerlink" title="策略器模式(Strategy Pattern)"></a>策略器模式(Strategy Pattern)</h1><p><img src="../../../../img/W3sDesign_Strategy_Design_Pattern_UML.jpg" alt=""></p>
 <blockquote>
 <p>定义： 策略模式的用意是针对一组算法，将每一个算法封装到具有共同接口的独立的类中，从而使得它们可以在运行时相互替换。</p>
 </blockquote>
 <p><strong>类型：</strong> 行为模式</p>
 <p><strong>UML</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">@startuml</div><div class="line">class Context&#123;</div><div class="line">    - strategy: Strategy</div><div class="line">    + execute(): void</div><div class="line">&#125;</div><div class="line"></div><div class="line">interface Strategy&#123;</div><div class="line">    + algorithm()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class ConcreteStrategyA&#123;</div><div class="line">    + algorithm()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class ConcreteStrategyB&#123;</div><div class="line">    + algorithm()</div><div class="line">&#125;</div><div class="line"></div><div class="line">Strategy &lt;|-- ConcreteStrategyA </div><div class="line">Strategy &lt;|-- ConcreteStrategyB</div><div class="line"></div><div class="line">Context *- Strategy</div><div class="line">@enduml</div></pre></td></tr></table></figure>
-<p><img src="../../../../img/img/stategy_uml.png" alt=""></p>
+<p><img src="../../../../img/stategy_uml.png" alt=""></p>
 <p><strong>角色说明</strong></p>
 <ul>
 <li><strong>环境(Context):</strong> 持有一个策略的引用</li>
