@@ -9,14 +9,14 @@
     <meta name="description" content="Java的四种引用类型历史回顾JDK1.2之前如果reference类型的数据中存储的数值代表的是另一块内存的起始地址，就称为这块内存代表着一个引用 Java中的垃圾回收机制在判断是否回收某个对象的时候，都需要依据引用这个概念。 在不同的垃圾回收算法中，对引用的判断方式有所不同：  引用计数法： 为每个对象添加一个引用计数器，每当有一个引用指向它的时候，计数器就+1,当引用失效时，计数器就-1,当">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【Java】 【Java】Java的四种引用类型">
+<meta property="og:title" content="【Java】Java 的四种引用类型">
 <meta property="og:url" content="http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/index.html">
 <meta property="og:site_name" content="Melody">
 <meta property="og:description" content="Java的四种引用类型历史回顾JDK1.2之前如果reference类型的数据中存储的数值代表的是另一块内存的起始地址，就称为这块内存代表着一个引用 Java中的垃圾回收机制在判断是否回收某个对象的时候，都需要依据引用这个概念。 在不同的垃圾回收算法中，对引用的判断方式有所不同：  引用计数法： 为每个对象添加一个引用计数器，每当有一个引用指向它的时候，计数器就+1,当引用失效时，计数器就-1,当">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-02T16:16:42.831Z">
+<meta property="og:updated_time" content="2019-04-02T16:19:55.756Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【Java】 【Java】Java的四种引用类型">
+<meta name="twitter:title" content="【Java】Java 的四种引用类型">
 <meta name="twitter:description" content="Java的四种引用类型历史回顾JDK1.2之前如果reference类型的数据中存储的数值代表的是另一块内存的起始地址，就称为这块内存代表着一个引用 Java中的垃圾回收机制在判断是否回收某个对象的时候，都需要依据引用这个概念。 在不同的垃圾回收算法中，对引用的判断方式有所不同：  引用计数法： 为每个对象添加一个引用计数器，每当有一个引用指向它的时候，计数器就+1,当引用失效时，计数器就-1,当">
     
     
@@ -37,7 +37,7 @@
         
     
     <!-- title -->
-    <title>【Java】 【Java】Java的四种引用类型</title>
+    <title>【Java】Java 的四种引用类型</title>
     <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
     <!-- rss -->
@@ -82,15 +82,15 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&text=【Java】 【Java】Java的四种引用类型"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&is_video=false&description=【Java】 【Java】Java的四种引用类型"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=【Java】 【Java】Java的四种引用类型&body=Check out this article: http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&name=【Java】 【Java】Java的四种引用类型&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&text=【Java】Java 的四种引用类型"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&is_video=false&description=【Java】Java 的四种引用类型"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】Java 的四种引用类型&body=Check out this article: http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&name=【Java】Java 的四种引用类型&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -107,7 +107,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        【Java】 【Java】Java的四种引用类型
+        【Java】Java 的四种引用类型
     </h1>
 
 
@@ -217,15 +217,15 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&text=【Java】 【Java】Java的四种引用类型"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&is_video=false&description=【Java】 【Java】Java的四种引用类型"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=【Java】 【Java】Java的四种引用类型&body=Check out this article: http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】 【Java】Java的四种引用类型"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&name=【Java】 【Java】Java的四种引用类型&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&text=【Java】Java 的四种引用类型"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&is_video=false&description=【Java】Java 的四种引用类型"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】Java 的四种引用类型&body=Check out this article: http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&title=【Java】Java 的四种引用类型"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/02/【Java】Java的四种引用类型/&name=【Java】Java 的四种引用类型&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
