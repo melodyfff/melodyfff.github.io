@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Java中的volatile关键字 Java 语言中的 volatile 变量可以被看作是一种 “程度较轻的 synchronized”与 synchronized 块相比，volatile 变量所需的编码较少， 并且运行时开销也较少，但是它所能实现的功能也仅是 synchronized 的一部分。  定义:Java中的关键字/修饰符 特性：  可见性： 当一个共享变量被volatile修饰时，保">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Java】 Java中的volatile关键字">
+<meta property="og:url" content="http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Java中的volatile关键字 Java 语言中的 volatile 变量可以被看作是一种 “程度较轻的 synchronized”与 synchronized 块相比，volatile 变量所需的编码较少， 并且运行时开销也较少，但是它所能实现的功能也仅是 synchronized 的一部分。  定义:Java中的关键字/修饰符 特性：  可见性： 当一个共享变量被volatile修饰时，保">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/img/jmm.jpg">
+<meta property="og:updated_time" content="2019-04-09T14:53:59.985Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Java】 Java中的volatile关键字">
+<meta name="twitter:description" content="Java中的volatile关键字 Java 语言中的 volatile 变量可以被看作是一种 “程度较轻的 synchronized”与 synchronized 块相比，volatile 变量所需的编码较少， 并且运行时开销也较少，但是它所能实现的功能也仅是 synchronized 的一部分。  定义:Java中的关键字/修饰符 特性：  可见性： 当一个共享变量被volatile修饰时，保">
+<meta name="twitter:image" content="http://yoursite.com/img/jmm.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【Java】 Java中的volatile关键字</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/04/02/【Java】Java的四种引用类型/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&text=【Java】 Java中的volatile关键字"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&is_video=false&description=【Java】 Java中的volatile关键字"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】 Java中的volatile关键字&body=Check out this article: http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&name=【Java】 Java中的volatile关键字&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java中的volatile关键字"><span class="toc-number">1.</span> <span class="toc-text">Java中的volatile关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java内存模型-JMM-Java-Memory-Model"><span class="toc-number">1.1.</span> <span class="toc-text">Java内存模型 JMM(Java Memory Model)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile底层实现机制"><span class="toc-number">1.2.</span> <span class="toc-text">volatile底层实现机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile的应用场景"><span class="toc-number">1.3.</span> <span class="toc-text">volatile的应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-状态量标记"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 状态量标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-单例模式-双重检查锁定DCL"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 单例模式(双重检查锁定DCL)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-独立观察（independent-observation）"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 独立观察（independent observation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-“volatile-bean”-模式"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. “volatile bean” 模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-开销较低的“读－写锁”策略"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. 开销较低的“读－写锁”策略</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Java】 Java中的volatile关键字
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Melody</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-04-08T16:00:00.000Z" itemprop="datePublished">2019-04-09</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Java中的volatile关键字"><a href="#Java中的volatile关键字" class="headerlink" title="Java中的volatile关键字"></a>Java中的volatile关键字</h1><blockquote>
+<p><code>Java</code> 语言中的 <code>volatile</code> 变量可以被看作是一种 “程度较轻的 <code>synchronized</code>”<br>与 <code>synchronized</code> 块相比，<code>volatile</code> 变量所需的编码较少， 并且运行时开销也较少，但是它所能实现的功能也仅是 <code>synchronized</code> 的一部分。</p>
+</blockquote>
+<p><strong>定义:</strong><br>Java中的关键字/修饰符</p>
+<p><strong>特性：</strong></p>
+<ul>
+<li><strong>可见性：</strong> 当一个共享变量被<code>volatile</code>修饰时，保证修改值后会立即刷新到主内存中，其他线程需要使用时回去读取最新的值<ul>
+<li>当写一个<code>volatile</code>变量时，<code>JMM</code>会把该线程对应的本地内存中的共享变量刷新到主内存中</li>
+<li>当读一个<code>volatile</code>变量时，<code>JMM</code>会把该线程对应的本地内存设置为无效，线程接下来从主内存中读取共享变量</li>
+</ul>
+</li>
+<li><strong>有序性：</strong> 主要针对编译器/处理器对指令进行优化/重排的时候</li>
+</ul>
+<p><strong>volatile不能保证原子性</strong></p>
+<p>要强行说能保证，最多只是单个volatile变量的读/写操作具有原子性，但是对于 <code>count++</code>这样的复合操作实际上是读、添加、存储的组合</p>
+<p><code>volatile</code>修饰的属性若在修改前已经被读取了值，那么修改后，无法改变已经复制到工作内存的值(无法阻止并发的情况)</p>
+<p><code>volatile</code>的读和写建立了一个<code>happens-before</code>关系，类似于申请和释放一个互斥锁</p>
+<p><code>volatile</code>可以用在任何变量前面，但不能用于<code>final</code>变量前面，因为<code>final</code>型的变量是禁止修改的,也不存在线程安全的问题。</p>
+<p><code>volatile</code>变量不能用于约束条件中</p>
+<h2 id="Java内存模型-JMM-Java-Memory-Model"><a href="#Java内存模型-JMM-Java-Memory-Model" class="headerlink" title="Java内存模型 JMM(Java Memory Model)"></a>Java内存模型 JMM(Java Memory Model)</h2><blockquote>
+<p>参考： <a href="https://www.cnblogs.com/gooder2-android/p/9509479.html?utm_source=oschina-app/" target="_blank" rel="external">https://www.cnblogs.com/gooder2-android/p/9509479.html?utm_source=oschina-app/</a><br>JSR133 : <a href="https://www.jcp.org/en/jsr/detail?id=133" target="_blank" rel="external">https://www.jcp.org/en/jsr/detail?id=133</a></p>
+</blockquote>
+<p><img src="../../../../img/jmm.jpg" alt=""></p>
+<p>在 <code>JDK1.2</code> 之前，<code>Java</code>的内存模型实现总是从主存（即共享内存）读取变量，是不需要进行特别的注意的。</p>
+<p>而在当前的 <code>Java</code> 内存模型下，线程可以把变量保存本地内存（比如机器的寄存器）中，而不是直接在主存中进行读写。</p>
+<p>这就可能造成一个线程在主存中修改了一个变量的值，而另外一个线程还继续使用它在寄存器中的变量值的拷贝，造成数据的不一致。</p>
+<p><strong>happens-before原则规则</strong></p>
+<ul>
+<li>程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作；</li>
+<li>锁定规则：一个unLock操作先行发生于后面对同一个锁额lock操作；</li>
+<li>volatile变量规则：对一个变量的写操作先行发生于后面对这个变量的读操作；</li>
+<li>传递规则：如果操作A先行发生于操作B，而操作B又先行发生于操作C，则可以得出操作A先行发生于操作C；</li>
+<li>线程启动规则：Thread对象的start()方法先行发生于此线程的每个一个动作；</li>
+<li>线程中断规则：对线程interrupt()方法的调用先行发生于被中断线程的代码检测到中断事件的发生；</li>
+<li>段检测到线程已经终止执行；</li>
+<li>对象终结规则：一个对象的初始化完成先行发生于他的finalize()方法的开始；</li>
+</ul>
+<h2 id="volatile底层实现机制"><a href="#volatile底层实现机制" class="headerlink" title="volatile底层实现机制"></a>volatile底层实现机制</h2><p>如果把加入<code>volatile</code>关键字的代码和为加入<code>volatile</code>关键字的代码都生成汇编代码，会发现加入了<code>volatile</code>关键字的代码会多处一个<code>lock</code>前缀指令。</p>
+<p><code>lock</code>指令相当于一个内存屏障，内存屏障主要作用如下：</p>
+<ul>
+<li>指令重排时，不能把后面的指令重排到内存屏障之前的位置</li>
+<li>使得本cpu的<code>Cache</code>写入内存</li>
+<li>写入动作会引起别的cpu或者别的内核无效化其<code>Cache</code>,相当于让新写入的值对别的线程可见</li>
+</ul>
+<h2 id="volatile的应用场景"><a href="#volatile的应用场景" class="headerlink" title="volatile的应用场景"></a>volatile的应用场景</h2><blockquote>
+<p>参考： <a href="https://blog.csdn.net/vking_wang/article/details/9982709" target="_blank" rel="external">https://blog.csdn.net/vking_wang/article/details/9982709</a></p>
+</blockquote>
+<h3 id="1-状态量标记"><a href="#1-状态量标记" class="headerlink" title="1. 状态量标记"></a>1. 状态量标记</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileDemo</span> </span>&#123;</div><div class="line">    <span class="keyword">volatile</span> <span class="keyword">static</span> <span class="keyword">boolean</span> flag = <span class="keyword">true</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">// 任务一 : 根据 flag 轮旬处理事物</span></div><div class="line">        Runnable task = () -&gt; &#123;</div><div class="line">            <span class="keyword">while</span> (flag)&#123;</div><div class="line"></div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    <span class="comment">// 模拟处理过程</span></div><div class="line">                    Thread.sleep(<span class="number">1000L</span>);</div><div class="line"></div><div class="line">                    System.out.println(Thread.currentThread().getName()+<span class="string">" : is running..."</span>);</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        <span class="comment">// 任务二 ： 改变 flag 为false</span></div><div class="line">        Runnable taskStop = () -&gt; &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                Thread.sleep(<span class="number">5000L</span>);</div><div class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">" : transform flag to [false]"</span>);</div><div class="line">                flag = <span class="keyword">false</span>;</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line"></div><div class="line">        <span class="keyword">final</span> ThreadFactory factory = <span class="keyword">new</span> ThreadFactoryBuilder().setNameFormat(<span class="string">"Volatile-pool-%d"</span>).build();</div><div class="line">        ExecutorService executorService = Executors.newCachedThreadPool(factory);</div><div class="line">        executorService.submit(task);</div><div class="line">        executorService.submit(taskStop);</div><div class="line">        executorService.shutdown();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果为:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Volatile-pool-0 : is running...</div><div class="line">Volatile-pool-0 : is running...</div><div class="line">Volatile-pool-0 : is running...</div><div class="line">Volatile-pool-0 : is running...</div><div class="line">Volatile-pool-0 : is running...</div><div class="line">Volatile-pool-1 : transform flag to [<span class="literal">false</span>]</div><div class="line">Volatile-pool-0 : is running...</div></pre></td></tr></table></figure></p>
+<h3 id="2-单例模式-双重检查锁定DCL"><a href="#2-单例模式-双重检查锁定DCL" class="headerlink" title="2. 单例模式(双重检查锁定DCL)"></a>2. 单例模式(双重检查锁定DCL)</h3><p>也可称一次性安全发布(<code>one-time safe publication</code>)</p>
+<p>如果不用<code>volatile</code>，则因为内存模型允许所谓的“无序写入”，可能导致失败。——某个线程可能会获得一个未完全初始化的实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == instance)&#123;</div><div class="line">            <span class="keyword">synchronized</span> (instance)&#123;</div><div class="line">                <span class="keyword">if</span> (<span class="keyword">null</span> == instance)&#123;</div><div class="line">                    instance = <span class="keyword">new</span> Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-独立观察（independent-observation）"><a href="#3-独立观察（independent-observation）" class="headerlink" title="3. 独立观察（independent observation）"></a>3. 独立观察（independent observation）</h3><p>①. 安全使用 <code>volatile</code> 的另一种简单模式是：<code>定期 “发布” 观察结果供程序内部使用</code>。</p>
+<p>如： 假设有一种环境传感器能够感觉环境温度。一个后台线程可能会每隔几秒读取一次该传感器，并更新包含当前文档的<code>volatile</code>变量。然后，其他线程可以读取这个变量，从而随时能够看到最新的温度值。</p>
+<p>②. 使用该模式的另一种应用程序就是收集程序的<code>统计信息</code>。</p>
+<p>如下代码展示了身份验证机制如何记忆最近一次登录的用户的名字。将反复使用lastUser 引用来发布值，以供程序的其他部分使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserManager</span> </span>&#123;</div><div class="line">    <span class="comment">//发布的信息,记录最后登录的用户名</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">volatile</span> String lastUser; </div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">authenticate</span><span class="params">(String user, String password)</span> </span>&#123;</div><div class="line">        <span class="keyword">boolean</span> valid = passwordIsValid(user, password);</div><div class="line">        <span class="keyword">if</span> (valid) &#123;</div><div class="line">            User u = <span class="keyword">new</span> User();</div><div class="line">            activeUsers.add(u);</div><div class="line">            lastUser = user;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> valid;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-“volatile-bean”-模式"><a href="#4-“volatile-bean”-模式" class="headerlink" title="4. “volatile bean” 模式"></a>4. “volatile bean” 模式</h3><p><code>volatile bean</code> 模式的基本原理是：很多框架为易变数据的持有者（例如 <code>HttpSession</code>）提供了容器，但是放入这些容器中的对象必须是线程安全的。</p>
+<p>在<code>volatile bean</code>模式中，<code>JavaBean</code> 的所有数据成员都是<code>volatile</code> 类型的，<code>并且 getter 和 setter 方法必须非常普通——即不包含约束！</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> String firstName;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> String lastName;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> age;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFirstName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> firstName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFirstName</span><span class="params">(String firstName)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.firstName = firstName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getLastName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> lastName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastName</span><span class="params">(String lastName)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.lastName = lastName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> age;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.age = age;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="5-开销较低的“读－写锁”策略"><a href="#5-开销较低的“读－写锁”策略" class="headerlink" title="5. 开销较低的“读－写锁”策略"></a>5. 开销较低的“读－写锁”策略</h3><p>如果读操作远远超过写操作，您可以结合使用内部锁和 volatile 变量来减少公共代码路径的开销。</p>
+<p>如下显示的线程安全的计数器，使用 <code>synchronized</code>确保增量操作是原子的，并使用 <code>volatile</code> 保证当前结果的可见性。</p>
+<p>如果更新不频繁的话，该方法可实现更好的性能，因为读路径的开销仅仅涉及<code>volatile</code>读操作，这通常要优于一个无竞争的锁获取的开销。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Counter</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 低开销的读写锁技巧</div><div class="line">     * 所有写操作必须在保持this锁的情况下完成</div><div class="line">     * &lt;p&gt;</div><div class="line">     * Employs the cheap read-write lock trick</div><div class="line">     * All mutative operations MUST be done with the 'this' lock held</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> value;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 读操作，没有synchronized</div><div class="line">     *</div><div class="line">     * <span class="doctag">@return</span> int</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getValue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> value;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 写操作，synchronized 使其具备原子性</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</div><div class="line">        value++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用锁进行所有变化的操作，使用 volatile 进行只读操作。</p>
+<p>其中，锁一次只允许一个线程访问值，volatile 允许多个线程执行读操作</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java中的volatile关键字"><span class="toc-number">1.</span> <span class="toc-text">Java中的volatile关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java内存模型-JMM-Java-Memory-Model"><span class="toc-number">1.1.</span> <span class="toc-text">Java内存模型 JMM(Java Memory Model)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile底层实现机制"><span class="toc-number">1.2.</span> <span class="toc-text">volatile底层实现机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile的应用场景"><span class="toc-number">1.3.</span> <span class="toc-text">volatile的应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-状态量标记"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 状态量标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-单例模式-双重检查锁定DCL"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 单例模式(双重检查锁定DCL)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-独立观察（independent-observation）"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 独立观察（independent observation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-“volatile-bean”-模式"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. “volatile bean” 模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-开销较低的“读－写锁”策略"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. 开销较低的“读－写锁”策略</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&text=【Java】 Java中的volatile关键字"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&is_video=false&description=【Java】 Java中的volatile关键字"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】 Java中的volatile关键字&body=Check out this article: http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&title=【Java】 Java中的volatile关键字"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/09/【Java】 Java中的volatile关键字/&name=【Java】 Java中的volatile关键字&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
