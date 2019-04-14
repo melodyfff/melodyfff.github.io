@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="桥接模式(Bridge Pattern)  定义： 将抽象部分与实现部分分离，使他们可以独立的变化。  类型： 结构型模式 UML 12345678910111213141516171819202122232425@startumlabstract class Abstraction&amp;#123;    - impl: Implementor    + function()&amp;#125;class A">
+<meta name="keywords" content="Design Patterns">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Design Patterns】桥接模式">
+<meta property="og:url" content="http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="桥接模式(Bridge Pattern)  定义： 将抽象部分与实现部分分离，使他们可以独立的变化。  类型： 结构型模式 UML 12345678910111213141516171819202122232425@startumlabstract class Abstraction&amp;#123;    - impl: Implementor    + function()&amp;#125;class A">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/img/W3sDesign_Bridge_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://yoursite.com/img/bridge_uml.png">
+<meta property="og:image" content="http://yoursite.com/img/bridge_uml2.png">
+<meta property="og:updated_time" content="2019-04-14T14:04:25.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Design Patterns】桥接模式">
+<meta name="twitter:description" content="桥接模式(Bridge Pattern)  定义： 将抽象部分与实现部分分离，使他们可以独立的变化。  类型： 结构型模式 UML 12345678910111213141516171819202122232425@startumlabstract class Abstraction&amp;#123;    - impl: Implementor    + function()&amp;#125;class A">
+<meta name="twitter:image" content="http://yoursite.com/img/W3sDesign_Bridge_Design_Pattern_UML.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【Design Patterns】桥接模式</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/04/02/【Java】Java的四种引用类型/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/04/01/【Design Patterns】策略模式/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&text=【Design Patterns】桥接模式"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&is_video=false&description=【Design Patterns】桥接模式"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】桥接模式&body=Check out this article: http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&name=【Design Patterns】桥接模式&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#桥接模式-Bridge-Pattern"><span class="toc-number">1.</span> <span class="toc-text">桥接模式(Bridge Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#桥接模式实例一"><span class="toc-number">1.1.</span> <span class="toc-text">桥接模式实例一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#桥接模式实例二"><span class="toc-number">1.2.</span> <span class="toc-text">桥接模式实例二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#桥接模式的优缺点"><span class="toc-number">1.3.</span> <span class="toc-text">桥接模式的优缺点</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Design Patterns】桥接模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Melody</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-04-01T16:00:00.000Z" itemprop="datePublished">2019-04-02</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Design-Patterns/">Design Patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="桥接模式-Bridge-Pattern"><a href="#桥接模式-Bridge-Pattern" class="headerlink" title="桥接模式(Bridge Pattern)"></a>桥接模式(Bridge Pattern)</h1><p><img src="../../../../img/W3sDesign_Bridge_Design_Pattern_UML.jpg" alt=""></p>
+<blockquote>
+<p>定义： 将抽象部分与实现部分分离，使他们可以独立的变化。</p>
+</blockquote>
+<p><strong>类型：</strong> 结构型模式</p>
+<p><strong>UML</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">@startuml</div><div class="line">abstract class Abstraction&#123;</div><div class="line">    - impl: Implementor</div><div class="line">    + function()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Abstraction</div><div class="line">note bottom: function() : impl.implementation()</div><div class="line"></div><div class="line">interface Implementor&#123;</div><div class="line">    + implementation()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class RefinedAbstraction&#123;</div><div class="line">    + refinedFunction()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class ConcreteImplementor&#123;</div><div class="line">    + implementation()</div><div class="line">&#125;</div><div class="line"></div><div class="line">Abstraction *- Implementor</div><div class="line">RefinedAbstraction --|&gt; Abstraction</div><div class="line">Implementor &lt;|- ConcreteImplementor</div><div class="line">@enduml</div></pre></td></tr></table></figure>
+<p><img src="../../../../img/bridge_uml.png" alt=""></p>
+<p><strong>角色定义</strong></p>
+<ul>
+<li><strong>Abstraction(abstract class)-抽象类：</strong> 定义抽象接口，持有/维持 implementor 的引用</li>
+<li><strong>RefinedAbstraction(normal class)-正常的类：</strong> 拓展由Abstraction定义的接口</li>
+<li><strong>Implementor(interface)-执行者：</strong> 定义执行者的接口</li>
+<li><strong>ConcreteImplementor(normal class)-具体类:</strong> 实现Implementor接口</li>
+</ul>
+<p><strong>Bridge设计模式可以解决哪些问题？</strong></p>
+<ul>
+<li>抽象及其实现应该彼此独立地定义和扩展。</li>
+<li>避免抽象及其实现之间的编译时绑定，以便可以在运行时选择实现。</li>
+</ul>
+<p>使用子类时，不同的子类以不同的方式实现抽象类。但是实现在编译时绑定到抽象，并且不能在运行时更改。</p>
+<h2 id="桥接模式实例一"><a href="#桥接模式实例一" class="headerlink" title="桥接模式实例一"></a>桥接模式实例一</h2><p>模拟账号操作记录日志</p>
+<p><strong>Implementor(Logger.java)</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@FunctionalInterface</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Logger</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 打印日志</div><div class="line">     * <span class="doctag">@param</span> message message</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">log</span><span class="params">(String message)</span></span>;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * info级别日志</div><div class="line">     * <span class="doctag">@return</span> LOGGER</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">static</span> Logger <span class="title">info</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> message -&gt; System.out.println(<span class="string">"info: "</span> + message);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * warn级别日志</div><div class="line">     * <span class="doctag">@return</span> LOGGER</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">static</span> Logger <span class="title">warning</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> message -&gt; System.out.println(<span class="string">"warning: "</span> + message);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>Abstraction(AbstractAccount.java)</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractAccount</span> </span>&#123;</div><div class="line">    <span class="comment">/** 自定义日志 支持 info/warn */</span></div><div class="line">    <span class="keyword">private</span> Logger logger = Logger.info();</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 设置打印的日志</div><div class="line">     * <span class="doctag">@param</span> logger Logger</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLogger</span><span class="params">(Logger logger)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.logger = logger;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 操作记录</div><div class="line">     * <span class="doctag">@param</span> message 信息</div><div class="line">     * <span class="doctag">@param</span> action 结果</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">(String message, BooleanSupplier action)</span> </span>&#123;</div><div class="line">        <span class="keyword">boolean</span> result = action.getAsBoolean();</div><div class="line">        logger.log(message + <span class="string">" result "</span> + result);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>RefinedAbstraction(SimpleAccount.java)</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleAccount</span> <span class="keyword">extends</span> <span class="title">AbstractAccount</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 余额</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> balance;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 初始化账号余额</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> balance balance</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleAccount</span><span class="params">(<span class="keyword">int</span> balance)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.balance = balance;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 判断是否快余额不足</div><div class="line">     * 判断条件为小于50</div><div class="line">     *</div><div class="line">     * <span class="doctag">@return</span> boolean</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isBalanceLow</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.balance &lt; <span class="number">50</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 取出余额</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> amount 数量</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">withdraw</span><span class="params">(<span class="keyword">int</span> amount)</span> </span>&#123;</div><div class="line">        operate(<span class="string">"withdraw "</span> + amount, () -&gt; &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.balance &gt;= amount) &#123;</div><div class="line">                <span class="keyword">this</span>.balance -= amount;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>Client</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BridgeDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 1. 初始化账号</span></div><div class="line">        SimpleAccount account = <span class="keyword">new</span> SimpleAccount(<span class="number">100</span>);</div><div class="line"></div><div class="line">        <span class="comment">// 2. 取出75</span></div><div class="line">        account.withdraw(<span class="number">75</span>);</div><div class="line">        <span class="comment">// info: withdraw 75 result true</span></div><div class="line"></div><div class="line">        <span class="comment">// 3. 判断余额是否已经到警戒值，切换日志级别</span></div><div class="line">        <span class="keyword">if</span> (account.isBalanceLow())&#123;</div><div class="line">            account.setLogger(Logger.warning());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// 4. 取出10</span></div><div class="line">        account.withdraw(<span class="number">10</span>);</div><div class="line">        <span class="comment">// warning: withdraw 10 result true</span></div><div class="line"></div><div class="line">        <span class="comment">// 5. 取出100</span></div><div class="line">        account.withdraw(<span class="number">100</span>);</div><div class="line">        <span class="comment">// warning: withdraw 100 result false</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="桥接模式实例二"><a href="#桥接模式实例二" class="headerlink" title="桥接模式实例二"></a>桥接模式实例二</h2><p>模拟消息的发送</p>
+<p><strong>UML</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">@startuml</div><div class="line">interface MessageImplementor&#123;</div><div class="line">    + send()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class MessageEmail&#123;</div><div class="line">    + send()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class MessageSMS&#123;</div><div class="line">    + send()</div><div class="line">&#125;</div><div class="line"></div><div class="line">abstract class AbstractMessage&#123;</div><div class="line">    - messageImplementor: MessageImplementor</div><div class="line">    + AbstractMessage(MessageImplementor)</div><div class="line"></div><div class="line">    + sendMessage()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class CommonMessage&#123;</div><div class="line">    + CommonMessage(MessageImplementor)</div><div class="line">    + sendMessage()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class UrgencyMessage&#123;</div><div class="line">    + UrgencyMessage(MessageImplementor)</div><div class="line">    + sendMessage()</div><div class="line">&#125;</div><div class="line"></div><div class="line">MessageImplementor &lt;|-- MessageEmail</div><div class="line">MessageImplementor &lt;|-- MessageSMS</div><div class="line"></div><div class="line">AbstractMessage *- MessageImplementor</div><div class="line"></div><div class="line">AbstractMessage &lt;|-- CommonMessage</div><div class="line">AbstractMessage &lt;|-- UrgencyMessage</div><div class="line"></div><div class="line">@enduml</div></pre></td></tr></table></figure>
+<p><img src="../../../../img/bridge_uml2.png" alt=""></p>
+<p><strong>Implementor接口</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MessageImplementor</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 发送消息</div><div class="line">     * <span class="doctag">@param</span> message 消息</div><div class="line">     * <span class="doctag">@param</span> to 发送对象</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">send</span><span class="params">(String message, String to)</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>ConcreteImplementor具体实现</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageEmail</span> <span class="keyword">implements</span> <span class="title">MessageImplementor</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(String message, String to)</span> </span>&#123;</div><div class="line">        System.out.println(String.format(<span class="string">"发送邮件消息 &#123;%s&#125; to &#123;%s&#125;"</span>, message, to));</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageSMS</span> <span class="keyword">implements</span> <span class="title">MessageImplementor</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(String message, String to)</span> </span>&#123;</div><div class="line">        System.out.println(String.format(<span class="string">"发送短信消息 &#123;%s&#125; to &#123;%s&#125;"</span>, message, to));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>Abstraction</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractMessage</span> </span>&#123;</div><div class="line">    <span class="comment">/** 消息发送接口 */</span></div><div class="line">    MessageImplementor messageImplementor;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 初始化时传入具体实现</div><div class="line">     * <span class="doctag">@param</span> messageImplementor 消息发送</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AbstractMessage</span><span class="params">(MessageImplementor messageImplementor)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.messageImplementor = messageImplementor;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 发送消息，委派给MessageImplementor的具体实现</div><div class="line">     * <span class="doctag">@param</span> message 消息</div><div class="line">     * <span class="doctag">@param</span> to 发送对象</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(String message,String to)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.messageImplementor.send(message,to);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>RefinedAbstraction</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonMessage</span> <span class="keyword">extends</span> <span class="title">AbstractMessage</span></span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 初始化时传入具体实现</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> messageImplementor 消息发送</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CommonMessage</span><span class="params">(MessageImplementor messageImplementor)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(messageImplementor);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(String message, String to)</span> </span>&#123;</div><div class="line">        <span class="comment">// 调用父方法发送</span></div><div class="line">        <span class="keyword">super</span>.sendMessage(message, to);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UrgencyMessage</span> <span class="keyword">extends</span> <span class="title">AbstractMessage</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 初始化时传入具体实现</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> messageImplementor 消息发送</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UrgencyMessage</span><span class="params">(MessageImplementor messageImplementor)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(messageImplementor);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(String message, String to)</span> </span>&#123;</div><div class="line">        <span class="comment">// 加入自己的处理逻辑</span></div><div class="line">        message = <span class="string">"[加急] "</span> + message;</div><div class="line">        <span class="keyword">super</span>.sendMessage(message, to);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 拓展自己功能，获取某个消息的状态</div><div class="line">     * <span class="doctag">@param</span> messageId messageId</div><div class="line">     * <span class="doctag">@return</span> Object</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">call</span><span class="params">(String messageId)</span></span>&#123;</div><div class="line">        <span class="comment">// 加入具体业务逻辑</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>Client</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 1. 发送普通短信消息</span></div><div class="line">        MessageImplementor sms = <span class="keyword">new</span> MessageSMS();</div><div class="line">        AbstractMessage messageSMS = <span class="keyword">new</span> CommonMessage(sms);</div><div class="line">        messageSMS.sendMessage(<span class="string">"test"</span>,<span class="string">"sam"</span>);</div><div class="line"></div><div class="line">        <span class="comment">// 2. 发送加急邮件消息</span></div><div class="line">        MessageImplementor email = <span class="keyword">new</span> MessageEmail();</div><div class="line">        AbstractMessage messageEmail = <span class="keyword">new</span> UrgencyMessage(email);</div><div class="line">        messageEmail.sendMessage(<span class="string">"test"</span>,<span class="string">"sam"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="桥接模式的优缺点"><a href="#桥接模式的优缺点" class="headerlink" title="桥接模式的优缺点"></a>桥接模式的优缺点</h2><p><strong>优点：</strong></p>
+<ul>
+<li>分离抽象和实现</li>
+<li>更好的拓展性</li>
+</ul>
+<p>桥接模式将继承关系转化成关联关系，它降低了类与类之间的耦合度</p>
+<p><code>JVM</code>的平台无关性其实也运用了桥接模式</p>
+<p>在<code>Java</code>的<code>JDBC驱动器</code>中就应用了桥接模式。</p>
+<p>一个应用系统动态的选择一个合适的驱动器，然后通过驱动器向数据库引擎发出指令。这个过程就是将抽象角色的行为委派给实现角色的过程。</p>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>桥接模式的引入会增加系统的理解与设计难度，由于聚合关联关系建立在抽象层，要求开发者针对抽象进行设计与编程。</li>
+<li>桥接模式要求正确识别出系统中两个独立变化的维度，因此其使用范围具有一定的局限性。</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#桥接模式-Bridge-Pattern"><span class="toc-number">1.</span> <span class="toc-text">桥接模式(Bridge Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#桥接模式实例一"><span class="toc-number">1.1.</span> <span class="toc-text">桥接模式实例一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#桥接模式实例二"><span class="toc-number">1.2.</span> <span class="toc-text">桥接模式实例二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#桥接模式的优缺点"><span class="toc-number">1.3.</span> <span class="toc-text">桥接模式的优缺点</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&text=【Design Patterns】桥接模式"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&is_video=false&description=【Design Patterns】桥接模式"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】桥接模式&body=Check out this article: http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&title=【Design Patterns】桥接模式"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/02/【Design Patterns】桥接模式/&name=【Design Patterns】桥接模式&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
