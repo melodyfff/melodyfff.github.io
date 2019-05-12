@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="深入理解Java中的spi机制SPI全名为Service Provider Interface是JDK内置的一种服务提供发现机制,是Java提供的一套用来被第三方实现或者扩展的API，它可以用来启用框架扩展和替换组件。 JAVA SPI = 基于接口的编程＋策略模式＋配置文件 的动态加载机制 Java SPI的具体约定如下： 当服务的提供者，提供了服务接口的一种实现之后，在jar包的META-IN">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Java】深入理解Java中的spi机制">
+<meta property="og:url" content="http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="深入理解Java中的spi机制SPI全名为Service Provider Interface是JDK内置的一种服务提供发现机制,是Java提供的一套用来被第三方实现或者扩展的API，它可以用来启用框架扩展和替换组件。 JAVA SPI = 基于接口的编程＋策略模式＋配置文件 的动态加载机制 Java SPI的具体约定如下： 当服务的提供者，提供了服务接口的一种实现之后，在jar包的META-IN">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-12T11:48:57.676Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Java】深入理解Java中的spi机制">
+<meta name="twitter:description" content="深入理解Java中的spi机制SPI全名为Service Provider Interface是JDK内置的一种服务提供发现机制,是Java提供的一套用来被第三方实现或者扩展的API，它可以用来启用框架扩展和替换组件。 JAVA SPI = 基于接口的编程＋策略模式＋配置文件 的动态加载机制 Java SPI的具体约定如下： 当服务的提供者，提供了服务接口的一种实现之后，在jar包的META-IN">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【Java】深入理解Java中的spi机制</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/05/11/【Linux】zookeeper单机以及集群搭建/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&text=【Java】深入理解Java中的spi机制"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&is_video=false&description=【Java】深入理解Java中的spi机制"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】深入理解Java中的spi机制&body=Check out this article: http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&name=【Java】深入理解Java中的spi机制&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#深入理解Java中的spi机制"><span class="toc-number">1.</span> <span class="toc-text">深入理解Java中的spi机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单的spi实例"><span class="toc-number">1.1.</span> <span class="toc-text">简单的spi实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码解析"><span class="toc-number">1.2.</span> <span class="toc-text">源码解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.4.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Java】深入理解Java中的spi机制
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Melody</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-05-11T16:00:00.000Z" itemprop="datePublished">2019-05-12</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="深入理解Java中的spi机制"><a href="#深入理解Java中的spi机制" class="headerlink" title="深入理解Java中的spi机制"></a>深入理解Java中的spi机制</h1><p><code>SPI</code>全名为<code>Service Provider Interface</code>是JDK内置的一种服务提供发现机制,是Java提供的一套用来被第三方实现或者扩展的API，它可以用来启用框架扩展和替换组件。</p>
+<p><code>JAVA SPI</code> = <strong>基于接口的编程＋策略模式＋配置文件 的动态加载机制</strong></p>
+<p><strong>Java SPI的具体约定如下：</strong></p>
+<p>当服务的提供者，提供了服务接口的一种实现之后，在<code>jar</code>包的<code>META-INF/services/</code>目录里同时创建一个以服务接口命名的文件。该文件里就是实现该服务接口的具体实现类。</p>
+<p>而当外部程序装配这个模块的时候，就能通过该<code>jar</code>包<code>META-INF/services/</code>里的配置文件找到具体的实现类名，并装载实例化，完成模块的注入。</p>
+<p>根据SPI的规范我们的服务实现类必须有一个<code>无参构造方法</code>。</p>
+<p>为什么一定要在<code>classes</code>中的<code>META-INF/services</code>下呢？</p>
+<p>JDK提供服务实现查找的一个工具类：<code>java.util.ServiceLoader</code></p>
+<p>在这个类里面已经写死</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 默认会去这里寻找相关信息</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PREFIX = <span class="string">"META-INF/services/"</span>;</div></pre></td></tr></table></figure>
+<p><strong>常见的使用场景：</strong></p>
+<ul>
+<li><code>JDBC</code>加载不同类型的数据库驱动</li>
+<li>日志门面接口实现类加载，<code>SLF4J</code>加载不同提供商的日志实现类</li>
+<li><code>Spring</code>中大量使用了<code>SPI</code>,<ul>
+<li>对<code>servlet3.0</code>规范</li>
+<li>对<code>ServletContainerInitializer</code>的实现</li>
+<li>自动类型转换<code>Type Conversion SPI(Converter SPI、Formatter SPI)</code>等</li>
+</ul>
+</li>
+<li><code>Dubbo</code>里面有很多个组件，每个组件在框架中都是以接口的形成抽象出来！具体的实现又分很多种，在程序执行时根据用户的配置来按需取接口的实现</li>
+</ul>
+<h2 id="简单的spi实例"><a href="#简单的spi实例" class="headerlink" title="简单的spi实例"></a>简单的spi实例</h2><p>整体包结构如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">└─main</div><div class="line">    ├─java</div><div class="line">    │  └─com</div><div class="line">    │      └─xinchen</div><div class="line">    │          └─spi</div><div class="line">    │              └─App.java</div><div class="line">    │              └─IService.java</div><div class="line">    │              └─ServiceImplA.java</div><div class="line">    │              └─ServiceImplB.java            </div><div class="line">    └─resources</div><div class="line">        └─META-INF</div><div class="line">            └─services</div><div class="line">                └─com.xinchen.spi.IService</div></pre></td></tr></table></figure></p>
+<p><strong>SPI接口</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IService</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">say</span><span class="params">(String word)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>具体实现类</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceImplA</span> <span class="keyword">implements</span> <span class="title">IService</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">(String word)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="keyword">this</span>.getClass().toString() + <span class="string">" say: "</span> + word);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceImplB</span> <span class="keyword">implements</span> <span class="title">IService</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">(String word)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="keyword">this</span>.getClass().toString() + <span class="string">" say: "</span> + word);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>/resource/META-INF/services/com.xinchen.spi.IService</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">com.xinchen.spi.ServiceImplA</div><div class="line">com.xinchen.spi.ServiceImplB</div></pre></td></tr></table></figure></p>
+<p><strong>Client类</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> ServiceLoader&lt;IService&gt; services = ServiceLoader.load(IService.class);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (IService service:services)&#123;</div><div class="line">            service.say(<span class="string">"Hello World!"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//    结果：</span></div><div class="line"><span class="comment">//    class com.xinchen.spi.ServiceImplA say: Hello World!</span></div><div class="line"><span class="comment">//    class com.xinchen.spi.ServiceImplB say: Hello World!</span></div></pre></td></tr></table></figure></p>
+<h2 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h2><p><code>java.util.ServiceLoader</code>中的Fied区域<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 加载具体实现类信息的前缀</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PREFIX = <span class="string">"META-INF/services/"</span>;</div><div class="line"></div><div class="line"><span class="comment">// 需要加载的接口</span></div><div class="line"><span class="comment">// The class or interface representing the service being loaded</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Class&lt;S&gt; service;</div><div class="line"></div><div class="line"><span class="comment">// 用于加载的类加载器</span></div><div class="line"><span class="comment">// The class loader used to locate, load, and instantiate providers</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> ClassLoader loader;</div><div class="line"></div><div class="line"><span class="comment">// 创建ServiceLoader时采用的访问控制上下文</span></div><div class="line"><span class="comment">// The access control context taken when the ServiceLoader is created</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> AccessControlContext acc;</div><div class="line"></div><div class="line"><span class="comment">// 用于缓存已经加载的接口实现类，其中key为实现类的完整类名</span></div><div class="line"><span class="comment">// Cached providers, in instantiation order</span></div><div class="line"><span class="keyword">private</span> LinkedHashMap&lt;String,S&gt; providers = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</div><div class="line"></div><div class="line"><span class="comment">// 用于延迟加载接口的实现类</span></div><div class="line"><span class="comment">// The current lazy-lookup iterator</span></div><div class="line"><span class="keyword">private</span> LazyIterator lookupIterator;</div></pre></td></tr></table></figure></p>
+<p>从<code>ServiceLoader.load(IService.class)</code>进入源码中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;S&gt; <span class="function">ServiceLoader&lt;S&gt; <span class="title">load</span><span class="params">(Class&lt;S&gt; service)</span> </span>&#123;</div><div class="line">    <span class="comment">// 获取当前线程上下文的类加载器</span></div><div class="line">    ClassLoader cl = Thread.currentThread().getContextClassLoader();</div><div class="line">    <span class="keyword">return</span> ServiceLoader.load(service, cl);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在<code>ServiceLoader.load(service, cl)</code>中<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;S&gt; <span class="function">ServiceLoader&lt;S&gt; <span class="title">load</span><span class="params">(Class&lt;S&gt; service,ClassLoader loader)</span></span>&#123;</div><div class="line">    <span class="comment">// 返回ServiceLoader的实例</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ServiceLoader&lt;&gt;(service, loader);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="title">ServiceLoader</span><span class="params">(Class&lt;S&gt; svc, ClassLoader cl)</span> </span>&#123;</div><div class="line">    service = Objects.requireNonNull(svc, <span class="string">"Service interface cannot be null"</span>);</div><div class="line">    loader = (cl == <span class="keyword">null</span>) ? ClassLoader.getSystemClassLoader() : cl;</div><div class="line">    acc = (System.getSecurityManager() != <span class="keyword">null</span>) ? AccessController.getContext() : <span class="keyword">null</span>;</div><div class="line">    reload();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reload</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// 清空已经缓存的加载的接口实现类</span></div><div class="line">    providers.clear();</div><div class="line">    <span class="comment">// 创建新的延迟加载迭代器</span></div><div class="line">    lookupIterator = <span class="keyword">new</span> LazyIterator(service, loader);</div><div class="line">&#125;   </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="title">LazyIterator</span><span class="params">(Class&lt;S&gt; service, ClassLoader loader)</span> </span>&#123;</div><div class="line">    <span class="comment">// 指定this类中的 需要加载的接口service和类加载器loader</span></div><div class="line">    <span class="keyword">this</span>.service = service;</div><div class="line">    <span class="keyword">this</span>.loader = loader;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当我们通过迭代器获取对象实例的时候，首先在成员变量<code>providers</code>中查找是否有缓存的实例对象</p>
+<p>如果存在则直接返回，否则则调用<code>lookupIterator</code>延迟加载迭代器进行加载</p>
+<p>迭代器判断的代码如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Iterator&lt;S&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 返回迭代器</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Iterator&lt;S&gt;() &#123;</div><div class="line">            <span class="comment">// 查询缓存中是否存在实例对象</span></div><div class="line">            Iterator&lt;Map.Entry&lt;String,S&gt;&gt; knownProviders</div><div class="line">                = providers.entrySet().iterator();</div><div class="line"></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="comment">// 如果缓存中已经存在返回true</span></div><div class="line">                <span class="keyword">if</span> (knownProviders.hasNext())</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                <span class="comment">// 如果不存在则使用延迟加载迭代器进行判断是否存在</span></div><div class="line">                <span class="keyword">return</span> lookupIterator.hasNext();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="function"><span class="keyword">public</span> S <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="comment">// 如果缓存中存在则直接返回</span></div><div class="line">                <span class="keyword">if</span> (knownProviders.hasNext())</div><div class="line">                    <span class="keyword">return</span> knownProviders.next().getValue();</div><div class="line">                <span class="comment">// 调用延迟加载迭代器进行返回</span></div><div class="line">                <span class="keyword">return</span> lookupIterator.next();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>LazyIterator的类加载</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 判断是否拥有下一个实例</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">hasNextService</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// 如果拥有直接返回true</span></div><div class="line">    <span class="keyword">if</span> (nextName != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 具体实现类的全名 ，Enumeration&lt;URL&gt; config</span></div><div class="line">    <span class="keyword">if</span> (configs == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            String fullName = PREFIX + service.getName();</div><div class="line">            <span class="keyword">if</span> (loader == <span class="keyword">null</span>)</div><div class="line">                configs = ClassLoader.getSystemResources(fullName);</div><div class="line">            <span class="keyword">else</span></div><div class="line">                configs = loader.getResources(fullName);</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException x) &#123;</div><div class="line">            fail(service, <span class="string">"Error locating configuration files"</span>, x);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> ((pending == <span class="keyword">null</span>) || !pending.hasNext()) &#123;</div><div class="line">        <span class="keyword">if</span> (!configs.hasMoreElements()) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 转换config中的元素，或者具体实现类的真实包结构</span></div><div class="line">        pending = parse(service, configs.nextElement());</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 具体实现类的包结构名</span></div><div class="line">    nextName = pending.next();</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> S <span class="title">nextService</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!hasNextService())</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</div><div class="line">    String cn = nextName;</div><div class="line">    nextName = <span class="keyword">null</span>;</div><div class="line">    Class&lt;?&gt; c = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// 加载类对象</span></div><div class="line">        c = Class.forName(cn, <span class="keyword">false</span>, loader);</div><div class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException x) &#123;</div><div class="line">        fail(service,</div><div class="line">             <span class="string">"Provider "</span> + cn + <span class="string">" not found"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (!service.isAssignableFrom(c)) &#123;</div><div class="line">        fail(service,</div><div class="line">             <span class="string">"Provider "</span> + cn  + <span class="string">" not a subtype"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// 通过c.newInstance()实例化</span></div><div class="line">        S p = service.cast(c.newInstance());</div><div class="line">        <span class="comment">// 将实现类加入缓存</span></div><div class="line">        providers.put(cn, p);</div><div class="line">        <span class="keyword">return</span> p;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable x) &#123;</div><div class="line">        fail(service,</div><div class="line">             <span class="string">"Provider "</span> + cn + <span class="string">" could not be instantiated"</span>,</div><div class="line">             x);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> Error();          <span class="comment">// This cannot happen</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>优点</strong></p>
+<p>使用Java SPI机制的优势是实现解耦，使得第三方服务模块的装配控制的逻辑与调用者的业务代码分离，而不是耦合在一起。应用程序可以根据实际业务情况启用框架扩展或替换框架组件。</p>
+<p><strong>缺点</strong></p>
+<ul>
+<li><p>多个并发多线程使用ServiceLoader类的实例是不安全的</p>
+</li>
+<li><p>虽然ServiceLoader也算是使用的延迟加载，但是基本只能通过遍历全部获取，也就是接口的实现类全部加载并实例化一遍。</p>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.oracle.com/javase/tutorial/ext/basics/spi.html" target="_blank" rel="external">The Java™ Tutorials</a></p>
+<p><a href="https://www.jianshu.com/p/7daa38fc9711" target="_blank" rel="external">聊聊Dubbo（五）：核心源码-SPI扩展</a></p>
+<p><a href="https://shuaijunlan.github.io/2018/08/03/java-spi-introduction/" target="_blank" rel="external">深入理解Java SPI机制</a></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#深入理解Java中的spi机制"><span class="toc-number">1.</span> <span class="toc-text">深入理解Java中的spi机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单的spi实例"><span class="toc-number">1.1.</span> <span class="toc-text">简单的spi实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码解析"><span class="toc-number">1.2.</span> <span class="toc-text">源码解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.4.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&text=【Java】深入理解Java中的spi机制"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&is_video=false&description=【Java】深入理解Java中的spi机制"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】深入理解Java中的spi机制&body=Check out this article: http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&title=【Java】深入理解Java中的spi机制"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/05/12/【Java】深入理解Java中的spi机制/&name=【Java】深入理解Java中的spi机制&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
