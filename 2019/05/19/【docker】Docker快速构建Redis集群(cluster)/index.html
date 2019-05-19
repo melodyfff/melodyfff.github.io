@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Docker快速构建Redis集群(cluster)以所有redis实例运行在同一台宿主机上为例子 搭建步骤redis集群目录清单123456789101112131415161718192021222324252627282930313233343536373839404142434445.├── Dockerfile├── make_master_slave.sh├── run_master_">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【docker】Docker快速构建Redis集群(cluster)">
+<meta property="og:url" content="http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Docker快速构建Redis集群(cluster)以所有redis实例运行在同一台宿主机上为例子 搭建步骤redis集群目录清单123456789101112131415161718192021222324252627282930313233343536373839404142434445.├── Dockerfile├── make_master_slave.sh├── run_master_">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-19T15:58:36.060Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【docker】Docker快速构建Redis集群(cluster)">
+<meta name="twitter:description" content="Docker快速构建Redis集群(cluster)以所有redis实例运行在同一台宿主机上为例子 搭建步骤redis集群目录清单123456789101112131415161718192021222324252627282930313233343536373839404142434445.├── Dockerfile├── make_master_slave.sh├── run_master_">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【docker】Docker快速构建Redis集群(cluster)</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/05/12/【Java】深入理解Java中的spi机制/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&text=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&is_video=false&description=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【docker】Docker快速构建Redis集群(cluster)&body=Check out this article: http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&name=【docker】Docker快速构建Redis集群(cluster)&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker快速构建Redis集群-cluster"><span class="toc-number">1.</span> <span class="toc-text">Docker快速构建Redis集群(cluster)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建步骤"><span class="toc-number">1.1.</span> <span class="toc-text">搭建步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-redis-conf"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.redis.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-构建redis-trib镜像"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.构建redis-trib镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-创建docker内部网络"><span class="toc-number">1.1.3.</span> <span class="toc-text">3.创建docker内部网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-创建-master-和-slave-文件夹并生成配置文件"><span class="toc-number">1.1.4.</span> <span class="toc-text">4.创建 master 和 slave 文件夹并生成配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-运行docker-redis-的-master-和-slave-实例"><span class="toc-number">1.1.5.</span> <span class="toc-text">5.运行docker redis 的 master 和 slave 实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-组装masters-slaves-节点参数"><span class="toc-number">1.1.6.</span> <span class="toc-text">6.组装masters : slaves 节点参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.2.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【docker】Docker快速构建Redis集群(cluster)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Melody</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-05-18T16:00:00.000Z" itemprop="datePublished">2019-05-19</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/docker/">docker</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Docker快速构建Redis集群-cluster"><a href="#Docker快速构建Redis集群-cluster" class="headerlink" title="Docker快速构建Redis集群(cluster)"></a>Docker快速构建Redis集群(cluster)</h1><p>以所有<code>redis</code>实例运行在同一台宿主机上为例子</p>
+<h2 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h2><p><code>redis</code>集群目录清单<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── Dockerfile</div><div class="line">├── make_master_slave.sh</div><div class="line">├── run_master_slave.sh</div><div class="line">├── compose_master_slave.sh</div><div class="line">├── redis-trib.rb</div><div class="line">├── master</div><div class="line">│   ├── 7000</div><div class="line">│   │   ├── data</div><div class="line">│   │   │   ├── appendonly.aof</div><div class="line">│   │   │   ├── dump.rdb</div><div class="line">│   │   │   └── nodes.conf</div><div class="line">│   │   └── redis.conf</div><div class="line">│   ├── 7001</div><div class="line">│   │   ├── data</div><div class="line">│   │   │   ├── appendonly.aof</div><div class="line">│   │   │   ├── dump.rdb</div><div class="line">│   │   │   └── nodes.conf</div><div class="line">│   │   └── redis.conf</div><div class="line">│   └── 7002</div><div class="line">│       ├── data</div><div class="line">│       │   ├── appendonly.aof</div><div class="line">│       │   ├── dump.rdb</div><div class="line">│       │   └── nodes.conf</div><div class="line">│       └── redis.conf</div><div class="line">├── redis-cluster.tmpl</div><div class="line">└── slave</div><div class="line">    ├── 7003</div><div class="line">    │   ├── data</div><div class="line">    │   │   ├── appendonly.aof</div><div class="line">    │   │   ├── dump.rdb</div><div class="line">    │   │   └── nodes.conf</div><div class="line">    │   └── redis.conf</div><div class="line">    ├── 7004</div><div class="line">    │   ├── data</div><div class="line">    │   │   ├── appendonly.aof</div><div class="line">    │   │   ├── dump.rdb</div><div class="line">    │   │   └── nodes.conf</div><div class="line">    │   └── redis.conf</div><div class="line">    └── 7005</div><div class="line">        ├── data</div><div class="line">        │   ├── appendonly.aof</div><div class="line">        │   ├── dump.rdb</div><div class="line">        │   └── nodes.conf</div><div class="line">        └── redis.conf</div></pre></td></tr></table></figure></p>
+<h3 id="1-redis-conf"><a href="#1-redis-conf" class="headerlink" title="1.redis.conf"></a>1.redis.conf</h3><p>找到一份原始的redis.conf文件，将其重命名为：redis-cluster.tmpl<br><strong>redis-cluster.tmpl</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># bind 127.0.0.1</span></div><div class="line">protected-mode no</div><div class="line">port <span class="variable">$&#123;PORT&#125;</span></div><div class="line">daemonize no</div><div class="line">dir /data/redis</div><div class="line">appendonly yes</div><div class="line">cluster-enabled yes</div><div class="line">cluster-config-file nodes.conf</div><div class="line">cluster-node-timeout 15000</div></pre></td></tr></table></figure></p>
+<h3 id="2-构建redis-trib镜像"><a href="#2-构建redis-trib镜像" class="headerlink" title="2.构建redis-trib镜像"></a>2.构建redis-trib镜像</h3><p><code>redis-trib.rb</code>是<code>redis</code>官方推出的管理<code>redis</code>集群的工具，集成在<code>redis</code>的源码<code>src</code>目录下,因为搭建redis-cluster的时候需要用到redis-trib工具。</p>
+<p>构建<code>redis-trib</code>镜像<br><strong>Dockerfile</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">FROM ruby:2.5.5-slim</div><div class="line">MAINTAINER xinchen&lt;xcmelody@gmail.com&gt;</div><div class="line">RUN gem install redis</div><div class="line">RUN mkdir /redis</div><div class="line">WORKDIR /redis</div><div class="line"><span class="comment"># redis-trib.rb 可在https://github.com/antirez/redis中找到</span></div><div class="line"><span class="comment"># 此处已经 wget https://raw.githubusercontent.com/antirez/redis/4.0/src/redis-trib.rb </span></div><div class="line">ADD ./redis-trib.rb /redis/redis-trib.rb</div></pre></td></tr></table></figure></p>
+<p>构建镜像<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build -t redis-trib .</div></pre></td></tr></table></figure></p>
+<h3 id="3-创建docker内部网络"><a href="#3-创建docker内部网络" class="headerlink" title="3.创建docker内部网络"></a>3.创建docker内部网络</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># docker network ls 可查看</span></div><div class="line">docker network create redis-cluster-net</div></pre></td></tr></table></figure>
+<h3 id="4-创建-master-和-slave-文件夹并生成配置文件"><a href="#4-创建-master-和-slave-文件夹并生成配置文件" class="headerlink" title="4.创建 master 和 slave 文件夹并生成配置文件"></a>4.创建 master 和 slave 文件夹并生成配置文件</h3><p><strong>make_master_slave.sh</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 创建 master 和 slave 文件夹</span></div><div class="line"><span class="keyword">for</span> port <span class="keyword">in</span> `seq 7000 7005`; <span class="keyword">do</span></div><div class="line">    ms=<span class="string">"master"</span></div><div class="line">    <span class="keyword">if</span> [ <span class="variable">$port</span> -ge 7003 ]; <span class="keyword">then</span></div><div class="line">        ms=<span class="string">"slave"</span></div><div class="line">    <span class="keyword">fi</span></div><div class="line">    mkdir -p ./<span class="variable">$ms</span>/<span class="variable">$port</span>/ &amp;&amp; mkdir -p ./<span class="variable">$ms</span>/<span class="variable">$port</span>/data \</div><div class="line">    &amp;&amp; PORT=<span class="variable">$port</span> envsubst &lt; ./redis-cluster.tmpl &gt; ./<span class="variable">$ms</span>/<span class="variable">$port</span>/redis.conf;</div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure></p>
+<h3 id="5-运行docker-redis-的-master-和-slave-实例"><a href="#5-运行docker-redis-的-master-和-slave-实例" class="headerlink" title="5.运行docker redis 的 master 和 slave 实例"></a>5.运行docker redis 的 master 和 slave 实例</h3><p><strong>run_master_slave.sh</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 运行docker redis 的 master 和 slave 实例</span></div><div class="line"><span class="keyword">for</span> port <span class="keyword">in</span> `seq 7000 7005`; <span class="keyword">do</span></div><div class="line">    ms=<span class="string">"master"</span></div><div class="line">    <span class="keyword">if</span> [ <span class="variable">$port</span> -ge 7003 ]; <span class="keyword">then</span></div><div class="line">        ms=<span class="string">"slave"</span></div><div class="line">    <span class="keyword">fi</span></div><div class="line">    docker run -d -p <span class="variable">$port</span>:<span class="variable">$port</span> -p 1<span class="variable">$port</span>:1<span class="variable">$port</span> \</div><div class="line">    -v <span class="variable">$PWD</span>/<span class="variable">$ms</span>/<span class="variable">$port</span>/redis.conf:/data/redis.conf \</div><div class="line">    -v <span class="variable">$PWD</span>/<span class="variable">$ms</span>/<span class="variable">$port</span>/data:/data/redis \</div><div class="line">    --restart always --name redis-<span class="variable">$ms</span>-<span class="variable">$port</span> --net redis-cluster-net \</div><div class="line">    redis redis-server /data/redis.conf;</div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure></p>
+<h3 id="6-组装masters-slaves-节点参数"><a href="#6-组装masters-slaves-节点参数" class="headerlink" title="6.组装masters : slaves 节点参数"></a>6.组装masters : slaves 节点参数</h3><p><strong>组装masters : slaves 节点参数</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 组装masters : slaves 节点参数</span></div><div class="line">matches=<span class="string">""</span></div><div class="line"><span class="keyword">for</span> port <span class="keyword">in</span> `seq 7000 7005`; <span class="keyword">do</span></div><div class="line">    ms=<span class="string">"master"</span></div><div class="line">    <span class="keyword">if</span> [ <span class="variable">$port</span> -ge 7003 ]; <span class="keyword">then</span></div><div class="line">        ms=<span class="string">"slave"</span></div><div class="line">    <span class="keyword">fi</span></div><div class="line">    matches=<span class="variable">$matches</span>$(docker inspect --format <span class="string">'&#123;&#123;(index .NetworkSettings.Networks "redis-cluster-net").IPAddress&#125;&#125;'</span> <span class="string">"redis-<span class="variable">$ms</span>-<span class="variable">$&#123;port&#125;</span>"</span>):<span class="variable">$&#123;port&#125;</span><span class="string">" "</span>;</div><div class="line"><span class="keyword">done</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="variable">$matches</span></div><div class="line"><span class="comment"># 172.20.0.2:7000 172.20.0.3:7001 172.20.0.4:7002 172.20.0.5:7003 172.20.0.6:7004 172.20.0.7:7005</span></div><div class="line"></div><div class="line"><span class="comment"># 创建docker-cluster，这里就用到了上面的redis-trib镜像</span></div><div class="line">docker run -it --rm --net redis-cluster-net redis-trib ruby redis-trib.rb create --replicas 1 <span class="variable">$matches</span></div><div class="line"></div><div class="line"><span class="comment"># 最后需要在接下来的console中输入“yes”，即可完成docker-cluster的搭建</span></div></pre></td></tr></table></figure></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://my.oschina.net/dslcode/blog/1936656" target="_blank" rel="external">docker redis 集群（cluster）搭建</a></p>
+<p><a href="https://redis.io/documentation" target="_blank" rel="external">redis官网</a></p>
+<p><a href="http://redis.cn/documentation.html" target="_blank" rel="external">redis中文文档</a></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker快速构建Redis集群-cluster"><span class="toc-number">1.</span> <span class="toc-text">Docker快速构建Redis集群(cluster)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建步骤"><span class="toc-number">1.1.</span> <span class="toc-text">搭建步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-redis-conf"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.redis.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-构建redis-trib镜像"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.构建redis-trib镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-创建docker内部网络"><span class="toc-number">1.1.3.</span> <span class="toc-text">3.创建docker内部网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-创建-master-和-slave-文件夹并生成配置文件"><span class="toc-number">1.1.4.</span> <span class="toc-text">4.创建 master 和 slave 文件夹并生成配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-运行docker-redis-的-master-和-slave-实例"><span class="toc-number">1.1.5.</span> <span class="toc-text">5.运行docker redis 的 master 和 slave 实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-组装masters-slaves-节点参数"><span class="toc-number">1.1.6.</span> <span class="toc-text">6.组装masters : slaves 节点参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.2.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&text=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&is_video=false&description=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【docker】Docker快速构建Redis集群(cluster)&body=Check out this article: http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&title=【docker】Docker快速构建Redis集群(cluster)"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/05/19/【docker】Docker快速构建Redis集群(cluster)/&name=【docker】Docker快速构建Redis集群(cluster)&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
