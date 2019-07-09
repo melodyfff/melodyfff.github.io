@@ -7,16 +7,16 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="Spring Bean的一生 When you work directly in Java, you can do anything you like with your objects and do not always need to rely on the container lifecycle.  前言:   在Ioc容器启动后相应的Bean并没有立即实例化，此时Ioc容器仅仅拥有所有对象">
-<meta name="keywords" content="java">
+<meta name="keywords" content="spring">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【Java】Spring Bean的一生">
-<meta property="og:url" content="http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/index.html">
+<meta property="og:url" content="http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/index.html">
 <meta property="og:site_name" content="Melody">
 <meta property="og:description" content="Spring Bean的一生 When you work directly in Java, you can do anything you like with your objects and do not always need to rely on the container lifecycle.  前言:   在Ioc容器启动后相应的Bean并没有立即实例化，此时Ioc容器仅仅拥有所有对象">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2019/06/24/img/Spring-bean-life-cycle.png">
 <meta property="og:image" content="http://yoursite.com/2019/06/24/img/spring-lifecycles1.png">
-<meta property="og:updated_time" content="2019-06-24T15:54:01.965Z">
+<meta property="og:updated_time" content="2019-07-09T15:11:15.088Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【Java】Spring Bean的一生">
 <meta name="twitter:description" content="Spring Bean的一生 When you work directly in Java, you can do anything you like with your objects and do not always need to rely on the container lifecycle.  前言:   在Ioc容器启动后相应的Bean并没有立即实例化，此时Ioc容器仅仅拥有所有对象">
@@ -84,16 +84,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&text=【Java】Spring Bean的一生"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&is_video=false&description=【Java】Spring Bean的一生"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=【Java】Spring Bean的一生&body=Check out this article: http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&name=【Java】Spring Bean的一生&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&text=【Java】Spring Bean的一生"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&is_video=false&description=【Java】Spring Bean的一生"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】Spring Bean的一生&body=Check out this article: http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&name=【Java】Spring Bean的一生&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -128,7 +128,7 @@
       
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/java/">java</a>
+        <a class="tag-link" href="/tags/spring/">spring</a>
     </div>
 
 
@@ -196,16 +196,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&text=【Java】Spring Bean的一生"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&is_video=false&description=【Java】Spring Bean的一生"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=【Java】Spring Bean的一生&body=Check out this article: http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/06/24/【Java】Spring Bean的一生/&name=【Java】Spring Bean的一生&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&text=【Java】Spring Bean的一生"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&is_video=false&description=【Java】Spring Bean的一生"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】Spring Bean的一生&body=Check out this article: http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&title=【Java】Spring Bean的一生"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/06/24/【Spring】Spring Bean的一生/&name=【Java】Spring Bean的一生&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
