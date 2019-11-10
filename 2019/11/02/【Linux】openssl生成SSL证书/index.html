@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="openssl生成SSL证书基础知识https = http + ssl    密码体制 组成 加密 解密     公钥私钥 公钥+私钥+加密解密算法 公钥+加密算法 私钥+解密算法   对称加密 密匙+加密解密算法 密匙+加密算法 密匙+解密算法   非对称加密 加密匙+解密匙+加密解密算法 加密匙+加密算法 解密匙+解密算法   RSA 公钥+私钥+加密解密算法 公钥或私钥+加密算法 公钥或私">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux】openssl生成SSL证书">
+<meta property="og:url" content="http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="openssl生成SSL证书基础知识https = http + ssl    密码体制 组成 加密 解密     公钥私钥 公钥+私钥+加密解密算法 公钥+加密算法 私钥+解密算法   对称加密 密匙+加密解密算法 密匙+加密算法 密匙+解密算法   非对称加密 加密匙+解密匙+加密解密算法 加密匙+加密算法 解密匙+解密算法   RSA 公钥+私钥+加密解密算法 公钥或私钥+加密算法 公钥或私">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-10T09:58:19.798Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Linux】openssl生成SSL证书">
+<meta name="twitter:description" content="openssl生成SSL证书基础知识https = http + ssl    密码体制 组成 加密 解密     公钥私钥 公钥+私钥+加密解密算法 公钥+加密算法 私钥+解密算法   对称加密 密匙+加密解密算法 密匙+加密算法 密匙+解密算法   非对称加密 加密匙+解密匙+加密解密算法 加密匙+加密算法 解密匙+解密算法   RSA 公钥+私钥+加密解密算法 公钥或私钥+加密算法 公钥或私">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【Linux】openssl生成SSL证书</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/11/01/【Java】JUC - Monitor监控ThreadPoolExecutor/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&text=【Linux】openssl生成SSL证书"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&is_video=false&description=【Linux】openssl生成SSL证书"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】openssl生成SSL证书&body=Check out this article: http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&name=【Linux】openssl生成SSL证书&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#openssl生成SSL证书"><span class="toc-number">1.</span> <span class="toc-text">openssl生成SSL证书</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础知识"><span class="toc-number">1.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#openssl生成SSL证书-1"><span class="toc-number">1.2.</span> <span class="toc-text">openssl生成SSL证书</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#生成自定义CA自签名证书-根证书"><span class="toc-number">1.2.1.</span> <span class="toc-text">生成自定义CA自签名证书(根证书)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务端证书签发"><span class="toc-number">1.2.2.</span> <span class="toc-text">服务端证书签发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#根证书安装"><span class="toc-number">1.3.</span> <span class="toc-text">根证书安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#windows"><span class="toc-number">1.3.1.</span> <span class="toc-text">windows</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ubuntu"><span class="toc-number">1.3.2.</span> <span class="toc-text">ubuntu</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#centos"><span class="toc-number">1.3.3.</span> <span class="toc-text">centos</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-中导入根证书"><span class="toc-number">1.3.4.</span> <span class="toc-text">Java 中导入根证书</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Linux】openssl生成SSL证书
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Melody</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-11-01T16:00:00.000Z" itemprop="datePublished">2019-11-02</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Linux/">Linux</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="openssl生成SSL证书"><a href="#openssl生成SSL证书" class="headerlink" title="openssl生成SSL证书"></a>openssl生成SSL证书</h1><h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p><code>https = http + ssl</code></p>
+<table>
+<thead>
+<tr>
+<th>密码体制</th>
+<th>组成</th>
+<th>加密</th>
+<th>解密</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>公钥私钥</td>
+<td>公钥+私钥+加密解密算法</td>
+<td>公钥+加密算法</td>
+<td>私钥+解密算法</td>
+</tr>
+<tr>
+<td>对称加密</td>
+<td>密匙+加密解密算法</td>
+<td>密匙+加密算法</td>
+<td>密匙+解密算法</td>
+</tr>
+<tr>
+<td>非对称加密</td>
+<td>加密匙+解密匙+加密解密算法</td>
+<td>加密匙+加密算法</td>
+<td>解密匙+解密算法</td>
+</tr>
+<tr>
+<td>RSA</td>
+<td>公钥+私钥+加密解密算法</td>
+<td>公钥或私钥+加密算法</td>
+<td>公钥或私钥+解密算法</td>
+</tr>
+<tr>
+<td>签名加加密</td>
+<td>签名hash+内容+加密解密算法</td>
+<td>签名hash+内容+加密算法</td>
+<td>签名hash+内容+解密算法</td>
+</tr>
+</tbody>
+</table>
+<h2 id="openssl生成SSL证书-1"><a href="#openssl生成SSL证书-1" class="headerlink" title="openssl生成SSL证书"></a>openssl生成SSL证书</h2><h3 id="生成自定义CA自签名证书-根证书"><a href="#生成自定义CA自签名证书-根证书" class="headerlink" title="生成自定义CA自签名证书(根证书)"></a>生成自定义CA自签名证书(根证书)</h3><p><code>opesnssl</code>全局配置一般在<code>/usr/lib/ssl/openssl.cnf</code></p>
+<p>通常生成方法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -des3 -out ca.key 1024</div><div class="line">openssl rsa -<span class="keyword">in</span> ca.key -out ca.key</div><div class="line"><span class="comment"># 生成10年有效期的CA证书, 可以加-config /etc/ssl/openssl.cnf 指定配置</span></div><div class="line">openssl req -new -x509 -days 3650 -key ca.key -out ca.crt </div><div class="line"></div><div class="line"><span class="comment"># 合并证书</span></div><div class="line">cat ca.key ca.crt &gt; ca.pem</div></pre></td></tr></table></figure></p>
+<p>快速生成方法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.com.key 2048</div><div class="line">openssl req -new -x509 -nodes -days 3650 -key ca.com.key -out ca.com.crt -subj /C=CN/ST=Chongqing/L=Chongqing/O=org/OU=OrgUnit/CN=ca.com/emailAddress=<span class="built_in">test</span>@test.com</div></pre></td></tr></table></figure></p>
+<h3 id="服务端证书签发"><a href="#服务端证书签发" class="headerlink" title="服务端证书签发"></a>服务端证书签发</h3><p>通常方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 生成服务器端的私钥(key文件)</span></div><div class="line">openssl genrsa -des3 -out server.key 1024</div><div class="line"><span class="comment"># 去除口令</span></div><div class="line">openssl rsa -<span class="keyword">in</span> server.key -out server.key</div><div class="line"></div><div class="line"><span class="comment"># 生成服务器端证书签名请求文件(csr文件) 生成的csr文件交给CA签名后形成服务端自己的证书</span></div><div class="line">openssl req -new -key server.key -out server.csr</div><div class="line"></div><div class="line"><span class="comment"># 签发证书</span></div><div class="line">openssl x509 -req -days 3650 -<span class="keyword">in</span> server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt</div><div class="line"></div><div class="line">openssl x509 -req -days 3650 -<span class="keyword">in</span> server.csr -CA ca.pem -CAkey ca.pem -CAcreateserial -out server.crt</div></pre></td></tr></table></figure>
+<p>快速方法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 生成 *.x.com 泛域名证书 (set_serial: 101)</span></div><div class="line">openssl req -newkey rsa:2048 -days 3650 -nodes -keyout x.com.key -out x.com.csr -subj /C=CN/ST=Chongqing/L=Chongqing/O=org/OU=OrgUnit/CN=*.x.com/emailAddress=<span class="built_in">test</span>@test.com</div><div class="line"></div><div class="line">cat &lt;&lt; EOF &gt; v3.ext</div><div class="line">authorityKeyIdentifier=keyid,issuer</div><div class="line">basicConstraints=CA:FALSE</div><div class="line">keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment</div><div class="line">subjectAltName = @alt_names</div><div class="line">[alt_names]</div><div class="line">DNS.1 = *.x.com</div><div class="line">EOF</div><div class="line"></div><div class="line">openssl x509 -req -<span class="keyword">in</span> x.com.csr -days 3650 -CA ca.com.crt -CAkey ca.com.key -set_serial 101 -out x.com.crt -extfile v3.ext</div></pre></td></tr></table></figure></p>
+<h2 id="根证书安装"><a href="#根证书安装" class="headerlink" title="根证书安装"></a>根证书安装</h2><h3 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h3><p>直接双击<code>*.crt</code>文件安装,注意在选择证书存储的时候选择 <code>受信任的根证书颁发机构</code></p>
+<h3 id="ubuntu"><a href="#ubuntu" class="headerlink" title="ubuntu"></a>ubuntu</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo su -</div><div class="line"><span class="comment"># curl http://172.2.2.2/ca.com.crt -o /usr/local/share/ca-certificates/ca.com.crt</span></div><div class="line">mv ca.com.crt /usr/<span class="built_in">local</span>/share/ca-certificates/ca.com.crt</div><div class="line">update-ca-certificates</div></pre></td></tr></table></figure>
+<h3 id="centos"><a href="#centos" class="headerlink" title="centos"></a>centos</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># curl http://172.2.2.2/ca.com.crt -o /etc/pki/ca-trust/source/anchors/ca.com.crt</span></div><div class="line">mv ca.com.crt /etc/pki/ca-trust/<span class="built_in">source</span>/anchors/ca.com.crt</div><div class="line">update-ca-trust</div></pre></td></tr></table></figure>
+<h3 id="Java-中导入根证书"><a href="#Java-中导入根证书" class="headerlink" title="Java 中导入根证书"></a>Java 中导入根证书</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> <span class="variable">$JAVA_HOME</span></div><div class="line">./jre/bin/keytool -keystore jre/lib/security/cacerts -importcert -<span class="built_in">alias</span> ca.com -file  ca.com.crt</div><div class="line"><span class="comment">#Java 证书管理keystore默认密码为 changeit</span></div></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#openssl生成SSL证书"><span class="toc-number">1.</span> <span class="toc-text">openssl生成SSL证书</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础知识"><span class="toc-number">1.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#openssl生成SSL证书-1"><span class="toc-number">1.2.</span> <span class="toc-text">openssl生成SSL证书</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#生成自定义CA自签名证书-根证书"><span class="toc-number">1.2.1.</span> <span class="toc-text">生成自定义CA自签名证书(根证书)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务端证书签发"><span class="toc-number">1.2.2.</span> <span class="toc-text">服务端证书签发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#根证书安装"><span class="toc-number">1.3.</span> <span class="toc-text">根证书安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#windows"><span class="toc-number">1.3.1.</span> <span class="toc-text">windows</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ubuntu"><span class="toc-number">1.3.2.</span> <span class="toc-text">ubuntu</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#centos"><span class="toc-number">1.3.3.</span> <span class="toc-text">centos</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-中导入根证书"><span class="toc-number">1.3.4.</span> <span class="toc-text">Java 中导入根证书</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&text=【Linux】openssl生成SSL证书"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&is_video=false&description=【Linux】openssl生成SSL证书"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】openssl生成SSL证书&body=Check out this article: http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&title=【Linux】openssl生成SSL证书"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/11/02/【Linux】openssl生成SSL证书/&name=【Linux】openssl生成SSL证书&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
