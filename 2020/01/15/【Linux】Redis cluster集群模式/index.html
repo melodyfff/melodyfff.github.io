@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Redis cluster集群模式 Redis Cluster设计的核心思想：数据拆分、去中心化  Redis cluster基础概念Redis群集TCP端口每个Redis群集节点都需要打开两个TCP连接。用于服务客户端的常规Redis TCP端口，例如6379，再加上将数据端口加10000所获得的端口，因此在示例中为16379。 第二个高端口用于群集总线，即使用二进制协议的节点到节点通信通道。节">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux】Redis cluster集群模式">
+<meta property="og:url" content="http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Redis cluster集群模式 Redis Cluster设计的核心思想：数据拆分、去中心化  Redis cluster基础概念Redis群集TCP端口每个Redis群集节点都需要打开两个TCP连接。用于服务客户端的常规Redis TCP端口，例如6379，再加上将数据端口加10000所获得的端口，因此在示例中为16379。 第二个高端口用于群集总线，即使用二进制协议的节点到节点通信通道。节">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-01-29T06:06:56.705Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Linux】Redis cluster集群模式">
+<meta name="twitter:description" content="Redis cluster集群模式 Redis Cluster设计的核心思想：数据拆分、去中心化  Redis cluster基础概念Redis群集TCP端口每个Redis群集节点都需要打开两个TCP连接。用于服务客户端的常规Redis TCP端口，例如6379，再加上将数据端口加10000所获得的端口，因此在示例中为16379。 第二个高端口用于群集总线，即使用二进制协议的节点到节点通信通道。节">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【Linux】Redis cluster集群模式</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/01/16/【Spring】Spring 通配符加载Resource文件/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="/2020/01/14/【Linux】Redis Sentinel哨兵模式/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&text=【Linux】Redis cluster集群模式"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&is_video=false&description=【Linux】Redis cluster集群模式"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】Redis cluster集群模式&body=Check out this article: http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&name=【Linux】Redis cluster集群模式&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-cluster集群模式"><span class="toc-number">1.</span> <span class="toc-text">Redis cluster集群模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-cluster基础概念"><span class="toc-number">1.1.</span> <span class="toc-text">Redis cluster基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis群集TCP端口"><span class="toc-number">1.1.1.</span> <span class="toc-text">Redis群集TCP端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-Cluster-data-sharding"><span class="toc-number">1.1.2.</span> <span class="toc-text">Redis Cluster data sharding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-Cluster主从模型"><span class="toc-number">1.1.3.</span> <span class="toc-text">Redis Cluster主从模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis集群一致性保证"><span class="toc-number">1.1.4.</span> <span class="toc-text">Redis集群一致性保证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-cluster和Redis-Sentinel的区别"><span class="toc-number">1.1.5.</span> <span class="toc-text">Redis cluster和Redis Sentinel的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dokcer部署"><span class="toc-number">1.2.</span> <span class="toc-text">Dokcer部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">1.2.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-number">1.2.2.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.3.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Linux】Redis cluster集群模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Melody</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-01-14T16:00:00.000Z" itemprop="datePublished">2020-01-15</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Linux/">Linux</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Redis-cluster集群模式"><a href="#Redis-cluster集群模式" class="headerlink" title="Redis cluster集群模式"></a>Redis cluster集群模式</h1><blockquote>
+<p>Redis Cluster设计的核心思想：数据拆分、去中心化</p>
+</blockquote>
+<h2 id="Redis-cluster基础概念"><a href="#Redis-cluster基础概念" class="headerlink" title="Redis cluster基础概念"></a>Redis cluster基础概念</h2><h3 id="Redis群集TCP端口"><a href="#Redis群集TCP端口" class="headerlink" title="Redis群集TCP端口"></a>Redis群集TCP端口</h3><p>每个Redis群集节点都需要打开两个TCP连接。用于服务客户端的常规Redis TCP端口，例如6379，再加上将数据端口加10000所获得的端口，因此在示例中为16379。</p>
+<p>第二个高端口用于群集总线，即使用二进制协议的节点到节点通信通道。节点将群集总线用于故障检测，配置更新，故障转移授权等。</p>
+<h3 id="Redis-Cluster-data-sharding"><a href="#Redis-Cluster-data-sharding" class="headerlink" title="Redis Cluster data sharding"></a>Redis Cluster data sharding</h3><p>Redis Cluster将所有数据按照hash slot算法分布到16384[0-16383]个哈希槽上面，哈希槽分布在各节点上，各节点维护自己的哈希槽。</p>
+<p>hash slot算法如下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">HASH_SLOT = CRC16(key) mod 16384</div></pre></td></tr></table></figure></p>
+<h3 id="Redis-Cluster主从模型"><a href="#Redis-Cluster主从模型" class="headerlink" title="Redis Cluster主从模型"></a>Redis Cluster主从模型</h3><p>为了在主节点的子集出现故障或无法与大多数节点通信时保持可用，Redis Cluster使用主从模型，其中每个哈希槽具有从1（主节点本身）到N个副本（N个） -1个其他从属节点）。</p>
+<p>在具有节点A，B，C的示例集群中，如果节点B失败，则集群将无法继续，因为我们不再有办法为5501-11000范围内的哈希槽提供服务。</p>
+<p>但是，在创建集群（或稍后）时，我们向每个主节点添加一个从属节点，以便最终集群由作为主节点的A，B，C和作为从属节点的A1，B1，C1组成，如果节点B发生故障，系统将能够继续。</p>
+<p>节点B1复制B，并且B发生故障，群集会将节点B1提升为新的主节点，并将继续正常运行。</p>
+<p>但是请注意，如果节点B和B1同时失败，则Redis Cluster无法继续运行。</p>
+<h3 id="Redis集群一致性保证"><a href="#Redis集群一致性保证" class="headerlink" title="Redis集群一致性保证"></a>Redis集群一致性保证</h3><p>Redis Cluster无法保证强一致性。实际上，这意味着在某些情况下，Redis Cluster可能会丢失系统认可给客户端的写入。</p>
+<p>Redis Cluster可能丢失写入的第一个原因是因为它使用异步复制。这意味着在写入期间会发生以下情况：</p>
+<ul>
+<li>您的客户写信给主B。</li>
+<li>主B向您的客户答复OK。</li>
+<li>主机B将写操作传播到其从机B1，B2和B3。</li>
+</ul>
+<p>如您所见，B在回复客户端之前不会等待B1，B2，B3的确认，因为这会对Redis造成延迟，因此，如果您的客户端写了一些东西，B会确认写，但是在能够将写操作发送到其从属服务器之前崩溃，因此一个从属服务器（未接收到写操作）可以升级为主服务器，从而永远丢失该写操作。</p>
+<h3 id="Redis-cluster和Redis-Sentinel的区别"><a href="#Redis-cluster和Redis-Sentinel的区别" class="headerlink" title="Redis cluster和Redis Sentinel的区别"></a>Redis cluster和Redis Sentinel的区别</h3><p><code>Redis cluster:</code></p>
+<ul>
+<li>是为了解决单机Redis容量有限的问题，将数据按一定的规则分配到多台机器,内存/QPS不受限于单机，可受益于分布式集群高扩展性。</li>
+<li>cluster做了sharding，一个key通过hash算法分配到不同的槽(slot)上，所有不同节点存储的数据是不一样的。</li>
+<li>集群模式提高并发量</li>
+</ul>
+<p><code>Redis Sentinel:</code></p>
+<ul>
+<li>高可用性(HA)解决方案</li>
+</ul>
+<h2 id="Dokcer部署"><a href="#Dokcer部署" class="headerlink" title="Dokcer部署"></a>Dokcer部署</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>创建工作目录,后面所有操作均在此目录下完成<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir cluster-test &amp;&amp; <span class="built_in">cd</span> cluster-test</div></pre></td></tr></table></figure></p>
+<p>准备镜像和网络<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 镜像</span></div><div class="line">docker pull redis:4.0.14</div><div class="line">docker pull ruby</div><div class="line"></div><div class="line"><span class="comment"># 网络</span></div><div class="line">docker network create redis-net</div><div class="line"><span class="comment"># 查看虚拟网卡网关ip</span></div><div class="line">docker network inspect redis-net | grep <span class="string">"Gateway"</span> | grep --color=auto -P <span class="string">'(\d&#123;1,3&#125;.)&#123;3&#125;\d&#123;1,3&#125;'</span> -o</div></pre></td></tr></table></figure></p>
+<p><code>redis-trib</code>帮助镜像准备<br><strong>Dockerfile</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">FROM ruby</div><div class="line">WORKDIR /redis</div><div class="line">RUN gem install redis</div><div class="line"><span class="comment"># RUN wget http://download.redis.io/redis-stable/src/redis-trib.rb -P /redis</span></div><div class="line"><span class="comment"># 这里需要注意版本问题,5.x新版本不推荐使用</span></div><div class="line">RUN wget https://raw.githubusercontent.com/antirez/redis/4.0/src/redis-trib.rb -P /redis</div></pre></td></tr></table></figure></p>
+<p>初始化脚本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> GATE_IP=$(docker network inspect redis-net | grep <span class="string">"Gateway"</span> | grep --color=auto -P <span class="string">'(\d&#123;1,3&#125;.)&#123;3&#125;\d&#123;1,3&#125;'</span> -o)</div><div class="line"></div><div class="line">cat &gt; redis.tmpl &lt;&lt; EOF</div><div class="line"><span class="comment">##节点端口</span></div><div class="line">port \<span class="variable">$&#123;PORT&#125;</span></div><div class="line"></div><div class="line"><span class="comment">##cluster集群模式 </span></div><div class="line">cluster-enabled yes</div><div class="line"><span class="comment">##集群配置名</span></div><div class="line">cluster-config-file nodes.conf</div><div class="line"><span class="comment">##超时时间</span></div><div class="line">cluster-node-timeout 5000</div><div class="line"><span class="comment">##实际为各节点网卡分配ip  先用上网关ip代替</span></div><div class="line">cluster-announce-ip <span class="variable">$GATE_IP</span></div><div class="line"><span class="comment">##节点映射端口</span></div><div class="line">cluster-announce-port \<span class="variable">$&#123;PORT&#125;</span></div><div class="line"><span class="comment">##节点总线端</span></div><div class="line">cluster-announce-bus-port 1\<span class="variable">$&#123;PORT&#125;</span></div><div class="line"><span class="comment">##持久化模式</span></div><div class="line">appendonly yes</div><div class="line">EOF</div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Redis Cluster Cleaner."</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line"><span class="comment"># 清空之前创建的集群</span></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `seq 7000 7005`;<span class="keyword">do</span> docker rm -f redis-<span class="variable">$i</span>;<span class="keyword">done</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Redis Cluster Conf Init."</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line"><span class="keyword">for</span> port <span class="keyword">in</span> `seq 7000 7005`; <span class="keyword">do</span> \</div><div class="line">mkdir -p ./<span class="variable">$&#123;port&#125;</span> \</div><div class="line">&amp;&amp; mkdir -p ./<span class="variable">$&#123;port&#125;</span>/data \</div><div class="line">&amp;&amp; PORT=<span class="variable">$&#123;port&#125;</span> envsubst &lt; ./redis.tmpl &gt; ./<span class="variable">$&#123;port&#125;</span>/redis.conf; \</div><div class="line"><span class="keyword">done</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Redis Cluster Start."</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line"><span class="keyword">for</span> port <span class="keyword">in</span> `seq 7000 7005`; <span class="keyword">do</span> \</div><div class="line">docker run -d -ti -p <span class="variable">$&#123;port&#125;</span>:<span class="variable">$&#123;port&#125;</span> -p 1<span class="variable">$&#123;port&#125;</span>:1<span class="variable">$&#123;port&#125;</span> \</div><div class="line">-v <span class="variable">$PWD</span>/<span class="variable">$&#123;port&#125;</span>/redis.conf:/usr/<span class="built_in">local</span>/etc/redis/redis.conf \</div><div class="line">-v <span class="variable">$PWD</span>/<span class="variable">$&#123;port&#125;</span>/data:/data \</div><div class="line">--restart always --name redis-<span class="variable">$&#123;port&#125;</span> --net redis-net \</div><div class="line">--sysctl net.core.somaxconn=1024 redis:4.0.14 redis-server /usr/<span class="built_in">local</span>/etc/redis/redis.conf; \</div><div class="line"><span class="keyword">done</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Redis Cluster Conf Replace."</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line">matches=<span class="string">""</span></div><div class="line"><span class="keyword">for</span> port <span class="keyword">in</span> `seq 7000 7005`; <span class="keyword">do</span> \</div><div class="line">hello=$(docker inspect redis-<span class="variable">$port</span>|grep <span class="string">"IPAddress"</span>|grep --color=auto -P <span class="string">'(\d&#123;1,3&#125;.)&#123;3&#125;\d&#123;1,3&#125;'</span> -o) &amp;&amp;\</div><div class="line">sed -i <span class="string">"s/<span class="variable">$GATE_IP</span>/<span class="variable">$hello</span>/g"</span> <span class="variable">$&#123;port&#125;</span>/redis.conf &amp;&amp;\</div><div class="line">docker restart redis-<span class="variable">$&#123;port&#125;</span></div><div class="line"></div><div class="line">matches=<span class="variable">$matches</span><span class="string">" "</span><span class="variable">$hello</span><span class="string">":"</span><span class="variable">$port</span></div><div class="line"><span class="keyword">done</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="variable">$matches</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Redis Cluster Start Up."</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"======================================"</span></div><div class="line"><span class="comment"># docker run -it --rm --net redis-net redis:4.0.14  redis-cli --cluster create $matches --cluster-replicas 1</span></div><div class="line">docker run -it --rm --net redis-net redis-trib ruby redis-trib.rb create --replicas 1 <span class="variable">$matches</span></div></pre></td></tr></table></figure></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 这里一定要加-c启动集群模式连接</span></div><div class="line"><span class="variable">$redis</span>-cli -c -h 127.0.0.1 -p 7000</div><div class="line"></div><div class="line"><span class="comment"># 可以发现来回切换</span></div><div class="line">127.0.0.1:7000&gt; <span class="built_in">set</span> a a</div><div class="line">-&gt; Redirected to slot [15495] located at 172.18.0.4:7002</div><div class="line">OK</div><div class="line">172.18.0.4:7002&gt; <span class="built_in">set</span> bb bb</div><div class="line">-&gt; Redirected to slot [8620] located at 172.18.0.3:7001</div><div class="line">OK</div><div class="line">172.18.0.3:7001&gt; <span class="built_in">set</span> cc cc</div><div class="line">-&gt; Redirected to slot [700] located at 172.18.0.2:7000</div><div class="line">OK</div><div class="line">172.18.0.2:7000&gt;</div></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://redis.io/topics/cluster-tutorial" target="_blank" rel="external">Redis cluster tutorial</a></p>
+<p><a href="https://redis.io/topics/cluster-spec#keys-distribution-model" target="_blank" rel="external">Redis Cluster Specification</a></p>
+<p><a href="https://www.jianshu.com/p/8a2d810402a9" target="_blank" rel="external">【译】Redis集群规范 (Redis Cluster Specification)</a></p>
+<p><a href="http://download.redis.io/redis-stable/redis.conf" target="_blank" rel="external">redis.conf</a></p>
+<p><a href="https://youzhixueyuan.com/redis-high-availability.html" target="_blank" rel="external">Redis的高可用详解：Redis哨兵、复制、集群的设计原理，以及区别</a></p>
+<p><a href="https://www.jianshu.com/p/0232236688c1" target="_blank" rel="external">Redis Cluster 原理分析</a></p>
+<p><a href="https://my.oschina.net/dslcode/blog/1936656" target="_blank" rel="external">docker redis 集群（cluster）搭建</a></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-cluster集群模式"><span class="toc-number">1.</span> <span class="toc-text">Redis cluster集群模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-cluster基础概念"><span class="toc-number">1.1.</span> <span class="toc-text">Redis cluster基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis群集TCP端口"><span class="toc-number">1.1.1.</span> <span class="toc-text">Redis群集TCP端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-Cluster-data-sharding"><span class="toc-number">1.1.2.</span> <span class="toc-text">Redis Cluster data sharding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-Cluster主从模型"><span class="toc-number">1.1.3.</span> <span class="toc-text">Redis Cluster主从模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis集群一致性保证"><span class="toc-number">1.1.4.</span> <span class="toc-text">Redis集群一致性保证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-cluster和Redis-Sentinel的区别"><span class="toc-number">1.1.5.</span> <span class="toc-text">Redis cluster和Redis Sentinel的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dokcer部署"><span class="toc-number">1.2.</span> <span class="toc-text">Dokcer部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">1.2.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-number">1.2.2.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.3.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&text=【Linux】Redis cluster集群模式"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&is_video=false&description=【Linux】Redis cluster集群模式"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】Redis cluster集群模式&body=Check out this article: http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&title=【Linux】Redis cluster集群模式"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/01/15/【Linux】Redis cluster集群模式/&name=【Linux】Redis cluster集群模式&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+

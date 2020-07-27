@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Redis Sentinel 哨兵模式Redis Sentinel provides high availability for Redis.  监控: Sentinel会不断检查您的主实例master和副本实例slave是否按预期工作。 通知: Sentinel可以通过API通知系统管理员或其他计算机程序，其中一个受监视的Redis实例出了问题。 自动故障转移(failover): 如果主服务器">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux】Redis Sentinel哨兵模式">
+<meta property="og:url" content="http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Redis Sentinel 哨兵模式Redis Sentinel provides high availability for Redis.  监控: Sentinel会不断检查您的主实例master和副本实例slave是否按预期工作。 通知: Sentinel可以通过API通知系统管理员或其他计算机程序，其中一个受监视的Redis实例出了问题。 自动故障转移(failover): 如果主服务器">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-01-29T06:06:56.704Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Linux】Redis Sentinel哨兵模式">
+<meta name="twitter:description" content="Redis Sentinel 哨兵模式Redis Sentinel provides high availability for Redis.  监控: Sentinel会不断检查您的主实例master和副本实例slave是否按预期工作。 通知: Sentinel可以通过API通知系统管理员或其他计算机程序，其中一个受监视的Redis实例出了问题。 自动故障转移(failover): 如果主服务器">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>【Linux】Redis Sentinel哨兵模式</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/01/15/【Linux】Redis cluster集群模式/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="/2020/01/09/【Java】JUC - Condition/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&text=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&is_video=false&description=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】Redis Sentinel哨兵模式&body=Check out this article: http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&name=【Linux】Redis Sentinel哨兵模式&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-Sentinel-哨兵模式"><span class="toc-number">1.</span> <span class="toc-text">Redis Sentinel 哨兵模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#有关Sentinel的基本知识"><span class="toc-number">1.1.</span> <span class="toc-text">有关Sentinel的基本知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-Sentinel-为什么不推荐使用两台Sentinel"><span class="toc-number">1.1.1.</span> <span class="toc-text">Redis-Sentinel 为什么不推荐使用两台Sentinel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-哨兵主备切换的数据丢失问题"><span class="toc-number">1.1.2.</span> <span class="toc-text">Redis 哨兵主备切换的数据丢失问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#异步复制导致的数据丢失"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">异步复制导致的数据丢失</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#脑裂导致的数据丢失"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">脑裂导致的数据丢失</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据丢失问题解决"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">数据丢失问题解决</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sdown-和-odown-转换机制"><span class="toc-number">1.1.3.</span> <span class="toc-text">sdown 和 odown 转换机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#slave-gt-master-选举算法"><span class="toc-number">1.1.4.</span> <span class="toc-text">slave->master 选举算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#quorum-和-majority"><span class="toc-number">1.1.5.</span> <span class="toc-text">quorum 和 majority</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置Sentinel"><span class="toc-number">1.2.</span> <span class="toc-text">配置Sentinel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-Compose部署"><span class="toc-number">1.3.</span> <span class="toc-text">Docker Compose部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#压力测试"><span class="toc-number">1.4.</span> <span class="toc-text">压力测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Linux】Redis Sentinel哨兵模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Melody</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-01-13T16:00:00.000Z" itemprop="datePublished">2020-01-14</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Linux/">Linux</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Redis-Sentinel-哨兵模式"><a href="#Redis-Sentinel-哨兵模式" class="headerlink" title="Redis Sentinel 哨兵模式"></a>Redis Sentinel 哨兵模式</h1><p>Redis Sentinel provides high <code>availability</code> for Redis.</p>
+<ul>
+<li><strong>监控:</strong> Sentinel会不断检查您的主实例master和副本实例slave是否按预期工作。</li>
+<li><strong>通知:</strong> Sentinel可以通过API通知系统管理员或其他计算机程序，其中一个受监视的Redis实例出了问题。</li>
+<li><strong>自动故障转移(failover):</strong> 如果主服务器master未按预期工作，则Sentinel可以启动故障转移过程，在该过程中，将副本slave升级为主服务器，将其他附加副本重新配置为使用新的主服务器，并通知使用Redis服务器的应用程序连接时要使用的新地址。</li>
+<li><strong>配置提供程序:</strong> Sentinel充当客户端服务发现的授权来源：客户端连接到Sentinels，以询问负责给定服务的当前Redis主服务器的地址。如果发生故障转移，Sentinels将报告新地址。</li>
+</ul>
+<h2 id="有关Sentinel的基本知识"><a href="#有关Sentinel的基本知识" class="headerlink" title="有关Sentinel的基本知识"></a>有关Sentinel的基本知识</h2><ul>
+<li>一个健壮的部署至少需要三个Sentinel实例,并且这三个Sentinel应该部署在独立的服务器或虚拟机上。</li>
+<li>由于Redis使用异步复制，因此Sentinel + Redis分布式系统不能保证在故障期间保留已确认的写入(一致性问题)。</li>
+</ul>
+<h3 id="Redis-Sentinel-为什么不推荐使用两台Sentinel"><a href="#Redis-Sentinel-为什么不推荐使用两台Sentinel" class="headerlink" title="Redis-Sentinel 为什么不推荐使用两台Sentinel"></a>Redis-Sentinel 为什么不推荐使用两台Sentinel</h3><p>在 sentinel 启动故障转移（failover）时需要满足两个条件：</p>
+<ul>
+<li>确定 master 不可用的 sentinel 数量必须大于等于 仲裁 (quorum)</li>
+<li>大多数 (majority) 的 sentinel 之间必须可以通信（大多数的意思是两台就是2，三台也是2，四台是2,五台就是3）这里通信目的是选出谁来执行 failover 操作</li>
+</ul>
+<h3 id="Redis-哨兵主备切换的数据丢失问题"><a href="#Redis-哨兵主备切换的数据丢失问题" class="headerlink" title="Redis 哨兵主备切换的数据丢失问题"></a>Redis 哨兵主备切换的数据丢失问题</h3><p>主备切换的过程，可能会导致数据丢失:</p>
+<h4 id="异步复制导致的数据丢失"><a href="#异步复制导致的数据丢失" class="headerlink" title="异步复制导致的数据丢失"></a>异步复制导致的数据丢失</h4><p>因为 master-&gt;slave 的复制是异步的，所以可能有部分数据还没复制到 slave，master 就宕机了，此时这部分数据就丢失了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">                                         +-------------+</div><div class="line">                                         |             |</div><div class="line">                                         |    Master   |</div><div class="line">                                         |             |</div><div class="line">                                         +-----+-------+</div><div class="line">                                               ^</div><div class="line">                                               |</div><div class="line">                                               | elect to master</div><div class="line">                                               |</div><div class="line">+----------------+                 +-----------+-----+</div><div class="line">|                |                 |                 |</div><div class="line">|      Master    +-----------------&gt;       Slave     |</div><div class="line">|                |                 |                 |</div><div class="line">+--------+-------+                 +----------+------+</div><div class="line">         |                                    ^</div><div class="line">         |                                    |</div><div class="line">         |                                    |</div><div class="line">         +                                    |</div><div class="line">Data prepare copy,                      +-----+</div><div class="line">master down                             |</div><div class="line">                                        |</div><div class="line">                            +-----------+------------+</div><div class="line">                            |                        |</div><div class="line">                            |        Sentinels       |</div><div class="line">                            |                        |</div><div class="line">                            +------------------------+</div></pre></td></tr></table></figure></p>
+<h4 id="脑裂导致的数据丢失"><a href="#脑裂导致的数据丢失" class="headerlink" title="脑裂导致的数据丢失"></a>脑裂导致的数据丢失</h4><p>脑裂，也就是说，某个 master 所在机器突然脱离了正常的网络，跟其他 slave 机器不能连接，但是实际上 master 还运行着。此时哨兵可能就会认为 master 宕机了，然后开启选举，将其他 slave 切换成了 master。这个时候，集群里就会有两个 master ，也就是所谓的脑裂。</p>
+<p>此时虽然某个 slave 被切换成了 master，但是可能 client 还没来得及切换到新的 master，还继续向旧 master 写数据。因此旧 master 再次恢复的时候，会被作为一个 slave 挂到新的 master 上去，自己的数据会清空，重新从新的 master 复制数据。而新的 master 并没有后来 client 写入的数据，因此，这部分数据也就丢失了。</p>
+<h4 id="数据丢失问题解决"><a href="#数据丢失问题解决" class="headerlink" title="数据丢失问题解决"></a>数据丢失问题解决</h4><p>对<code>redis.conf</code>进行如下配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">min-slaves-to-write 1</div><div class="line">min-slaves-max-lag 10</div></pre></td></tr></table></figure></p>
+<p>表示，要求至少有 1 个 slave，数据复制和同步的延迟不能超过 10 秒。</p>
+<p>如果说一旦所有的 slave，数据复制和同步的延迟都超过了 10 秒钟，那么这个时候，master 就不会再接收任何请求了。</p>
+<p>如果一个 master 出现了脑裂，跟其他 slave 丢了连接，那么上面两个配置可以确保说，如果不能继续给指定数量的 slave 发送数据，而且 slave 超过 10 秒没有给自己 ack 消息，那么就直接拒绝客户端的写请求。因此在脑裂场景下，最多就丢失 10 秒的数据。</p>
+<h3 id="sdown-和-odown-转换机制"><a href="#sdown-和-odown-转换机制" class="headerlink" title="sdown 和 odown 转换机制"></a>sdown 和 odown 转换机制</h3><ul>
+<li>sdown 是主观宕机，就一个哨兵如果自己觉得一个 master 宕机了，那么就是主观宕机</li>
+<li>odown 是客观宕机，如果 quorum 数量的哨兵都觉得一个 master 宕机了，那么就是客观宕机</li>
+</ul>
+<h3 id="slave-gt-master-选举算法"><a href="#slave-gt-master-选举算法" class="headerlink" title="slave-&gt;master 选举算法"></a>slave-&gt;master 选举算法</h3><p>如果一个 master 被认为 odown 了，而且 majority 数量的哨兵都允许主备切换，那么某个哨兵就会执行主备切换操作，此时首先要选举一个 slave 来，会考虑 slave 的一些信息：</p>
+<ul>
+<li>跟 master 断开连接的时长</li>
+<li>slave 优先级</li>
+<li>复制 offset</li>
+<li>run id</li>
+</ul>
+<p>如果一个 slave 跟 master 断开连接的时间已经超过了 down-after-milliseconds 的 10 倍，外加 master 宕机的时长，那么 slave 就被认为不适合选举为 master。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(down-after-milliseconds * 10) + milliseconds_since_master_is_in_SDOWN_state</div></pre></td></tr></table></figure></p>
+<p>接下来会对 slave 进行排序：</p>
+<ul>
+<li>按照 slave 优先级进行排序，slave priority 越低，优先级就越高。</li>
+<li>如果 slave priority 相同，那么看 replica offset，哪个 slave 复制了越多的数据，offset 越靠后，优先级就越高。</li>
+<li>如果上面两个条件都相同，那么选择一个 run id 比较小的那个 slave。</li>
+</ul>
+<h3 id="quorum-和-majority"><a href="#quorum-和-majority" class="headerlink" title="quorum 和 majority"></a>quorum 和 majority</h3><p>每次一个哨兵要做主备切换，首先需要 quorum 数量的哨兵认为 odown，然后选举出一个哨兵来做切换，这个哨兵还需要得到 majority 哨兵的授权，才能正式执行切换。</p>
+<p>如果 quorum &lt; majority，比如 5 个哨兵，majority 就是 3，quorum 设置为 2，那么就 3 个哨兵授权就可以执行切换。</p>
+<p>但是如果 quorum &gt;= majority，那么必须 quorum 数量的哨兵都授权，比如 5 个哨兵，quorum 是 5，那么必须 5 个哨兵都同意授权，才能执行切换。</p>
+<h2 id="配置Sentinel"><a href="#配置Sentinel" class="headerlink" title="配置Sentinel"></a>配置Sentinel</h2><p>Sentinels默认情况下监听TCP连接端口号为26379</p>
+<p><strong>默认启动方式</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 以下两种方式相同</span></div><div class="line"><span class="comment"># 在运行Sentinel时必须使用配置文件，因为系统将使用此文件来保存当前状态，以便在重启时重新加载。如果未提供配置文件或配置文件路径不可写，Sentinel只会拒绝启动。</span></div><div class="line">redis-sentinel /path/to/sentinel.conf</div><div class="line">redis-server /path/to/sentinel.conf --sentinel</div></pre></td></tr></table></figure></p>
+<p><strong>官方典型最小配置</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 告诉Redis监视一个名为 mymaster的主服务器</span></div><div class="line"><span class="comment"># 服务器地址为127.0.0.1 端口为 6379 仲裁quorum为2</span></div><div class="line">sentinel monitor mymaster 127.0.0.1 6379 2</div><div class="line"></div><div class="line"><span class="comment"># master被认为s_down的时间,单位毫秒 默认30秒</span></div><div class="line">sentinel down-after-milliseconds mymaster 60000</div><div class="line"></div><div class="line"><span class="comment"># 指定故障转移超时（以毫秒为单位）,默认3分钟</span></div><div class="line"><span class="comment"># 指定当故障发生的时候，进行恢复的超时时间，当failover开始后，在此时间内仍然没有触发任何failover操作，当前sentinel  将会认为此次failoer失败</span></div><div class="line">sentinel failover-timeout mymaster 180000</div><div class="line"></div><div class="line"><span class="comment"># 在故障转移期间，多少个副本节点进行数据同步</span></div><div class="line">sentinel parallel-syncs mymaster 1</div></pre></td></tr></table></figure></p>
+<h2 id="Docker-Compose部署"><a href="#Docker-Compose部署" class="headerlink" title="Docker Compose部署"></a>Docker Compose部署</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/AliyunContainerService/redis-cluster</div><div class="line"><span class="built_in">cd</span> redis-cluster</div></pre></td></tr></table></figure>
+<p>目录结构为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── docker-compose.yml</div><div class="line">├── LICENSE</div><div class="line">├── README.md</div><div class="line">├── sentinel</div><div class="line">│   ├── Dockerfile</div><div class="line">│   ├── sentinel.conf</div><div class="line">│   └── sentinel-entrypoint.sh</div><div class="line">└── test.sh</div></pre></td></tr></table></figure></p>
+<p>修改<code>sentinel</code>目录下<code>Dockerfile</code>中redis的版本号,并构建镜像<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 我使用的是redis-3.2.8,为方便使用,后续镜像命名为redis:3</span></div><div class="line">docker build -t redis:3 .</div></pre></td></tr></table></figure></p>
+<p>添加到镜像中的<code>sentinel.conf</code>配置如下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># redis-master为docker网络中的--link别名</span></div><div class="line">sentinel monitor mymaster redis-master 6379 2</div><div class="line">sentinel down-after-milliseconds mymaster 5000</div><div class="line">sentinel parallel-syncs mymaster 1</div><div class="line">sentinel failover-timeout mymaster 5000</div></pre></td></tr></table></figure></p>
+<p><code>docker-compose.yml</code>中的配置为如下:<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="attr">master:</span></div><div class="line"><span class="attr">  image:</span> <span class="attr">redis:3.2.8</span></div><div class="line"><span class="attr">slave:</span></div><div class="line"><span class="attr">  image:</span> <span class="attr">redis:3.2.8</span></div><div class="line"><span class="attr">  command:</span> <span class="string">redis-server</span> <span class="bullet">--slaveof</span> <span class="string">redis-master</span> <span class="number">6379</span></div><div class="line"><span class="attr">  links:</span></div><div class="line">    <span class="comment"># master别名redis-master</span></div><div class="line"><span class="attr">    - master:</span><span class="string">redis-master</span></div><div class="line"><span class="attr">sentinel:</span></div><div class="line">  <span class="comment"># 这里指定构建镜像地址</span></div><div class="line"><span class="attr">  build:</span> <span class="string">sentinel</span></div><div class="line"><span class="attr">  environment:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">SENTINEL_DOWN_AFTER=5000</span></div><div class="line"><span class="bullet">    -</span> <span class="string">SENTINEL_FAILOVER=5000</span>    </div><div class="line"><span class="attr">  links:</span></div><div class="line"><span class="attr">    - master:</span><span class="string">redis-master</span></div><div class="line"><span class="bullet">    -</span> <span class="string">slave</span></div></pre></td></tr></table></figure></p>
+<p>在模板中定义了下面一系列服务</p>
+<ul>
+<li>master: Redis master</li>
+<li>slave: Redis slave</li>
+<li>sentinel: Redis Sentinel</li>
+</ul>
+<p>启动<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 这里会自动去构建sentinel文件夹下的镜像</span></div><div class="line"><span class="comment"># 也可以先docker-compose build</span></div><div class="line">docker-compose up -d</div></pre></td></tr></table></figure></p>
+<p>查看启动情况<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$docker</span>-compose ps</div><div class="line"></div><div class="line">          Name                        Command               State          Ports       </div><div class="line">---------------------------------------------------------------------------------------</div><div class="line">redis-cluster_master_1     docker-entrypoint.sh redis ...   Up      6379/tcp           </div><div class="line">redis-cluster_sentinel_1   sentinel-entrypoint.sh           Up      26379/tcp, 6379/tcp</div><div class="line">redis-cluster_slave_1      docker-entrypoint.sh redis ...   Up      6379/tcp</div></pre></td></tr></table></figure></p>
+<p>伸缩sentinel和slave实例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker-compose scale sentinel=3</div><div class="line">docker-compose scale slave=2</div></pre></td></tr></table></figure></p>
+<p>再次查看集群状态<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$docker</span>-compose ps</div><div class="line"></div><div class="line">         Name                        Command               State          Ports       </div><div class="line">---------------------------------------------------------------------------------------</div><div class="line">redis-cluster_master_1     docker-entrypoint.sh redis ...   Up      6379/tcp           </div><div class="line">redis-cluster_sentinel_1   sentinel-entrypoint.sh           Up      26379/tcp, 6379/tcp</div><div class="line">redis-cluster_sentinel_2   sentinel-entrypoint.sh           Up      26379/tcp, 6379/tcp</div><div class="line">redis-cluster_sentinel_3   sentinel-entrypoint.sh           Up      26379/tcp, 6379/tcp</div><div class="line">redis-cluster_slave_1      docker-entrypoint.sh redis ...   Up      6379/tcp           </div><div class="line">redis-cluster_slave_2      docker-entrypoint.sh redis ...   Up      6379/tcp</div></pre></td></tr></table></figure></p>
+<p>执行测试脚本<code>./test.sh</code></p>
+<p>这个测试脚本实际上利用 docker pause 命令将 Redis master容器暂停，sentinel会发现这个故障并将master切换到其他一个备用的slave上面。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">Redis master: 172.172.172.2</div><div class="line">Redis Slave: 172.172.172.3</div><div class="line">------------------------------------------------</div><div class="line">Initial status of sentinel</div><div class="line">------------------------------------------------</div><div class="line"><span class="comment"># Sentinel</span></div><div class="line">sentinel_masters:1</div><div class="line">sentinel_tilt:0</div><div class="line">sentinel_running_scripts:0</div><div class="line">sentinel_scripts_queue_length:0</div><div class="line">sentinel_simulate_failure_flags:0</div><div class="line">master0:name=mymaster,status=ok,address=172.172.172.2:6379,slaves=2,sentinels=3</div><div class="line">Current master is</div><div class="line">172.172.172.2</div><div class="line">6379</div><div class="line">------------------------------------------------</div><div class="line">Stop redis master</div><div class="line">redis-cluster_master_1</div><div class="line">Wait <span class="keyword">for</span> 10 seconds</div><div class="line">Current infomation of sentinel</div><div class="line"><span class="comment"># Sentinel</span></div><div class="line">sentinel_masters:1</div><div class="line">sentinel_tilt:0</div><div class="line">sentinel_running_scripts:0</div><div class="line">sentinel_scripts_queue_length:0</div><div class="line">sentinel_simulate_failure_flags:0</div><div class="line">master0:name=mymaster,status=ok,address=172.172.172.3:6379,slaves=2,sentinels=3</div><div class="line">Current master is</div><div class="line">172.172.172.3</div><div class="line">6379</div><div class="line">------------------------------------------------</div><div class="line">Restart Redis master</div><div class="line">redis-cluster_master_1</div><div class="line">Current infomation of sentinel</div><div class="line"><span class="comment"># Sentinel</span></div><div class="line">sentinel_masters:1</div><div class="line">sentinel_tilt:0</div><div class="line">sentinel_running_scripts:0</div><div class="line">sentinel_scripts_queue_length:0</div><div class="line">sentinel_simulate_failure_flags:0</div><div class="line">master0:name=mymaster,status=ok,address=172.172.172.3:6379,slaves=2,sentinels=3</div><div class="line">Current master is</div><div class="line">172.172.172.3</div><div class="line">6379</div></pre></td></tr></table></figure>
+<p>停止与清理<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker-compose stop</div><div class="line">docker-compose rm</div></pre></td></tr></table></figure></p>
+<h2 id="压力测试"><a href="#压力测试" class="headerlink" title="压力测试"></a>压力测试</h2><p>获取源码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">wget -c http://download.redis.io/releases/redis-4.0.14.tar.gz</div><div class="line">tar -zxvf redis-4.0.14.tar.gz &amp;&amp; <span class="built_in">cd</span> redis-4.0.14</div><div class="line"><span class="comment"># make获取相关工具</span></div><div class="line">make</div></pre></td></tr></table></figure></p>
+<p>进入<code>src</code>目录<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">redis-benchmark -t <span class="built_in">set</span>,get -d 10240 -n 100000 -c 1000</div></pre></td></tr></table></figure></p>
+<p>上述命令表示选择执行 <code>set,get</code>命令插入大小为<code>10240byte</code>的数据100000次,并发请求为1000</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://redis.io/topics/sentinel" target="_blank" rel="external">Redis Sentinel Documentation</a></p>
+<p><a href="http://download.redis.io/redis-stable/sentinel.conf" target="_blank" rel="external">sentinel.conf</a></p>
+<p><a href="https://github.com/doocs/advanced-java/blob/master/docs/high-concurrency/redis-sentinel.md" target="_blank" rel="external">Redis 哨兵集群实现高可用</a></p>
+<p><a href="https://yq.aliyun.com/articles/57953" target="_blank" rel="external">使用Docker Compose部署基于Sentinel的高可用Redis集群</a></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-Sentinel-哨兵模式"><span class="toc-number">1.</span> <span class="toc-text">Redis Sentinel 哨兵模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#有关Sentinel的基本知识"><span class="toc-number">1.1.</span> <span class="toc-text">有关Sentinel的基本知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-Sentinel-为什么不推荐使用两台Sentinel"><span class="toc-number">1.1.1.</span> <span class="toc-text">Redis-Sentinel 为什么不推荐使用两台Sentinel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-哨兵主备切换的数据丢失问题"><span class="toc-number">1.1.2.</span> <span class="toc-text">Redis 哨兵主备切换的数据丢失问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#异步复制导致的数据丢失"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">异步复制导致的数据丢失</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#脑裂导致的数据丢失"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">脑裂导致的数据丢失</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据丢失问题解决"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">数据丢失问题解决</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sdown-和-odown-转换机制"><span class="toc-number">1.1.3.</span> <span class="toc-text">sdown 和 odown 转换机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#slave-gt-master-选举算法"><span class="toc-number">1.1.4.</span> <span class="toc-text">slave->master 选举算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#quorum-和-majority"><span class="toc-number">1.1.5.</span> <span class="toc-text">quorum 和 majority</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置Sentinel"><span class="toc-number">1.2.</span> <span class="toc-text">配置Sentinel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-Compose部署"><span class="toc-number">1.3.</span> <span class="toc-text">Docker Compose部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#压力测试"><span class="toc-number">1.4.</span> <span class="toc-text">压力测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&text=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&is_video=false&description=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】Redis Sentinel哨兵模式&body=Check out this article: http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&title=【Linux】Redis Sentinel哨兵模式"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/01/14/【Linux】Redis Sentinel哨兵模式/&name=【Linux】Redis Sentinel哨兵模式&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
