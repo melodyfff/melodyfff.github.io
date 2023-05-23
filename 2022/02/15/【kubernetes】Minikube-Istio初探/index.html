@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Minikube-Istio初探设置Minikube删除Minikube 1$ minikube delete   启动Minikube 123456789101112# 启动 指定国内仓库，由于istio官方建议加大内存和cpu，推荐driver设置为VM# docker驱动启动会报错https:&#x2F;&#x2F;docs.docker.com&#x2F;engine&#x2F;install&#x2F;linux-postinstall">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【kubernetes】Minikube-Istio初探">
+<meta property="og:url" content="http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Minikube-Istio初探设置Minikube删除Minikube 1$ minikube delete   启动Minikube 123456789101112# 启动 指定国内仓库，由于istio官方建议加大内存和cpu，推荐driver设置为VM# docker驱动启动会报错https:&#x2F;&#x2F;docs.docker.com&#x2F;engine&#x2F;install&#x2F;linux-postinstall">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://istio.io/latest/docs/examples/bookinfo/withistio.svg">
+<meta property="og:image" content="http://example.com/images/istio-kiali.png">
+<meta property="og:image" content="http://example.com/images/istio-grafna.png">
+<meta property="article:published_time" content="2022-02-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://istio.io/latest/docs/examples/bookinfo/withistio.svg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【kubernetes】Minikube-Istio初探</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&text=【kubernetes】Minikube-Istio初探"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&is_video=false&description=【kubernetes】Minikube-Istio初探"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Minikube-Istio初探&body=Check out this article: http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&name=【kubernetes】Minikube-Istio初探&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&t=【kubernetes】Minikube-Istio初探"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Minikube-Istio%E5%88%9D%E6%8E%A2"><span class="toc-number">1.</span> <span class="toc-text">Minikube-Istio初探</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEMinikube"><span class="toc-number">1.1.</span> <span class="toc-text">设置Minikube</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A2%E7%B4%A2Istio"><span class="toc-number">1.2.</span> <span class="toc-text">探索Istio</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Istio"><span class="toc-number">1.2.1.</span> <span class="toc-text">安装Istio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%98%E7%BD%91-Bookinfo-Demo%E6%BC%94%E7%A4%BA"><span class="toc-number">1.2.2.</span> <span class="toc-text">官网 Bookinfo Demo演示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E5%A4%96%E9%83%A8%E6%B5%81%E9%87%8F%E6%89%93%E5%BC%80%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">向外部流量打开应用程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AE%E5%AE%9A%E5%85%A5%E5%8F%A3IP%E5%92%8C%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.2.4.</span> <span class="toc-text">确定入口IP和端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%BB%AA%E8%A1%A8%E6%9D%BF"><span class="toc-number">1.2.5.</span> <span class="toc-text">查看仪表板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B8%E8%BC%89"><span class="toc-number">1.2.6.</span> <span class="toc-text">卸載</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.3.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【kubernetes】Minikube-Istio初探
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-02-15T00:00:00.000Z" itemprop="datePublished">2022-02-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Minikube-Istio初探"><a href="#Minikube-Istio初探" class="headerlink" title="Minikube-Istio初探"></a>Minikube-Istio初探</h1><h2 id="设置Minikube"><a href="#设置Minikube" class="headerlink" title="设置Minikube"></a>设置Minikube</h2><p><strong>删除Minikube</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube delete </span><br></pre></td></tr></table></figure>
+
+<p><strong>启动Minikube</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 指定国内仓库，由于istio官方建议加大内存和cpu，推荐driver设置为VM</span></span><br><span class="line"><span class="comment"># docker驱动启动会报错https://docs.docker.com/engine/install/linux-postinstall/#your-kernel-does-not-support-cgroup-swap-limit-capabili</span></span><br><span class="line">$ minikube start --memory=8192MB --cpus=4 --image-mirror-country=<span class="string">&#x27;cn&#x27;</span> --vm-driver=virtualbox</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查状态</span></span><br><span class="line">$ minikube addons <span class="built_in">enable</span> dashboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问面板</span></span><br><span class="line">$ minikube dashboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问web前端</span></span><br><span class="line">$ kubectl proxy</span><br></pre></td></tr></table></figure>
+
+<h2 id="探索Istio"><a href="#探索Istio" class="headerlink" title="探索Istio"></a>探索Istio</h2><h3 id="安装Istio"><a href="#安装Istio" class="headerlink" title="安装Istio"></a>安装Istio</h3><p>1 命令行CI安装</p>
+<ul>
+<li>官方下载方式：<a target="_blank" rel="noopener" href="https://istio.io/latest/docs/setup/getting-started/">https://istio.io/latest/docs/setup/getting-started/</a></li>
+<li>archlinux系统直接： pacman -S istio</li>
+</ul>
+<p>2 初始化<code>demo</code>,可选<code>default,demo,minimal</code>,生产系统一般用<code>default</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ istioctl install --<span class="built_in">set</span> profile=demo -y</span><br><span class="line"></span><br><span class="line">✔ Istio core installed                                                                                                                                                                               </span><br><span class="line">✔ Istiod installed                                                                                                                                                                                   </span><br><span class="line">✔ Ingress gateways installed                                                                                                                                                                         </span><br><span class="line">✔ Egress gateways installed                                                                                                                                                                          </span><br><span class="line">✔ Installation complete                                                                                                                                                                              Making this installation the default <span class="keyword">for</span> injection and validation.</span><br><span class="line"></span><br><span class="line">Thank you <span class="keyword">for</span> installing Istio 1.12.  Please take a few minutes to tell us about your install/upgrade experience!  https://forms.gle/FegQbc9UvePd4Z9z7</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>3 添加<code>default</code>命名空间label标识istio,为了在部署应用的时候自动注入<a target="_blank" rel="noopener" href="https://www.envoyproxy.io/">Envoy sidecar proxies</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl label namespace default istio-injection=enabled</span><br><span class="line"></span><br><span class="line">namespace/default labeled</span><br></pre></td></tr></table></figure>
+
+<h3 id="官网-Bookinfo-Demo演示"><a href="#官网-Bookinfo-Demo演示" class="headerlink" title="官网 Bookinfo Demo演示"></a>官网 Bookinfo Demo演示</h3><p><img src="https://istio.io/latest/docs/examples/bookinfo/withistio.svg"></p>
+<p>网站包括四个微服务：</p>
+<pre><code>productpage ：本服务会调用 details 和 reviews 两个微服务，用来生成页面。
+details ：这个微服务包含了书籍的信息。
+reviews ：这个微服务包含了书籍相关的评论。它还会调用 ratings 微服务。
+ratings ：ratings 微服务中包含了由书籍评价组成的评级信息。
+</code></pre>
+<p>reviews 微服务有 3 个版本：</p>
+<pre><code>v1 版本不会调用 ratings 服务。
+v2 版本会调用 ratings 服务，并使用 1 到 5 个黑色星形图标来显示评分信息。
+v3 版本会调用 ratings 服务，并使用 1 到 5 个红色星形图标来显示评分信息。
+</code></pre>
+<p>1 Deploy the <a target="_blank" rel="noopener" href="https://gitee.com/melodyfff/istio/tree/master">Bookinfo sample application</a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://gitee.com/melodyfff/istio/raw/master/samples/bookinfo/platform/kube/bookinfo.yaml</span><br><span class="line"></span><br><span class="line">service/details created</span><br><span class="line">serviceaccount/bookinfo-details created</span><br><span class="line">deployment.apps/details-v1 created</span><br><span class="line">service/ratings created</span><br><span class="line">serviceaccount/bookinfo-ratings created</span><br><span class="line">deployment.apps/ratings-v1 created</span><br><span class="line">service/reviews created</span><br><span class="line">serviceaccount/bookinfo-reviews created</span><br><span class="line">deployment.apps/reviews-v1 created</span><br><span class="line">deployment.apps/reviews-v2 created</span><br><span class="line">deployment.apps/reviews-v3 created</span><br><span class="line">service/productpage created</span><br><span class="line">serviceaccount/bookinfo-productpage created</span><br><span class="line">deployment.apps/productpage-v1 created</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>2 The application will start. As each pod becomes ready, the Istio sidecar will be deployed along with it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get svc</span><br><span class="line"></span><br><span class="line">NAME          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE</span><br><span class="line">details       ClusterIP   10.103.244.170   &lt;none&gt;        9080/TCP   35m</span><br><span class="line">kubernetes    ClusterIP   10.96.0.1        &lt;none&gt;        443/TCP    93m</span><br><span class="line">productpage   ClusterIP   10.100.103.177   &lt;none&gt;        9080/TCP   35m</span><br><span class="line">ratings       ClusterIP   10.96.29.16      &lt;none&gt;        9080/TCP   35m</span><br><span class="line">reviews       ClusterIP   10.110.16.242    &lt;none&gt;        9080/TCP   35m</span><br></pre></td></tr></table></figure>
+<p>and</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get pods</span><br><span class="line"></span><br><span class="line">NAME                              READY   STATUS    RESTARTS   AGE</span><br><span class="line">details-v1-5498c86cf5-klv2f       2/2     Running   0          36m</span><br><span class="line">productpage-v1-65b75f6885-mwhf2   2/2     Running   0          36m</span><br><span class="line">ratings-v1-b477cf6cf-b5nbl        2/2     Running   0          36m</span><br><span class="line">reviews-v1-79d546878f-pndk6       2/2     Running   0          36m</span><br><span class="line">reviews-v2-548c57f459-4n6cj       2/2     Running   0          36m</span><br><span class="line">reviews-v3-6dd79655b9-l2fkf       2/2     Running   0          36m</span><br></pre></td></tr></table></figure>
+<p>3 Verify everything is working correctly up to this point. Run this command to see if the app is running inside the cluster and serving HTML pages by checking for the page title in the response:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl <span class="built_in">exec</span> <span class="string">&quot;<span class="subst">$(kubectl get pod -l app=ratings -o jsonpath=&#x27;&#123;.items[0].metadata.name&#125;&#x27;)</span>&quot;</span> -c ratings -- curl -sS productpage:9080/productpage | grep -o <span class="string">&quot;&lt;title&gt;.*&lt;/title&gt;&quot;</span></span><br><span class="line"></span><br><span class="line">&lt;title&gt;Simple Bookstore App&lt;/title&gt;</span><br></pre></td></tr></table></figure>
+<p>or<br>Minikube运行<code>minikube tunnel</code>访问<code>http://10.100.103.177:9080</code></p>
+<h3 id="向外部流量打开应用程序"><a href="#向外部流量打开应用程序" class="headerlink" title="向外部流量打开应用程序"></a>向外部流量打开应用程序</h3><p><code>Bookinfo</code> 应用程序已部署，但无法从外部访问。 为了使其可访问，您需要创建一个 <code>Istio Ingress Gateway</code>，它将路径映射到网格边缘的路由。 </p>
+<p>1 Associate this application with the Istio gateway:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://gitee.com/melodyfff/istio/raw/master/samples/bookinfo/networking/bookinfo-gateway.yaml</span><br><span class="line"></span><br><span class="line">gateway.networking.istio.io/bookinfo-gateway created</span><br><span class="line">virtualservice.networking.istio.io/bookinfo created</span><br></pre></td></tr></table></figure>
+
+<p>2 Ensure that there are no issues with the configuration:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ istioctl analyze</span><br><span class="line"></span><br><span class="line">✔ No validation issues found when analyzing namespace: default.</span><br></pre></td></tr></table></figure>
+
+<h3 id="确定入口IP和端口"><a href="#确定入口IP和端口" class="headerlink" title="确定入口IP和端口"></a>确定入口IP和端口</h3><p>通过<code>kubectl get svc istio-ingressgateway -n istio-system</code>查看</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NAME                   TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)                                                                      AGE</span><br><span class="line">istio-ingressgateway   LoadBalancer   10.107.90.15   10.107.90.15   15021:31768/TCP,80:31278/TCP,443:31472/TCP,31400:31545/TCP,15443:32033/TCP   96m</span><br></pre></td></tr></table></figure>
+
+<p><strong>minikube</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set the ingress ports</span></span><br><span class="line"><span class="built_in">export</span> INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath=<span class="string">&#x27;&#123;.spec.ports[?(@.name==&quot;http2&quot;)].nodePort&#125;&#x27;</span>)</span><br><span class="line"><span class="built_in">export</span> SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath=<span class="string">&#x27;&#123;.spec.ports[?(@.name==&quot;https&quot;)].nodePort&#125;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$INGRESS_PORT</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$SECURE_INGRESS_PORT</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the ingress IP:</span></span><br><span class="line"><span class="built_in">export</span> INGRESS_HOST=$(minikube ip)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$INGRESS_HOST</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Run this command in a new terminal window to start a Minikube tunnel that sends traffic to your Istio Ingress Gateway:</span></span><br><span class="line">minikube tunnel</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set GATEWAY_URL:</span></span><br><span class="line"><span class="built_in">export</span> GATEWAY_URL=<span class="variable">$INGRESS_HOST</span>:<span class="variable">$INGRESS_PORT</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$GATEWAY_URL</span>&quot;</span> <span class="comment"># 192.168.59.101:31278</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问应用</span></span><br><span class="line">curl http://192.168.59.101:31278/productpage</span><br><span class="line">curl http://192.168.59.101:31278/productpage?u=normal</span><br><span class="line">curl http://192.168.59.101:31278/productpage?u=<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Other platforms</strong></p>
+<p><a target="_blank" rel="noopener" href="https://istio.io/latest/docs/setup/getting-started/#determining-the-ingress-ip-and-ports">https://istio.io/latest/docs/setup/getting-started/#determining-the-ingress-ip-and-ports</a></p>
+<h3 id="查看仪表板"><a href="#查看仪表板" class="headerlink" title="查看仪表板"></a>查看仪表板</h3><p>1 Use the following instructions to deploy the <a target="_blank" rel="noopener" href="https://istio.io/latest/docs/ops/integrations/kiali/">Kiali</a> dashboard, along with <a target="_blank" rel="noopener" href="https://istio.io/latest/docs/ops/integrations/prometheus/">Prometheus</a>, <a target="_blank" rel="noopener" href="https://istio.io/latest/docs/ops/integrations/grafana">Grafana</a>, and <a target="_blank" rel="noopener" href="https://istio.io/latest/docs/ops/integrations/jaeger/">Jaeger</a>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 部署</span></span><br><span class="line">$ git <span class="built_in">clone</span> https://gitee.com/melodyfff/istio.git</span><br><span class="line">$ kubectl apply -f istio/samples/addons</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">$ kubectl rollout status deployment/kiali -n istio-system</span><br></pre></td></tr></table></figure>
+<p>2 Access the Kiali dashboard</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://istio.io/latest/docs/tasks/observability/kiali/">Visualizing Your Mesh</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ istioctl dashboard kiali</span><br></pre></td></tr></table></figure>
+
+<p>3 In the left navigation menu, select Graph and in the Namespace drop down, select default.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># for i in $(seq 1 100);do curl -s -o /dev/null &quot;http://192.168.59.101:31278/productpage&quot; ;done</span></span><br><span class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq 1 100); <span class="keyword">do</span> curl -s -o /dev/null <span class="string">&quot;http://<span class="variable">$GATEWAY_URL</span>/productpage&quot;</span> ; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/istio-kiali.png"></p>
+<p>4 Grafana</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://istio.io/latest/docs/tasks/observability/metrics/using-istio-dashboard/">Visualizing Metrics with Grafana</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ istioctl dashboard grafana</span><br></pre></td></tr></table></figure>
+<p>Visit <a target="_blank" rel="noopener" href="http://localhost:3000/d/G8wLrJIZk/istio-mesh-dashboard">http://localhost:3000/d/G8wLrJIZk/istio-mesh-dashboard</a> in your web browser.</p>
+<p>visit <a target="_blank" rel="noopener" href="http://localhost:3000/d/LJ_uJAvmk/istio-service-dashboard">http://localhost:3000/d/LJ_uJAvmk/istio-service-dashboard</a> in your web browser.</p>
+<p>visit <a target="_blank" rel="noopener" href="http://localhost:3000/d/UbsSZTDik/istio-workload-dashboard">http://localhost:3000/d/UbsSZTDik/istio-workload-dashboard</a> in your web browser.</p>
+<p><img src="/images/istio-grafna.png"></p>
+<p>5 Prometheus</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://istio.io/latest/docs/tasks/observability/metrics/querying-metrics/">Querying Metrics from Prometheus</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># key : istio_requests_total</span></span><br><span class="line">$ istioctl dashboard prometheus</span><br></pre></td></tr></table></figure>
+
+<h3 id="卸載"><a href="#卸載" class="headerlink" title="卸載"></a>卸載</h3><p>To delete the Bookinfo sample application and its configuration, see <a target="_blank" rel="noopener" href="https://istio.io/latest/docs/examples/bookinfo/#cleanup">Bookinfo cleanup</a></p>
+<p><code>Istio</code> 卸载会分层删除 <code>istio-system</code> 命名空间下的 <code>RBAC</code> 权限和所有资源。 忽略不存在资源的错误是安全的，因为它们可能已被分层删除。 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl delete -f samples/addons</span><br><span class="line">$ istioctl manifest generate --<span class="built_in">set</span> profile=demo | kubectl delete --ignore-not-found=<span class="literal">true</span> -f -</span><br><span class="line">$ istioctl tag remove default</span><br></pre></td></tr></table></figure>
+
+<p>The <code>istio-system</code> namespace is not removed by default. If no longer needed, use the following command to remove it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl delete namespace istio-system</span><br></pre></td></tr></table></figure>
+
+<p>The label to instruct Istio to automatically inject Envoy sidecar proxies is not removed by default. If no longer needed, use the following command to remove it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$  kubectl label namespace default istio-injection-</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://istio.io/latest/docs/setup/getting-started">Istio - Getting Started</a></p>
+<p><a target="_blank" rel="noopener" href="https://istio.io/latest/docs/examples/bookinfo/#before-you-begin">Istio - Bookinfo Application</a></p>
+<p><a target="_blank" rel="noopener" href="https://minikube.sigs.k8s.io/docs/">Minikube Document</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/services-networking/service/">K8S官网文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://istio.io/latest/docs/setup/platform-setup/minikube/">Istio-Minikube</a></p>
+<p><a target="_blank" rel="noopener" href="https://veiasai.github.io/2018/08/21/minikube-helm-istio/">minikube/helm/istio初体验</a></p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/61242490/envoy-sidecar-proxy">Envoy sidecar proxy</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Minikube-Istio%E5%88%9D%E6%8E%A2"><span class="toc-number">1.</span> <span class="toc-text">Minikube-Istio初探</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEMinikube"><span class="toc-number">1.1.</span> <span class="toc-text">设置Minikube</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A2%E7%B4%A2Istio"><span class="toc-number">1.2.</span> <span class="toc-text">探索Istio</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Istio"><span class="toc-number">1.2.1.</span> <span class="toc-text">安装Istio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%98%E7%BD%91-Bookinfo-Demo%E6%BC%94%E7%A4%BA"><span class="toc-number">1.2.2.</span> <span class="toc-text">官网 Bookinfo Demo演示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E5%A4%96%E9%83%A8%E6%B5%81%E9%87%8F%E6%89%93%E5%BC%80%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">向外部流量打开应用程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AE%E5%AE%9A%E5%85%A5%E5%8F%A3IP%E5%92%8C%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.2.4.</span> <span class="toc-text">确定入口IP和端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%BB%AA%E8%A1%A8%E6%9D%BF"><span class="toc-number">1.2.5.</span> <span class="toc-text">查看仪表板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B8%E8%BC%89"><span class="toc-number">1.2.6.</span> <span class="toc-text">卸載</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.3.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&text=【kubernetes】Minikube-Istio初探"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&is_video=false&description=【kubernetes】Minikube-Istio初探"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Minikube-Istio初探&body=Check out this article: http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&title=【kubernetes】Minikube-Istio初探"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&name=【kubernetes】Minikube-Istio初探&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/&t=【kubernetes】Minikube-Istio初探"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

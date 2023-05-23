@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="由于最近一部英剧《西部世界》挺火，在实验楼中看到有关人物关系提取的教程，所以尝试对其进行了人物关系的简单抽取，用到了第三方的jieba分词器，和数据分析软件gephi 环境准备： 操作系统：linux ubuntu python: 2.7 第三方模块：分词器jieba 分析软件：gephi-0.9.1  首先先通过各大搜索引擎搜索获得主要的人物wdict.txt  德洛丽丝 100 nr艾伯纳西">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【python】python+gephi对《西部世界》进行人物关系提取">
+<meta property="og:url" content="http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="由于最近一部英剧《西部世界》挺火，在实验楼中看到有关人物关系提取的教程，所以尝试对其进行了人物关系的简单抽取，用到了第三方的jieba分词器，和数据分析软件gephi 环境准备： 操作系统：linux ubuntu python: 2.7 第三方模块：分词器jieba 分析软件：gephi-0.9.1  首先先通过各大搜索引擎搜索获得主要的人物wdict.txt  德洛丽丝 100 nr艾伯纳西">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/3.png">
+<meta property="og:image" content="http://example.com/images/4.png">
+<meta property="article:published_time" content="2016-11-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/3.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【python】python+gephi对《西部世界》进行人物关系提取</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2017/01/13/%E3%80%90mysql%E3%80%91ubuntu16.4%E7%8E%AF%E5%A2%83%E8%A3%85mysql/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2016/11/03/%E3%80%90JVM%E3%80%91%E5%81%8F%E5%90%91%E9%94%81%E6%B5%85%E8%B0%88/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&text=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&is_video=false&description=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【python】python+gephi对《西部世界》进行人物关系提取&body=Check out this article: http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&name=【python】python+gephi对《西部世界》进行人物关系提取&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&t=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">环境准备：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A6%96%E5%85%88%E5%85%88%E9%80%9A%E8%BF%87%E5%90%84%E5%A4%A7%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E6%90%9C%E7%B4%A2%E8%8E%B7%E5%BE%97%E4%B8%BB%E8%A6%81%E7%9A%84%E4%BA%BA%E7%89%A9"><span class="toc-number">2.</span> <span class="toc-text">首先先通过各大搜索引擎搜索获得主要的人物</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E7%9A%84%E5%89%A7%E6%9C%AC-%E7%AC%AC%E4%B8%80%E5%AD%A31-2%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">获取西部世界的剧本(第一季1-2集)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E5%B0%B1%E6%98%AF%E5%88%86%E6%9E%90%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB%E7%9A%84py%E7%BC%96%E5%86%99"><span class="toc-number">4.</span> <span class="toc-text">接下来就是分析人物关系的py编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%90%84%E4%B8%AA%E4%BA%BA%E7%89%A9%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">5.</span> <span class="toc-text">分析各个人物之间的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E5%88%86%E6%9E%90%E7%BB%93%E6%9E%9C%E6%8C%81%E4%B9%85%E5%8C%96%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="toc-number">6.</span> <span class="toc-text">将分析结果持久化到本地</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E5%B0%B1%E6%98%AF%E8%AE%B2%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5gephi%E4%B8%AD%E8%BF%9B%E8%A1%8C%E5%88%86%E6%9E%90"><span class="toc-number">7.</span> <span class="toc-text">接下来就是讲数据导入gephi中进行分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="toc-number">8.</span> <span class="toc-text">最后的结果</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【python】python+gephi对《西部世界》进行人物关系提取
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2016-11-15T00:00:00.000Z" itemprop="datePublished">2016-11-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/python/" rel="tag">python</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>由于最近一部英剧《西部世界》挺火，在<a target="_blank" rel="noopener" href="https://www.shiyanlou.com/courses/677">实验楼</a>中看到有关人物关系提取的教程，所以尝试对其进行了人物关系的简单抽取，用到了第三方的jieba分词器，和数据分析软件gephi</p>
+<h2 id="环境准备："><a href="#环境准备：" class="headerlink" title="环境准备："></a>环境准备：</h2><ul>
+<li>操作系统：linux ubuntu</li>
+<li>python: 2.7</li>
+<li>第三方模块：分词器jieba</li>
+<li>分析软件：gephi-0.9.1</li>
+</ul>
+<h2 id="首先先通过各大搜索引擎搜索获得主要的人物"><a href="#首先先通过各大搜索引擎搜索获得主要的人物" class="headerlink" title="首先先通过各大搜索引擎搜索获得主要的人物"></a>首先先通过各大搜索引擎搜索获得主要的人物</h2><p>wdict.txt</p>
+<blockquote>
+<p>德洛丽丝 100 nr<br>艾伯纳西 100 nr<br>伯纳德 100 nr<br>泰迪 100 nr<br>黑衣人 100 nr<br>福特博士 100 nr<br>接待员 100 nr<br>运营人员 100 nr<br>游客 100 nr<br>卡伦 100 nr<br>土匪 100 nr<br>实验人员 100 nr<br>老鸨 100 nr<br>开发人员 100 nr<br>梅芙 100 nr<br>劳伦斯 100 nr<br>年轻男子 100 nr   </p>
+</blockquote>
+<h2 id="获取西部世界的剧本-第一季1-2集"><a href="#获取西部世界的剧本-第一季1-2集" class="headerlink" title="获取西部世界的剧本(第一季1-2集)"></a>获取西部世界的剧本(第一季1-2集)</h2><p>westworld.txt</p>
+<blockquote>
+<p>第1集 - 科技乐园造人吸金 叛逆意识暗中萌生<br>德洛丽丝正如往日一样，清晨时分，从梦中醒来，迎接一天美好的开始。她向父亲艾伯纳西道别，然后出门写生，再到小镇转悠。德洛丽丝的久别多时的好朋友泰迪从外地回来，两人相互对视的眼神中，透露着浓浓的爱意。尽管很久不见，但泰迪和德洛丽丝的感情丝毫不减。两人骑着马在草原上驰骋，谈天说地，直到晚上，泰迪把德洛丽丝送回她的家。<br>然而回到家时，德洛丽丝却发现家里的牛还在乱跑，要在平时这个时间，父亲早已把家里的牲口安置好了。眼前惨绝人寰的景象让德洛丽丝崩溃了，她看见父母被土匪残忍杀害。泰迪立刻出手把两个土匪击毙，可惜父母亲已回天乏术。一位黑衣人突然出现，他用着迷的目光看着德洛丽丝。他认识德洛丽丝三十年了，这次看见的德洛丽丝，比以往多了一些勇气。 泰迪察觉到黑衣人对德洛丽丝的不善，打算连他也一起击倒，然而开枪过后，黑衣人屹立不倒。黑衣人傲慢地告诉泰迪，他是“新住民”，泰迪伤害不了自己，但泰迪他们却可以任由“新住民”随意处置。<br>泰迪茫然地跪下，手无缚鸡之力的德洛丽丝被黑衣人拖走。第二天，德洛丽丝从睡梦中醒来，又开始新的一天，一如既往地重复着之前发生过的事情。<br>西部世界是福特博士一手策划出来的乐园，里面的“接待员”皆是他属下公司制造的人造人。西部世界通过逼真的场景，还有和活人没什么两样的人造人，为游客带来最真实的体验。运营人员给乐园里的人造人编排剧本，对人造人进行编程。乐园的入场费价值不菲，但游客们能在这里满足了杀戮和性的欲望，这让不少有钱人都感到乐而忘返。黑衣人是众多游客的其中一位，他来了这里三十年了，但这次前来，他不仅仅是为了满足一己私欲，还带着更深层次的目的。<br>最近，乐园里出现了不少不按剧本编排行动的人造人，这让很多运营人员担心，尤其是女高管卡伦。她认为应该把这些不可控制的人造人直接回收，不再循环使用，但福特却不甚赞同。福特认为这些人造人出现反叛，都是有原因的，只是多次循环使用，才令他们的意识和记忆出现了错乱。福特为了让自己的作品更加接近人类，给他们植入了“冥想”的意识系统，让他们得以自发性地思考。<br>艾伯纳西无意中发现了一张来自现实世界的照片，这让他对这个世界产生了怀疑。一连串的记忆在他脑海里涌现，原来，他在西部世界里曾经扮演过大学教授和食人族，而现在这个剧本里，他扮演的是德洛丽丝的父亲。他用尽自己毕生所知道的东西，在一天清晨时，借用莎士比亚的名句告诉了德洛丽丝。<br>在剧情中扮演土匪的其中一名人造人失控了，在西部世界造成了一场混乱。尽管大部分人造人都能修好，但卡伦等人察觉到艾伯纳西和德洛丽丝在早晨时的那场异常的对话，可能会有后患，他们单独把两人放在实验室，重新进行程序设置。艾伯纳西在接受盘问时，透露了很多反叛的念头，但用的是莎士比亚的句子，福特对自己的作品并无怀疑，他觉得艾伯纳西只是意识错乱了。<br>德洛丽丝也接受了实验人员的盘问和调试，在回答中，德洛丽丝保持着一如既往的人造人姿态，面无表情，情绪毫无波动。<br>艾伯纳西的自发性思维让福特和其他运营人员感受到威胁，只能把他暂时回收，德洛丽丝则重新投入西部世界继续当“接待员”。运营人员对德洛丽丝都很放心，毕竟，她是西部世界里最老的一位接待员了。<br>德洛丽丝开始了新的一天，向换了人扮演的父亲道别，然后准备出门写生。她一脸笑意地享受着晨曦的阳光，似乎在想着什么。<br>第2集 -老鸨忆起残忍往事 黑衣人肆杀接待员<br>年轻男子怀着既期待又紧张不安的心情，随朋友来到西部世界。美丽的接待员带领他进行换装，还有向他简单地讲解了西部世界可以怎么玩。在现实生活里，一直中规中矩的年轻男子对这样无法无天的地方似乎有点抵触，但毕竟好奇心作崇，他还是跟朋友一起，进入了这个不可思议的地方。<br>伯纳德正和一位开发人员讨论着艾伯纳西。开发人员反复查看艾伯纳西的录像，发现他看见那张来自现实世界的照片后，懂得去思索，开发人员认为是他的认知出现了问题。伯纳德和开发人员都认为，艾伯纳西很特别，希望能让他重新投入到西部世界中。<br>在乐园里扮演着老鸨角色的梅芙，最近似乎也出现了记忆混乱。一些来自过去的片段不时地出现，导致她在接待客人时突然沉默。运营人员发现到梅芙的异常行为后，打算把她回收。<br>黑衣人继续来到西部世界大杀四方。他之前杀掉一个接待员，然后割下他的头盖骨，头盖骨背后，刻画了一个迷宫地图一样的图案，黑衣人认为，这个地图就是找到西部世界深层秘密的关键。身手不凡的他捉了一个似乎知道真相的接待员劳伦斯，然后在他面前不断杀人，并捉了他的家人，打算威胁其说出进入西部世界内部的入口。劳伦斯本身带有感情，面对家人遭受黑衣人的威胁，难免感到伤心和愤怒，但是他依旧选择闭口不提，哪怕是妻子就在自己眼前，命丧黑衣人之手。劳伦斯的女儿突然开口，把所在地的位置告诉了黑衣人。但她面无表情地警告黑衣人，那里不是他该去的地方。黑衣人不屑地笑了笑，继续他的挖掘真相之旅。<br>开发人员对梅芙进行了调试，认为她调整一下参数，便可以继续投入运作，毕竟她是那么出色的一名接待员。重新回到老鸨角色的梅芙比起以前，显得更加轻浮，带有攻击性。尽管经过了调试，但她的记忆越来越清晰，甚至做起了噩梦。她记起自己曾经有个女儿，两人相依为命过着简单开心的生活，但这一切都被突然闯进的印第安人打破了。残暴的印第安部落杀害了周围的人，还打算伤害自己和女儿，幸好此时有牛仔出手相助，才得以暂时逃命。梅芙带着女儿一脸惊恐地逃回家里，这时，门外出现了一个印第安人，她执起枪杆，打算与这个野蛮人决一死战。门开了，进来的并不是印第安人，而是黑衣人，情绪激动的梅芙向黑衣人开了几枪，只见黑衣人毫发无损。<br>梅芙知道自己在做噩梦，她用自创的稳定心神方式，心里默念“三、二、一”，试图唤醒自己。醒来后，她发现自己躺着一个手术室，周围的场景是她从未见过的，眼前两个对着自己开膛破肚的医护人员，让她惊恐万分。医护人员看见她醒来了也显得很惊讶，毕竟他们明明对梅芙进行了睡眠处理，可现在却不知为何突然醒来了。<br>梅芙抢过刀子威胁医护人员，然后趁机逃出了手术室。她拖着尚未完成手术的身子，不断在这个陌生的环境狂奔，当她来到一间清洗处理室时，眼前的场景吓了她一跳。众多赤身裸体的人造人，正被各种医护人员处理着。梅芙手脚发软，随后摊坐在地。从手术室追过来的医护人员及时给她打了麻醉，带走了她。<br>德洛丽丝继续在西部世界扮演她的农家女孩角色，但她没有忘记之前发生的事。夜里，万籁俱寂，德洛丽丝来到后院的，刨开地上的泥土，找到一把不知何时埋在地下的手枪。  </p>
+</blockquote>
+<h2 id="接下来就是分析人物关系的py编写"><a href="#接下来就是分析人物关系的py编写" class="headerlink" title="接下来就是分析人物关系的py编写"></a>接下来就是分析人物关系的py编写</h2><p>首先我们引入所需模块包括os、sys和第三方分词器 <code>jieba</code>  等</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> os, sys</span><br><span class="line"><span class="keyword">import</span> jieba, codecs, math</span><br><span class="line"><span class="keyword">import</span> jieba.posseg <span class="keyword">as</span> pseg</span><br></pre></td></tr></table></figure>
+<p>定义相关数据结构接收数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">names = &#123;&#125;          <span class="comment"># 姓名字典</span></span><br><span class="line">relationships = &#123;&#125;  <span class="comment"># 关系字典</span></span><br><span class="line">lineNames = []      <span class="comment"># 每段内人物关系</span></span><br></pre></td></tr></table></figure>
+<p>利用分词器jieba统计分析出场人物的总数，从wdict.txt中提取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jieba.load_userdict(<span class="string">&quot;wdict.txt&quot;</span>)        <span class="comment"># 加载人物字典</span></span><br></pre></td></tr></table></figure>
+<p>读取剧本，分析名字出现的频率,向字典中加入数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> codecs.<span class="built_in">open</span>(<span class="string">&quot;westworld.txt&quot;</span>, <span class="string">&quot;r&quot;</span>, <span class="string">&quot;utf8&quot;</span>) <span class="keyword">as</span> f: <span class="comment"># 读取剧本分析人物出现次数</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        poss = pseg.cut(line)       <span class="comment"># 分词并返回该词词性</span></span><br><span class="line">        lineNames.append([])        <span class="comment"># 为新读入的一段添加人物名称列表</span></span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> poss:</span><br><span class="line">            <span class="keyword">if</span> w.flag != <span class="string">&quot;nr&quot;</span> <span class="keyword">or</span> <span class="built_in">len</span>(w.word) &lt; <span class="number">2</span>:</span><br><span class="line">                <span class="keyword">continue</span>            <span class="comment"># 当分词长度小于2或该词词性不为nr时认为该词不为人名</span></span><br><span class="line">            lineNames[-<span class="number">1</span>].append(w.word)        <span class="comment"># 为当前段的环境增加一个人物</span></span><br><span class="line">            <span class="keyword">if</span> names.get(w.word) <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                names[w.word] = <span class="number">0</span></span><br><span class="line">                relationships[w.word] = &#123;&#125;</span><br><span class="line">            names[w.word] += <span class="number">1</span>                  <span class="comment"># 该人物出现次数加 1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="分析各个人物之间的关系"><a href="#分析各个人物之间的关系" class="headerlink" title="分析各个人物之间的关系"></a>分析各个人物之间的关系</h2><p>根据人物在lineNames中每段是否同时出现来判断，出现次数越多人物关系越密切</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lineNames:                  <span class="comment"># 对于每一段</span></span><br><span class="line">    <span class="keyword">for</span> name1 <span class="keyword">in</span> line:                  </span><br><span class="line">        <span class="keyword">for</span> name2 <span class="keyword">in</span> line:              <span class="comment"># 每段中的任意两个人</span></span><br><span class="line">            <span class="keyword">if</span> name1 == name2:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> relationships[name1].get(name2) <span class="keyword">is</span> <span class="literal">None</span>:     <span class="comment"># 若两人尚未同时出现则新建项</span></span><br><span class="line">                relationships[name1][name2]= <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                relationships[name1][name2] = relationships[name1][name2]+ <span class="number">1</span>        <span class="comment"># 两人共同出现次数加 1</span></span><br></pre></td></tr></table></figure>
+<h2 id="将分析结果持久化到本地"><a href="#将分析结果持久化到本地" class="headerlink" title="将分析结果持久化到本地"></a>将分析结果持久化到本地</h2><p>将分析得到的结果保存为.txt格式存储到本地</p>
+<blockquote>
+<p>注意：为在gephi中生成相应的节点<br>节点表格中的第一行格式为<code>Id Label Weight</code><br>边表格中的第一行格式为<code>Source Target Weight</code>  </p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 节点表</span></span><br><span class="line"><span class="keyword">with</span> codecs.<span class="built_in">open</span>(<span class="string">&quot;westworld.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, <span class="string">&quot;gbk&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(<span class="string">&quot;Id Label Weight\r\n&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> name, times <span class="keyword">in</span> names.items():</span><br><span class="line">        f.write(name + <span class="string">&quot; &quot;</span> + name + <span class="string">&quot; &quot;</span> + <span class="built_in">str</span>(times) + <span class="string">&quot;\r\n&quot;</span>)</span><br><span class="line"><span class="comment"># 关系表</span></span><br><span class="line"><span class="keyword">with</span> codecs.<span class="built_in">open</span>(<span class="string">&quot;westworld.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, <span class="string">&quot;gbk&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(<span class="string">&quot;Source Target Weight\r\n&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> name, edges <span class="keyword">in</span> relationships.items():</span><br><span class="line">        <span class="keyword">for</span> v, w <span class="keyword">in</span> edges.items():</span><br><span class="line">            <span class="keyword">if</span> w &gt; <span class="number">3</span>:</span><br><span class="line">                f.write(name + <span class="string">&quot; &quot;</span> + v + <span class="string">&quot; &quot;</span> + <span class="built_in">str</span>(w) + <span class="string">&quot;\r\n&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="接下来就是讲数据导入gephi中进行分析"><a href="#接下来就是讲数据导入gephi中进行分析" class="headerlink" title="接下来就是讲数据导入gephi中进行分析"></a>接下来就是讲数据导入gephi中进行分析</h2><p>对导入后的数据进行平均化和模块化处理<br><img src="/images/3.png" alt="img1">  </p>
+<h2 id="最后的结果"><a href="#最后的结果" class="headerlink" title="最后的结果"></a>最后的结果</h2><p><img src="/images/4.png" alt="img1"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">环境准备：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A6%96%E5%85%88%E5%85%88%E9%80%9A%E8%BF%87%E5%90%84%E5%A4%A7%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E6%90%9C%E7%B4%A2%E8%8E%B7%E5%BE%97%E4%B8%BB%E8%A6%81%E7%9A%84%E4%BA%BA%E7%89%A9"><span class="toc-number">2.</span> <span class="toc-text">首先先通过各大搜索引擎搜索获得主要的人物</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E7%9A%84%E5%89%A7%E6%9C%AC-%E7%AC%AC%E4%B8%80%E5%AD%A31-2%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">获取西部世界的剧本(第一季1-2集)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E5%B0%B1%E6%98%AF%E5%88%86%E6%9E%90%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB%E7%9A%84py%E7%BC%96%E5%86%99"><span class="toc-number">4.</span> <span class="toc-text">接下来就是分析人物关系的py编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%90%84%E4%B8%AA%E4%BA%BA%E7%89%A9%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">5.</span> <span class="toc-text">分析各个人物之间的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E5%88%86%E6%9E%90%E7%BB%93%E6%9E%9C%E6%8C%81%E4%B9%85%E5%8C%96%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="toc-number">6.</span> <span class="toc-text">将分析结果持久化到本地</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E5%B0%B1%E6%98%AF%E8%AE%B2%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5gephi%E4%B8%AD%E8%BF%9B%E8%A1%8C%E5%88%86%E6%9E%90"><span class="toc-number">7.</span> <span class="toc-text">接下来就是讲数据导入gephi中进行分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="toc-number">8.</span> <span class="toc-text">最后的结果</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&text=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&is_video=false&description=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【python】python+gephi对《西部世界》进行人物关系提取&body=Check out this article: http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&title=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&name=【python】python+gephi对《西部世界》进行人物关系提取&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2016/11/15/%E3%80%90Python%E3%80%91python+gephi%E6%8F%90%E5%8F%96%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E4%BA%BA%E7%89%A9%E5%85%B3%E7%B3%BB/&t=【python】python+gephi对《西部世界》进行人物关系提取"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

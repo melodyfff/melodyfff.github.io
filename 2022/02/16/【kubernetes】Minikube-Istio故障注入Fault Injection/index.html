@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Minikube-Istio故障注入Fault InjectionBefore you begin参考【kubernetes】Minikube-Istio初探 搭建基础环境，并部署好官方示例Bookinfo  网站包括四个微服务： productpage ：本服务会调用 details 和 reviews 两个微服务，用来生成页面。 details ：这个微服务包含了书籍的信息。 reviews">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【kubernetes】Minikube-Istio故障注入Fault Injection">
+<meta property="og:url" content="http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Minikube-Istio故障注入Fault InjectionBefore you begin参考【kubernetes】Minikube-Istio初探 搭建基础环境，并部署好官方示例Bookinfo  网站包括四个微服务： productpage ：本服务会调用 details 和 reviews 两个微服务，用来生成页面。 details ：这个微服务包含了书籍的信息。 reviews">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://istio.io/latest/docs/examples/bookinfo/withistio.svg">
+<meta property="article:published_time" content="2022-02-16T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://istio.io/latest/docs/examples/bookinfo/withistio.svg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【kubernetes】Minikube-Istio故障注入Fault Injection</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%B5%81%E9%87%8F%E5%88%87%E6%8D%A2Traffic%20Shifting/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&text=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&is_video=false&description=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Minikube-Istio故障注入Fault Injection&body=Check out this article: http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&name=【kubernetes】Minikube-Istio故障注入Fault Injection&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&t=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault-Injection"><span class="toc-number">1.</span> <span class="toc-text">Minikube-Istio故障注入Fault Injection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Before-you-begin"><span class="toc-number">1.1.</span> <span class="toc-text">Before you begin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Injecting-an-HTTP-delay-fault-%E5%BB%B6%E8%BF%9F%E9%94%99%E8%AF%AF"><span class="toc-number">1.2.</span> <span class="toc-text">Injecting an HTTP delay fault(延迟错误)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Testing-the-delay-configuration"><span class="toc-number">1.3.</span> <span class="toc-text">Testing the delay configuration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What-Happen"><span class="toc-number">1.4.</span> <span class="toc-text">What Happen?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fixing-the-bug"><span class="toc-number">1.5.</span> <span class="toc-text">Fixing the bug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Injecting-an-HTTP-abort-fault-%E7%BB%88%E6%AD%A2%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8"><span class="toc-number">1.6.</span> <span class="toc-text">Injecting an HTTP abort fault(终止服务调用)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CleanUp"><span class="toc-number">1.7.</span> <span class="toc-text">CleanUp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.8.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【kubernetes】Minikube-Istio故障注入Fault Injection
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-02-16T00:00:00.000Z" itemprop="datePublished">2022-02-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Minikube-Istio故障注入Fault-Injection"><a href="#Minikube-Istio故障注入Fault-Injection" class="headerlink" title="Minikube-Istio故障注入Fault Injection"></a>Minikube-Istio故障注入Fault Injection</h1><h2 id="Before-you-begin"><a href="#Before-you-begin" class="headerlink" title="Before you begin"></a>Before you begin</h2><p>参考<a target="_blank" rel="noopener" href="https://melodyfff.github.io/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/">【kubernetes】Minikube-Istio初探</a> 搭建基础环境，并部署好官方示例<a target="_blank" rel="noopener" href="https://istio.io/latest/docs/examples/bookinfo/">Bookinfo</a></p>
+<p><img src="https://istio.io/latest/docs/examples/bookinfo/withistio.svg"></p>
+<p>网站包括四个微服务：</p>
+<pre><code>productpage ：本服务会调用 details 和 reviews 两个微服务，用来生成页面。
+details ：这个微服务包含了书籍的信息。
+reviews ：这个微服务包含了书籍相关的评论。它还会调用 ratings 微服务。
+ratings ：ratings 微服务中包含了由书籍评价组成的评级信息。
+</code></pre>
+<p>reviews 微服务有 3 个版本：</p>
+<pre><code>v1 版本不会调用 ratings 服务。
+v2 版本会调用 ratings 服务，并使用 1 到 5 个黑色星形图标来显示评分信息。
+v3 版本会调用 ratings 服务，并使用 1 到 5 个红色星形图标来显示评分信息。
+</code></pre>
+<p>这里的v1、v2、v3是通过<code>label version: v1</code>标注</p>
+<p>需要参考<a target="_blank" rel="noopener" href="https://istio.io/latest/docs/tasks/traffic-management/request-routing/">Request routing</a>执行以下命令</p>
+<ul>
+<li><code>kubectl apply -f https://gitee.com/melodyfff/istio/raw/master/samples/bookinfo/networking/virtual-service-all-v1.yaml</code></li>
+<li><code>kubectl apply -f https://gitee.com/melodyfff/istio/raw/master/samples/bookinfo/networking/virtual-service-reviews-test-v2.yaml</code></li>
+</ul>
+<p>当上述指令执行完毕后效果如下：</p>
+<ul>
+<li>productpage → reviews:v2 → ratings (only for user jason)</li>
+<li>productpage → reviews:v1 (for everyone else)</li>
+</ul>
+<h2 id="Injecting-an-HTTP-delay-fault-延迟错误"><a href="#Injecting-an-HTTP-delay-fault-延迟错误" class="headerlink" title="Injecting an HTTP delay fault(延迟错误)"></a>Injecting an HTTP delay fault(延迟错误)</h2><p>要测试 Bookinfo 应用程序微服务的resiliency，请在用户 jason 的reviews:v2 和ratings microservices之间注入 7 秒的延迟。 此测试将发现一个有意引入 Bookinfo 应用程序的错误。</p>
+<blockquote>
+<p>Note that the reviews:v2 service has a 10s hard-coded connection timeout for calls to the ratings service. Even with the 7s delay that you introduced, you still expect the end-to-end flow to continue without any errors.</p>
+</blockquote>
+<p>1 Create a fault injection rule to delay traffic coming from the test user jason.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://gitee.com/melodyfff/istio/raw/master/samples/bookinfo/networking/virtual-service-ratings-test-delay.yaml</span><br></pre></td></tr></table></figure>
+
+<p>2 Confirm the rule was created:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get virtualservice ratings -o yaml</span><br></pre></td></tr></table></figure>
+
+<p>这里主要是针对 <code>ratings</code>调用设置延迟</p>
+<h2 id="Testing-the-delay-configuration"><a href="#Testing-the-delay-configuration" class="headerlink" title="Testing the delay configuration"></a>Testing the delay configuration</h2><ul>
+<li>访问应用<code>/productpage</code>,登录<code>jason</code>用户</li>
+<li>出现错误信息： <code>Sorry, product reviews are currently unavailable for this book.</code></li>
+<li>F12观察网络，发现这个页面打开时间为6S</li>
+</ul>
+<h2 id="What-Happen"><a href="#What-Happen" class="headerlink" title="What Happen?"></a>What Happen?</h2><p>这个应用中存在着硬编码，我们这里当用户为<code>jason</code>调用<code>reviews</code>时注入延迟7S</p>
+<p><code>reviews</code>和<code>ratings</code>服务调用之间硬编码超时时间为10S</p>
+<p><code>productpage</code> 和<code>reviews</code>之间的调用也有一个硬编码为 <strong>3S+1次retry = 6S</strong>，所以我们观察网络加载时间为6S就抛出的错误</p>
+<p>这个故障注入规则主要可以针对到指定用户，或者特定条件。换其他用户登录请求是正常的</p>
+<h2 id="Fixing-the-bug"><a href="#Fixing-the-bug" class="headerlink" title="Fixing the bug"></a>Fixing the bug</h2><p>假设你尝试调整超时时间修复了这个BUG，并且发布部署到了<code>reviews:v3</code>,调整硬编码中的超时时间从10S-&gt;2.5S</p>
+<p>此时按照<a target="_blank" rel="noopener" href="https://istio.io/latest/docs/tasks/traffic-management/traffic-shifting/">Traffic Shifting</a>进行服务流量转移，我们这个时候需要讲我们的延迟规则修改为小于2.5s的任何量，例如2s，并确认端到端流继续没有 任何错误。</p>
+<h2 id="Injecting-an-HTTP-abort-fault-终止服务调用"><a href="#Injecting-an-HTTP-abort-fault-终止服务调用" class="headerlink" title="Injecting an HTTP abort fault(终止服务调用)"></a>Injecting an HTTP abort fault(终止服务调用)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://gitee.com/melodyfff/istio/raw/master/samples/bookinfo/networking/virtual-service-ratings-test-abort.yaml</span><br><span class="line"></span><br><span class="line">$ kubectl get virtualservice ratings -o yaml</span><br></pre></td></tr></table></figure>
+
+<p>访问<code>/productpage</code>页面登录<code>jason</code>发现很快刷新，只是不再去调用<code>Ratings</code>服务</p>
+<blockquote>
+<p>Ratings service is currently unavailable</p>
+</blockquote>
+<h2 id="CleanUp"><a href="#CleanUp" class="headerlink" title="CleanUp"></a>CleanUp</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl delete -f https://gitee.com/melodyfff/istio/raw/master/samples/bookinfo/networking/virtual-service-all-v1.yaml</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://istio.io/latest/docs/tasks/traffic-management/fault-injection/">Istio - Fault Injection</a></p>
+<p><a target="_blank" rel="noopener" href="https://istio.io/latest/docs/examples/bookinfo/#before-you-begin">Istio - Bookinfo Application</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault-Injection"><span class="toc-number">1.</span> <span class="toc-text">Minikube-Istio故障注入Fault Injection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Before-you-begin"><span class="toc-number">1.1.</span> <span class="toc-text">Before you begin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Injecting-an-HTTP-delay-fault-%E5%BB%B6%E8%BF%9F%E9%94%99%E8%AF%AF"><span class="toc-number">1.2.</span> <span class="toc-text">Injecting an HTTP delay fault(延迟错误)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Testing-the-delay-configuration"><span class="toc-number">1.3.</span> <span class="toc-text">Testing the delay configuration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What-Happen"><span class="toc-number">1.4.</span> <span class="toc-text">What Happen?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fixing-the-bug"><span class="toc-number">1.5.</span> <span class="toc-text">Fixing the bug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Injecting-an-HTTP-abort-fault-%E7%BB%88%E6%AD%A2%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8"><span class="toc-number">1.6.</span> <span class="toc-text">Injecting an HTTP abort fault(终止服务调用)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CleanUp"><span class="toc-number">1.7.</span> <span class="toc-text">CleanUp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.8.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&text=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&is_video=false&description=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Minikube-Istio故障注入Fault Injection&body=Check out this article: http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&title=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&name=【kubernetes】Minikube-Istio故障注入Fault Injection&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/&t=【kubernetes】Minikube-Istio故障注入Fault Injection"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="原型模式(Prototype Pattern) wiki:    类型： 创建型   何时使用： 当直接创建对象的代价比较大时，则采用这种模式   UML   原型设计模式解决了以下问题：  如何创建对象以便在运行时指定要创建的对象？ 如何动态加载类的实例化  原型设计模式描述了如何解决这些问题：  定义一个Prototype返回自身副本的对象。 通过复制Prototype对象创建新对象。  原型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Design Patterns】原型模式">
+<meta property="og:url" content="http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="原型模式(Prototype Pattern) wiki:    类型： 创建型   何时使用： 当直接创建对象的代价比较大时，则采用这种模式   UML   原型设计模式解决了以下问题：  如何创建对象以便在运行时指定要创建的对象？ 如何动态加载类的实例化  原型设计模式描述了如何解决这些问题：  定义一个Prototype返回自身副本的对象。 通过复制Prototype对象创建新对象。  原型">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/W3sDesign_Prototype_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://example.com/images/Prototype_UML.svg.png">
+<meta property="og:image" content="http://example.com/images/prototype_manager.png">
+<meta property="article:published_time" content="2019-01-27T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.514Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Design Patterns">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/W3sDesign_Prototype_Design_Pattern_UML.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Design Patterns】原型模式</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/02/12/%E3%80%90Design%20Patterns%E3%80%91%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】原型模式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】原型模式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】原型模式&body=Check out this article: http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】原型模式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】原型模式"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F-Prototype-Pattern"><span class="toc-number">1.</span> <span class="toc-text">原型模式(Prototype Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">原型模式实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6Prototype-Manager%E7%9A%84%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F-%E7%99%BB%E8%AE%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">带Prototype Manager的原型模式(登记形式的原型模型)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.3.</span> <span class="toc-text">原型模式的优缺点</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Design Patterns】原型模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-27T00:00:00.000Z" itemprop="datePublished">2019-01-27</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Design-Patterns/" rel="tag">Design Patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="原型模式-Prototype-Pattern"><a href="#原型模式-Prototype-Pattern" class="headerlink" title="原型模式(Prototype Pattern)"></a>原型模式(Prototype Pattern)</h1><blockquote>
+<p>wiki:</p>
+</blockquote>
+<p><img src="/images/W3sDesign_Prototype_Design_Pattern_UML.jpg"></p>
+<blockquote>
+<p>类型： 创建型</p>
+</blockquote>
+<blockquote>
+<p>何时使用： 当直接创建对象的代价比较大时，则采用这种模式</p>
+</blockquote>
+<blockquote>
+<p>UML</p>
+</blockquote>
+<p><img src="/images/Prototype_UML.svg.png"></p>
+<p>原型设计模式解决了以下问题：</p>
+<ul>
+<li>如何创建对象以便在运行时指定要创建的对象？</li>
+<li>如何动态加载类的实例化</li>
+</ul>
+<p>原型设计模式描述了如何解决这些问题：</p>
+<ul>
+<li>定义一个<code>Prototype</code>返回自身副本的对象。</li>
+<li>通过复制<code>Prototype</code>对象创建新对象。</li>
+</ul>
+<p>原型模式的注意事项: </p>
+<ul>
+<li>使用原型模式复制对象不会调用类的构造方法。</li>
+<li>单例模式中，只要将构造方法的访问权限设置为private型，就可以实现单例。但是clone方法直接无视构造方法的权限，所以，单例模式与原型模式是冲突的，在使用时要特别注意。</li>
+<li><code>浅拷贝</code>: Object类的clone方法只会拷贝对象中的基本的数据类型，对于数组、容器对象、引用对象等都不会拷贝</li>
+<li><code>深拷贝</code>: 将原型模式中的数组、容器对象、引用对象等另行拷贝</li>
+<li>因为是从内存中直接</li>
+</ul>
+<h2 id="原型模式实例"><a href="#原型模式实例" class="headerlink" title="原型模式实例"></a>原型模式实例</h2><p><strong>抽象原型角色</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Prototype</span> <span class="keyword">implements</span> <span class="title">Cloneable</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.clone();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>具体原型角色</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcretePrototype1</span> <span class="keyword">extends</span> <span class="title">Prototype</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.clone();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcretePrototype2</span> <span class="keyword">extends</span> <span class="title">Prototype</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ArrayList list = <span class="keyword">new</span> ArrayList();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 由于Clone不会调用构造函数，可用来查看差别</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcretePrototype2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;ConcretePrototype2 init...&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>.list.add(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ArrayList <span class="title">getList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setList</span><span class="params">(ArrayList list)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.list = list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException </span>&#123;</span><br><span class="line">        ConcretePrototype2 clone = (ConcretePrototype2)<span class="keyword">super</span>.clone();</span><br><span class="line">        <span class="comment">// 深度拷贝</span></span><br><span class="line">        clone.setList((ArrayList) <span class="keyword">this</span>.getList().clone());</span><br><span class="line">        <span class="keyword">return</span> clone;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>场景类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> CloneNotSupportedException </span>&#123;</span><br><span class="line">        <span class="comment">// 测试克隆</span></span><br><span class="line">        ConcretePrototype1 concretePrototype1 = <span class="keyword">new</span> ConcretePrototype1();</span><br><span class="line">        System.out.println(concretePrototype1);</span><br><span class="line">        System.out.println(concretePrototype1.clone());</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line"></span><br><span class="line">        ConcretePrototype2 concretePrototype2 = <span class="keyword">new</span> ConcretePrototype2();</span><br><span class="line">        System.out.println(concretePrototype2);</span><br><span class="line">        <span class="keyword">final</span> ConcretePrototype2 clone = (ConcretePrototype2)concretePrototype2.clone();</span><br><span class="line">        System.out.println(clone);</span><br><span class="line">        System.out.println(concretePrototype2.getList());</span><br><span class="line">        System.out.println(clone.getList());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 测试性能</span></span><br><span class="line">        System.out.println();</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">10000</span>;</span><br><span class="line">        <span class="keyword">long</span> startTmie = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;count;i++)&#123;</span><br><span class="line">            <span class="keyword">new</span> ConcretePrototype2();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">long</span> endTime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;new cost :&quot;</span>+(endTime-startTmie)+<span class="string">&quot;ms&quot;</span>);</span><br><span class="line">        <span class="comment">// new cost :48ms</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        startTmie = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;count;i++)&#123;</span><br><span class="line">           concretePrototype2.clone();</span><br><span class="line">        &#125;</span><br><span class="line">        endTime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;prototype cost :&quot;</span>+(endTime-startTmie)+<span class="string">&quot;ms&quot;</span>);</span><br><span class="line">        <span class="comment">// prototype cost :2ms</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="带Prototype-Manager的原型模式-登记形式的原型模型"><a href="#带Prototype-Manager的原型模式-登记形式的原型模型" class="headerlink" title="带Prototype Manager的原型模式(登记形式的原型模型)"></a>带Prototype Manager的原型模式(登记形式的原型模型)</h2><ul>
+<li>从缓存（MAP）中获取</li>
+<li>可使用HashTable或者ConcurrentHashMap</li>
+<li>如果使用HashMap需要考虑加锁，或者<code>Collections.synchronizeMap(hashMap);</code>使其同步</li>
+</ul>
+<p><strong>UML</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">class Client&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface Prototype&#123;</span><br><span class="line">   + Prototype clone()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ConcretePrototypeA&#123;</span><br><span class="line">   - name:String</span><br><span class="line">   + clone():Prototype </span><br><span class="line">   + getName():String </span><br><span class="line">   + setName():void</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ConcretePrototypeB&#123;</span><br><span class="line">   - name:String </span><br><span class="line">   + clone():Prototype </span><br><span class="line">   + getName():String </span><br><span class="line">   + setName():void</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class PrototypeManager&#123;</span><br><span class="line">   - map:Map</span><br><span class="line">   - PrototypeManager():PrototypeManager</span><br><span class="line">   + addPrototype(Prototype):void</span><br><span class="line">   + removePrototype(Prototype):void</span><br><span class="line">   + getPrototype():Prototype </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Client ..&gt; Prototype</span><br><span class="line">Client ..&gt; PrototypeManager</span><br><span class="line">Prototype &lt;|.. ConcretePrototypeA</span><br><span class="line">Prototype &lt;|.. ConcretePrototypeB</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/prototype_manager.png"></p>
+<p><strong>抽象原型接口</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Prototype</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 自定义克隆（可使用第三方序列化方式）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Prototype</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">Prototype <span class="title">clone</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> id</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">String <span class="title">id</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>具体原型对象</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcretePrototypeA</span> <span class="keyword">implements</span> <span class="title">Prototype</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcretePrototypeA</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Prototype <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 自定义克隆，此处可新建或者使用第三方序列化</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConcretePrototypeA(<span class="keyword">this</span>.getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">id</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcretePrototypeB</span> <span class="keyword">implements</span> <span class="title">Prototype</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcretePrototypeB</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Prototype <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 自定义克隆，此处可新建或者使用第三方序列化</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConcretePrototypeB(<span class="keyword">this</span>.getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">id</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>PrototypeManager</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrototypeManager</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String,Prototype&gt; map = <span class="keyword">new</span> ConcurrentHashMap();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 防止外部初始化，保证只有一个实例 */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">PrototypeManager</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addPrototype</span><span class="params">(Prototype prototype)</span></span>&#123;</span><br><span class="line">        map.put(prototype.id(), prototype);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">removePrototype</span><span class="params">(Prototype prototype)</span></span>&#123;</span><br><span class="line">        map.remove(prototype.id());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取原始对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> id 标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Prototype</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Prototype <span class="title">getPrototype</span><span class="params">(String id)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> map.get(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取拷贝对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> id 标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Prototype</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Prototype <span class="title">getPrototypeClone</span><span class="params">(String id)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> map.get(id).clone();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>场景类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Prototype prototypeA = <span class="keyword">new</span> ConcretePrototypeA(<span class="string">&quot;ConcretePrototypeA&quot;</span>);</span><br><span class="line">        Prototype prototypeB = <span class="keyword">new</span> ConcretePrototypeB(<span class="string">&quot;ConcretePrototypeB&quot;</span>);</span><br><span class="line"></span><br><span class="line">        PrototypeManager.addPrototype(prototypeA);</span><br><span class="line">        PrototypeManager.addPrototype(prototypeB);</span><br><span class="line"></span><br><span class="line">        System.out.println(prototypeA);</span><br><span class="line">        System.out.println(PrototypeManager.getPrototype(<span class="string">&quot;ConcretePrototypeA&quot;</span>));</span><br><span class="line">        System.out.println(PrototypeManager.getPrototypeClone(<span class="string">&quot;ConcretePrototypeA&quot;</span>));</span><br><span class="line">        <span class="comment">//  ConcretePrototypeA@60e53b93</span></span><br><span class="line">        <span class="comment">//  ConcretePrototypeA@60e53b93</span></span><br><span class="line">        <span class="comment">//  ConcretePrototypeA@5e2de80c</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="原型模式的优缺点"><a href="#原型模式的优缺点" class="headerlink" title="原型模式的优缺点"></a>原型模式的优缺点</h2><p><strong>优点：</strong></p>
+<ul>
+<li>性能提高（直接操作内存中的二进制流）</li>
+<li>逃避构造函数的约束</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>必须实现 Cloneable 接口</li>
+<li>需要为每一个类配置一个克隆方法，而且该克隆方法位于类的内部，当对已有类进行改造的时候，需要修改代码，违反了开闭原则。</li>
+<li>在实现深克隆时需要编写较为复杂的代码，而且当对象之间存在多重签到引用时，为了实现深克隆，每一层对象对应的类都必须支持深克隆，实现起来会比较麻烦。</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F-Prototype-Pattern"><span class="toc-number">1.</span> <span class="toc-text">原型模式(Prototype Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">原型模式实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6Prototype-Manager%E7%9A%84%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F-%E7%99%BB%E8%AE%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">带Prototype Manager的原型模式(登记形式的原型模型)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.3.</span> <span class="toc-text">原型模式的优缺点</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】原型模式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】原型模式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】原型模式&body=Check out this article: http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】原型模式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】原型模式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】原型模式"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

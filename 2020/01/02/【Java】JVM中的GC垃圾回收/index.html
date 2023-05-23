@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="JVM中的GC垃圾回收推荐阅读 Java Garbage Collection handbook java.lang.OutOfMemoryError What Is Garbage Collection? Garbage Collection is tracking down(追踪) all the objects that are still used and marks the rest a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Java】JVM中的GC垃圾回收">
+<meta property="og:url" content="http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="JVM中的GC垃圾回收推荐阅读 Java Garbage Collection handbook java.lang.OutOfMemoryError What Is Garbage Collection? Garbage Collection is tracking down(追踪) all the objects that are still used and marks the rest a">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Java-GC-cyclical-dependencies.png">
+<meta property="og:image" content="http://example.com/images/Java-GC-mark-and-sweep.png">
+<meta property="og:image" content="http://example.com/images/jvm_conponent.png">
+<meta property="og:image" content="http://example.com/images/jvm_memory3.png">
+<meta property="og:image" content="http://example.com/images/fragmented-vs-compacted-heap.png">
+<meta property="og:image" content="http://example.com/images/object-age-based-on-GC-generation-generational-hypothesis.png">
+<meta property="og:image" content="http://example.com/images/java-heap-eden-survivor-old.png">
+<meta property="og:image" content="http://example.com/images/TLAB-in-Eden-memory.png">
+<meta property="og:image" content="http://example.com/images/how-java-garbage-collection-works.png">
+<meta property="og:image" content="http://example.com/images/gc_collection.jpg">
+<meta property="article:published_time" content="2020-01-02T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Java-GC-cyclical-dependencies.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Java】JVM中的GC垃圾回收</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2020/01/03/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84Minor%20GC%E3%80%81Major%20GC%E5%92%8CFull%20GC/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/12/05/%E3%80%90Design%20Patterns%E3%80%91%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&text=【Java】JVM中的GC垃圾回收"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&is_video=false&description=【Java】JVM中的GC垃圾回收"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】JVM中的GC垃圾回收&body=Check out this article: http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&name=【Java】JVM中的GC垃圾回收&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&t=【Java】JVM中的GC垃圾回收"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-number">1.</span> <span class="toc-text">JVM中的GC垃圾回收</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-Is-Garbage-Collection"><span class="toc-number">1.1.</span> <span class="toc-text">What Is Garbage Collection?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM-Architecture-Diagram"><span class="toc-number">1.2.</span> <span class="toc-text">JVM Architecture Diagram</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#STW-Stop-The-World"><span class="toc-number">1.3.</span> <span class="toc-text">STW - Stop The World</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.3.1.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Garbage-Collection-in-Java"><span class="toc-number">1.4.</span> <span class="toc-text">Garbage Collection in Java</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fragmenting-and-Compacting-%E7%A2%8E%E7%89%87%E5%92%8C%E5%8E%8B%E7%BC%A9"><span class="toc-number">1.4.1.</span> <span class="toc-text">Fragmenting and Compacting(碎片和压缩)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generational-Hypothesis-%E4%B8%96%E4%BB%A3%E5%81%87%E8%AF%B4"><span class="toc-number">1.4.2.</span> <span class="toc-text">Generational Hypothesis(世代假说)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Memory-Pools-%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%92%E5%88%86"><span class="toc-number">1.4.3.</span> <span class="toc-text">Memory Pools(内存池划分)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Eden"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">Eden</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Survivor-Spaces"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">Survivor Spaces</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Old-Generation"><span class="toc-number">1.4.3.3.</span> <span class="toc-text">Old Generation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PermGen"><span class="toc-number">1.4.3.4.</span> <span class="toc-text">PermGen</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Metaspace"><span class="toc-number">1.4.3.5.</span> <span class="toc-text">Metaspace</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-number">1.4.4.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM-Garbage-Collectors"><span class="toc-number">1.5.</span> <span class="toc-text">JVM Garbage Collectors</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-2"><span class="toc-number">1.5.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Java】JVM中的GC垃圾回收
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-01-02T00:00:00.000Z" itemprop="datePublished">2020-01-02</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/java/" rel="tag">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="JVM中的GC垃圾回收"><a href="#JVM中的GC垃圾回收" class="headerlink" title="JVM中的GC垃圾回收"></a>JVM中的GC垃圾回收</h1><p>推荐阅读</p>
+<p><a target="_blank" rel="noopener" href="https://plumbr.io/java-garbage-collection-handbook">Java Garbage Collection handbook</a></p>
+<p><a target="_blank" rel="noopener" href="https://plumbr.io/outofmemoryerror">java.lang.OutOfMemoryError</a></p>
+<h2 id="What-Is-Garbage-Collection"><a href="#What-Is-Garbage-Collection" class="headerlink" title="What Is Garbage Collection?"></a>What Is Garbage Collection?</h2><blockquote>
+<p>Garbage Collection is tracking down(追踪) all the objects that are still used and marks the rest as garbage.</p>
+</blockquote>
+<p><code>memory leak(内存泄露):</code>该内存被声明但未被使用</p>
+<p><strong>Reference Counting(引用计数)</strong>:</p>
+<p>可能存在循环引用问题</p>
+<p><img src="/images/Java-GC-cyclical-dependencies.png"></p>
+<p><strong>Mark and Sweep(标记清除):</strong></p>
+<p>Garbage Collection Roots(GC Root):</p>
+<ul>
+<li>Local variables(局部变量)</li>
+<li>Active threads(活动线程)</li>
+<li>Static fields(静态字段)</li>
+<li>JNI references(Java Native Interface引用)</li>
+</ul>
+<p><code>JVM</code>用于跟踪所有可到达（活动）对象并确保被非可访问对象(non-reachable)声明的内存可重用的方法称为标记和清除算法</p>
+<p>它包括两个步骤：</p>
+<ul>
+<li><strong>Marking(标记)</strong> 正在遍历所有可到达的对象，从GC根目录开始，并在所有此类对象的本机内存(native memory)中保留分类帐(ledger)</li>
+<li><strong>Sweeping(扫描)</strong> 确保了不可访问对象占用的内存地址可以在下一个分配中重用。</li>
+</ul>
+<p>JVM中不同的GC算法，例如<code>Parallel Scavenge</code>，<code>Parallel Mark + Copy或CMS</code>，在实现这些阶段时略有不同，但是在概念上，该过程仍然类似于上述两个步骤。</p>
+<p><img src="/images/Java-GC-mark-and-sweep.png"></p>
+<h2 id="JVM-Architecture-Diagram"><a href="#JVM-Architecture-Diagram" class="headerlink" title="JVM Architecture Diagram"></a>JVM Architecture Diagram</h2><p><img src="/images/jvm_conponent.png"></p>
+<p><img src="/images/jvm_memory3.png"></p>
+<p>JVM被划分为三个主要的子系统</p>
+<ul>
+<li>类装载子系统（Class Loader Subsystem）</li>
+<li>运行时数据区（Runtime Data Area）</li>
+<li>执行引擎（Execution Engine）</li>
+</ul>
+<h2 id="STW-Stop-The-World"><a href="#STW-Stop-The-World" class="headerlink" title="STW - Stop The World"></a>STW - Stop The World</h2><p><code>Java</code>中<code>Stop-The-World</code>机制简称<code>STW</code>，是在执行垃圾收集算法时，<code>Java</code>应用程序的其他所有线程都被挂起（除了垃圾收集帮助器之外）。<code>Java</code>中一种全局暂停现象，全局停顿，所有<code>Java</code>代码停止，<code>native</code>代码可以执行，但不能与<code>JVM</code>交互。</p>
+<p>除了<code>GC</code>，<code>JVM</code>下还会发生停顿现象:</p>
+<p><code>JVM</code>里有一条特殊的线程－－<code>VM Threads</code>，专门用来执行一些特殊的<code>VM Operation</code>，比如分派<code>GC</code>，<code>thread dump</code>等，这些任务，都需要整个<code>Heap</code>，以及所有线程的状态是静止的，一致的才能进行。所以<code>JVM</code>引入了安全点(<code>Safe Point</code>)的概念，想办法在需要进行<code>VM Operation</code>时，通知所有的线程进入一个静止的安全点。</p>
+<p>除了<code>GC</code>，其他触发安全点的<code>VM Operation</code>包括：</p>
+<ul>
+<li><ol>
+<li>JIT相关，比如<code>Code deoptimization, Flushing code cache</code>；</li>
+</ol>
+</li>
+<li><ol start="2">
+<li><code>Class redefinition (e.g. javaagent，AOP代码植入的产生的instrumentation)</code>；</li>
+</ol>
+</li>
+<li><ol start="3">
+<li><code>Biased lock revocation</code> 取消偏向锁；</li>
+</ol>
+</li>
+<li><ol start="4">
+<li><code>Various debug operation (e.g. thread dump or deadlock check)</code>；</li>
+</ol>
+</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/29268019/answer/43762165">现代JVM中的Safe Region和Safe Point到底是如何定义和划分的?</a></p>
+<h2 id="Garbage-Collection-in-Java"><a href="#Garbage-Collection-in-Java" class="headerlink" title="Garbage Collection in Java"></a>Garbage Collection in Java</h2><h3 id="Fragmenting-and-Compacting-碎片和压缩"><a href="#Fragmenting-and-Compacting-碎片和压缩" class="headerlink" title="Fragmenting and Compacting(碎片和压缩)"></a>Fragmenting and Compacting(碎片和压缩)</h3><p>每当进行扫描时，<code>JVM</code>必须确保填充有无法访问对象的区域可以重用。这可能会（最终将导致）内存碎片，这与磁盘碎片类似，会导致两个问题：</p>
+<ul>
+<li>写操作变得更加耗时，因为找到下一个足够大的空闲块不再是微不足道的操作。</li>
+<li>创建新对象时，<code>JVM</code>会在连续的块中分配内存。因此，如果碎片升级到没有任何单独的碎片足以容纳新创建的对象的程度，则会发生分配错误。</li>
+</ul>
+<p>为了避免此类问题，<code>JVM</code>确保碎片不会失控。因此，在垃圾回收过程中还会发生<code>“内存碎片整理”</code>过程，而不仅仅是标记和清除。此过程将所有可到达的对象彼此相邻放置，从而消除（或减少了）碎片。这是一个说明：</p>
+<p><img src="/images/fragmented-vs-compacted-heap.png"></p>
+<h3 id="Generational-Hypothesis-世代假说"><a href="#Generational-Hypothesis-世代假说" class="headerlink" title="Generational Hypothesis(世代假说)"></a>Generational Hypothesis(世代假说)</h3><blockquote>
+<p> <code>Weak Generational Hypothesis</code>(弱代假说):大部分对象的生命期很短（<code>die young</code>），而没有<code>die young</code>的对象则很可能会存活很长时间（<code>live long</code>）</p>
+</blockquote>
+<p>如前所述，执行垃圾回收需要完全停止应用程序。同样很明显，对象越多，收集所有垃圾所需的时间就越长。但是，如果我们有可能使用较小的内存区域怎么办？在研究可能性时，一组研究人员观察到，应用程序内部的大多数分配都分为两类：</p>
+<ul>
+<li>大多数对象很快就变得不被使用</li>
+<li>还有一部分不会立即无用,但也不会持续(太)长时间</li>
+</ul>
+<p>这些观测形成了 <code>弱代假设(Weak Generational Hypothesis)</code>。基于这一假设, VM中的内存被分为<code>年轻代(Young Generation)</code>和<code>老年代(Old Generation)</code>。老年代有时候也称为 <code>年老区(Tenured)</code>。</p>
+<p><img src="/images/object-age-based-on-GC-generation-generational-hypothesis.png"></p>
+<p>拆分为这样两个可清理的单独区域，允许采用不同的算法来大幅提高GC的性能。</p>
+<p>这种方法也不是没有问题。例如，在不同分代中的对象可能会互相引用, 在收集某一个分代时就会成为 “事实上的” GC root(‘defacto’ GC roots)。</p>
+<p>当然,要着重强调的是,分代假设并不适用于所有程序。因为GC算法专门针对<code>“要么死得快”，“否则可能永远活着”</code> 这类特征的对象来进行优化, JVM对收集那种存活时间半长不长的对象就显得非常尴尬了。</p>
+<h3 id="Memory-Pools-内存池划分"><a href="#Memory-Pools-内存池划分" class="headerlink" title="Memory Pools(内存池划分)"></a>Memory Pools(内存池划分)</h3><p>应该熟悉堆中以下内存池的划分。不太容易理解的地方在于各个内存池中的垃圾收集是如何运行的。注意，在不同的GC算法中，一些实现细节可能有所不同，但是本章中的概念实际上仍然相同。</p>
+<p><img src="/images/java-heap-eden-survivor-old.png"></p>
+<h4 id="Eden"><a href="#Eden" class="headerlink" title="Eden"></a>Eden</h4><p><code>Eden</code> 是内存中的一个区域, 用来分配新创建的对象。</p>
+<p>由于通常有多个线程同时创建许多对象，因此<code>Eden</code>进一步分为一个或多个,驻留在<code>Eden</code>空间中的<strong>Thread Local Allocation Buffer(TLAB for short)线程本地分配缓冲区简称TLAB）</strong><br>.通过这种缓冲区划分,大部分对象直接由<code>JVM</code>在对应线程的<code>TLAB</code>中分配, 避免与其他线程的同步操作。</p>
+<p>如果无法在<code>TLAB</code>内部进行分配（通常是因为那里没有足够的空间），则分配将转移到共享的Eden空间。如果那里没有足够的空间，则会触发<code>Young Generation</code>中的垃圾收集过程以释放更多空间。<br>如果<code>Young GC</code>也没有在<code>Eden</code>内部产生足够的可用内存，则该对象将分配到<code>老年代空间(Old Generation)</code>。</p>
+<p>当<code>Eden</code>区进行垃圾收集时, <code>GC</code>会从<code>根(Roots)目录</code>遍历所有可到达的对象并将它们标记为<code>存活(alive)</code>。</p>
+<p>我们曾指出,对象间可能会有<code>跨代的引用</code>, 所以需要一种方法来标记检查从其他分代中指向<code>Eden</code>的所有引用。但是这样做将和世代相传的初衷不合.<code>JVM</code>有一个技巧：<code>卡片标记(card-marking)</code>。本质上，<code>JVM</code>只是在<code>Eden</code>中标记了“脏”对象的粗略位置，这些对象可能与上一代有链接。更多参考<a target="_blank" rel="noopener" href="http://psy-lob-saw.blogspot.com/2014/10/the-jvm-write-barrier-card-marking.html">the-jvm-write-barrier-card-marking</a></p>
+<p><img src="/images/TLAB-in-Eden-memory.png"></p>
+<p>标记阶段完成后，将<code>Eden</code>中的所有活动对象复制到<code>幸存者区(Survivor spaces)之一</code>。现在，整个<code>Eden</code>被认为是空的，可以重新使用以分配更多对象。这种方法称为<code>“标记-复制”(Mark and Copy)</code>：标记活动对象，然后将其复制（而不移动）到幸存者空间。</p>
+<h4 id="Survivor-Spaces"><a href="#Survivor-Spaces" class="headerlink" title="Survivor Spaces"></a>Survivor Spaces</h4><p><code>Eden</code>区的旁边是两个<code>幸存区(Survivor Spaces)</code>, 称为 <code>from 空间</code>和 <code>to 空间</code>,<strong>重要的是要注意两个幸存者空间之一始终是空的</strong>。</p>
+<p>空的那个幸存者空间用于在下一次<code>Young GC</code>时存放收集的对象。整个<code>年轻代(Young)</code>的所有活动对象（包括<code>Eden空间</code>和<code>非空的“from”生存空间</code>）都被复制到<code>“ to”生存空间</code>。<code>GC</code>过程完成后, <code>to区</code>有对象,而 <code>from区</code>里没有对象。两者的角色进行正好切换 。</p>
+<p><img src="/images/how-java-garbage-collection-works.png"></p>
+<p>在两个幸存者空间之间复制活动对象的过程重复进行多次，直到某些对象被认为已经成熟并且“足够旧”为止。请记住，基于世代假设，存活了一段时间的对象预计将继续使用很长时间。</p>
+<p>这类“ 年老” 的对象因此被<code>晋升(promoted)</code>到<code>Tenured老年代(Old space)</code>。提升的时候， 幸存者空间的对象不再是复制到另一个幸存者空间,而是迁移到<code>Tenured老年代(Old space)</code>, 并在<code>Tenured老年代(Old space)</code>一直驻留, 直到变为不可达对象。</p>
+<p>为了确定对象是否“足够老”，可以认为已准备好传播到旧空间，<code>GC</code>会跟踪集合中特定对象的幸存次数。在每一代对象完成了<code>GC</code>之后，那些仍然存在的对象的年龄就会增加。只要年龄超过某个使用  <code>tenuring threshold(期限阈值)</code>，  该对象就会被<code>晋升(promoted)</code>到旧空间(Old space)。</p>
+<p>具体的提升阈值由<code>JVM</code>动态调整,但也可以用参数 <code>-XX:+MaxTenuringThreshold</code> 来指定上限。如果设置 <code>-XX:+MaxTenuringThreshold=0</code> , 则<code>GC</code>时存活对象不在存活区之间复制，直接提升到<code>Old Generation</code>。现代 <code>JVM</code> 中这个阈值默认设置为<code>15个GC周期</code>。这也是<code>HotSpot</code>中的最大值。</p>
+<p>如果幸存者空间的大小不足以容纳<code>Young一代</code>中的所有活动对象，那么晋升也可能过早地发生。</p>
+<h4 id="Old-Generation"><a href="#Old-Generation" class="headerlink" title="Old Generation"></a>Old Generation</h4><p><code>Old Generation</code>内存空间的实现要复杂得多。<code>Old Generation</code>通常更大，并且被不太可能成为垃圾的对象所占据。</p>
+<p>与<code>Young Generation</code>相比，<code>Old Generation</code>中发生<code>GC</code>的频率更低。此外，由于大多数对象在<code>Old Generation</code>中都还活着，因此不会发生 <code>Mark and Copy (标记和复制)</code>事件。相反，对象会四处移动以最大程度地减少碎片。清理<code>Old space</code>的算法通常建立在不同的基础上。原则上，采取的步骤如下：</p>
+<ul>
+<li>通过<code>标志位(marked bit)</code>,标记所有通过 <code>GC roots</code> 可达的对象.</li>
+<li>删除所有不可达对象</li>
+<li>通过将活动对象<code>连续复制</code>到老年代空间的开头来压缩老年代空间的内容</li>
+</ul>
+<p>通过上面的描述可知, 老年代<code>GC</code>必须明确地进行整理,以避免内存碎片过多。</p>
+<h4 id="PermGen"><a href="#PermGen" class="headerlink" title="PermGen"></a>PermGen</h4><p>在<code>Java 8</code>之前有一个特殊的空间,称为<code>永久代(Permanent Generation)</code>。这是<code>元数据(metadata)</code>比如<code>classes</code>所在之处.此外，<code>Permgen</code>还保留了一些其他内容，例如<code>内部字符串(internalized strings)</code>。实际上这给Java开发者造成了很多麻烦,因为很难去计算这块区域到底需要占用多少内存空间。预测失败导致的结果就是产生 <code>java.lang.OutOfMemoryError: Permgen space</code> 这种形式的错误。<br>除非<code>OutOfMemoryError</code>确实是内存泄漏导致的,否则就只能增加<code>permgen</code>的大小，例如下面的示例，就是设置<code>permgen</code>最大空间为 256 MB:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -XX：MaxPermSize = 256m com.mycompany.MyApplication</span><br></pre></td></tr></table></figure>
+
+<h4 id="Metaspace"><a href="#Metaspace" class="headerlink" title="Metaspace"></a>Metaspace</h4><p>由于预测对元数据的需求是一项复杂且不便的工作，因此在<code>Java 8</code>中删除了<code>Permanent Generation</code>，转而支持<code>Metaspace</code>。从那时起，大多数杂项都移到了常规<code>Java堆</code>中。</p>
+<p>当然，像<code>类定义(class definitions)</code>之类的信息会被加载到 <code>Metaspace</code> 中。元数据区位于本地内存<code>(native memory)</code>,不再影响到堆中的普通的Java对象.默认情况下，<code>Metaspace</code>大小仅受Java进程可用的本机内存量限制.这样程序就不再因为多加载了几个类/JAR包就导致 <code>java.lang.OutOfMemoryError: Permgen space.</code>注意, 这种不受限制的空间也不是没有代价的 —— 如果 <code>Metaspace</code> 失控, 则可能会导致很严重的内存交换(swapping), 或者导致本地内存分配失败。</p>
+<p>如果您仍然希望在这种情况下保护自己，则可以像下面这样限制<code>Metaspace</code>的增长，将<code>Metaspace</code>的大小限制为256 MB：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -XX:MaxMetaspaceSize=256m com.mycompany.MyApplication</span><br></pre></td></tr></table></figure>
+
+<h3 id="参考-1"><a href="#参考-1" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://plumbr.io/handbook/garbage-collection-in-java">Garbage Collection in Java</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/53613423">java的gc为什么要分代？</a></p>
+<h2 id="JVM-Garbage-Collectors"><a href="#JVM-Garbage-Collectors" class="headerlink" title="JVM Garbage Collectors"></a>JVM Garbage Collectors</h2><p><img src="/images/gc_collection.jpg"></p>
+<table>
+<thead>
+<tr>
+<th>收集器</th>
+<th>收集范围</th>
+<th>算法</th>
+<th>执行类型</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Serial(串行GC)</code></td>
+<td>新生代</td>
+<td>复制</td>
+<td>单线程</td>
+<td>Jvm client模式下默认的新生代收集器</td>
+</tr>
+<tr>
+<td><code>ParNew(并行GC)</code></td>
+<td>新生代</td>
+<td>复制</td>
+<td>多线程并行</td>
+<td>serial收集器的多线程版本</td>
+</tr>
+<tr>
+<td><code>Parallel Scavenge(并行回收GC)</code></td>
+<td>新生代</td>
+<td>复制</td>
+<td>多线程并行</td>
+<td>目标是达到一个可控制的吞吐量<br>吞吐量= 程序运行时间/(程序运行时间 + 垃圾收集时间)<br>虚拟机总共运行了100分钟。其中垃圾收集花掉1分钟，那吞吐量就是99%。</td>
+</tr>
+<tr>
+<td><code>Serial Old(串行GC)</code></td>
+<td>老年代</td>
+<td>标记整理</td>
+<td>单线程</td>
+<td>Serial收集器的老年代版本<br>主要使用在Client模式下的虚拟机</td>
+</tr>
+<tr>
+<td><code>Parallel Old(并行GC)</code></td>
+<td>老年代</td>
+<td>标记整理</td>
+<td>多线程并行</td>
+<td>Parallel Scavenge收集器的老年代版本</td>
+</tr>
+<tr>
+<td><code>CMS(并发GC)</code></td>
+<td>老年代</td>
+<td>标记清除</td>
+<td>多线程并发</td>
+<td>以获取最短回收停顿时间为目标的收集器</td>
+</tr>
+<tr>
+<td><code>G1</code></td>
+<td>全部</td>
+<td>复制算法,标记整理</td>
+<td>多线程</td>
+<td>以获取最短回收停顿时间为目标的收集器</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><code>并行(Parallel)</code>：多条垃圾收集线程并行工作，而用户线程仍处于等待状态<br><code>并发(Concurrent)</code>：垃圾收集线程与用户线程一段时间内同时工作(交替执行)</p>
+</blockquote>
+<h3 id="参考-2"><a href="#参考-2" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://my.oschina.net/hosee/blog/644618">JVM GC参数以及GC算法的应用</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1102243">JVM GC算法</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.toutiao.com/i6490796229067276814/">java虚拟机之HotSpot垃圾收集器</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/java2000_wl/article/details/8030172">Java虚拟机学习 - 垃圾收集器</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-number">1.</span> <span class="toc-text">JVM中的GC垃圾回收</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-Is-Garbage-Collection"><span class="toc-number">1.1.</span> <span class="toc-text">What Is Garbage Collection?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM-Architecture-Diagram"><span class="toc-number">1.2.</span> <span class="toc-text">JVM Architecture Diagram</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#STW-Stop-The-World"><span class="toc-number">1.3.</span> <span class="toc-text">STW - Stop The World</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.3.1.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Garbage-Collection-in-Java"><span class="toc-number">1.4.</span> <span class="toc-text">Garbage Collection in Java</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fragmenting-and-Compacting-%E7%A2%8E%E7%89%87%E5%92%8C%E5%8E%8B%E7%BC%A9"><span class="toc-number">1.4.1.</span> <span class="toc-text">Fragmenting and Compacting(碎片和压缩)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generational-Hypothesis-%E4%B8%96%E4%BB%A3%E5%81%87%E8%AF%B4"><span class="toc-number">1.4.2.</span> <span class="toc-text">Generational Hypothesis(世代假说)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Memory-Pools-%E5%86%85%E5%AD%98%E6%B1%A0%E5%88%92%E5%88%86"><span class="toc-number">1.4.3.</span> <span class="toc-text">Memory Pools(内存池划分)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Eden"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">Eden</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Survivor-Spaces"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">Survivor Spaces</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Old-Generation"><span class="toc-number">1.4.3.3.</span> <span class="toc-text">Old Generation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PermGen"><span class="toc-number">1.4.3.4.</span> <span class="toc-text">PermGen</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Metaspace"><span class="toc-number">1.4.3.5.</span> <span class="toc-text">Metaspace</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-number">1.4.4.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM-Garbage-Collectors"><span class="toc-number">1.5.</span> <span class="toc-text">JVM Garbage Collectors</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-2"><span class="toc-number">1.5.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&text=【Java】JVM中的GC垃圾回收"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&is_video=false&description=【Java】JVM中的GC垃圾回收"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】JVM中的GC垃圾回收&body=Check out this article: http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&title=【Java】JVM中的GC垃圾回收"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&name=【Java】JVM中的GC垃圾回收&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/01/02/%E3%80%90Java%E3%80%91JVM%E4%B8%AD%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/&t=【Java】JVM中的GC垃圾回收"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Minikube-Kubernetes本地环境进行开发使用Minikube启动Minikube 12345678910111213141516171819202122# 启动 指定国内仓库# minikube start --image-mirror-country&#x3D;&amp;#x27;cn&amp;#x27; --registry-mirror https:&#x2F;&#x2F;dockerhub.azk8s.cn# 指定内存大">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【kubernetes】Minikube-Kubernetes本地环境进行开发">
+<meta property="og:url" content="http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Minikube-Kubernetes本地环境进行开发使用Minikube启动Minikube 12345678910111213141516171819202122# 启动 指定国内仓库# minikube start --image-mirror-country&#x3D;&amp;#x27;cn&amp;#x27; --registry-mirror https:&#x2F;&#x2F;dockerhub.azk8s.cn# 指定内存大">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-05-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【kubernetes】Minikube-Kubernetes本地环境进行开发</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/05/19/%E3%80%90docker%E3%80%91Docker%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BARedis%E9%9B%86%E7%BE%A4(cluster)/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/05/12/%E3%80%90Java%E3%80%91%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E4%B8%AD%E7%9A%84spi%E6%9C%BA%E5%88%B6/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&text=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&is_video=false&description=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Minikube-Kubernetes本地环境进行开发&body=Check out this article: http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&name=【kubernetes】Minikube-Kubernetes本地环境进行开发&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&t=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91"><span class="toc-number">1.</span> <span class="toc-text">Minikube-Kubernetes本地环境进行开发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Minikube"><span class="toc-number">1.1.</span> <span class="toc-text">使用Minikube</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Minikube%E8%8E%B7%E5%8F%96%E6%9C%8D%E5%8A%A1%E8%AE%BF%E9%97%AE%E5%9C%B0%E5%9D%80"><span class="toc-number">1.1.1.</span> <span class="toc-text">使用Minikube获取服务访问地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.2.</span> <span class="toc-text">删除服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9C%E6%AD%A2Minikube"><span class="toc-number">1.1.3.</span> <span class="toc-text">停止Minikube</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BDMinikube"><span class="toc-number">1.1.4.</span> <span class="toc-text">卸载Minikube</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">可能遇到的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.3.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【kubernetes】Minikube-Kubernetes本地环境进行开发
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-15T00:00:00.000Z" itemprop="datePublished">2019-05-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Minikube-Kubernetes本地环境进行开发"><a href="#Minikube-Kubernetes本地环境进行开发" class="headerlink" title="Minikube-Kubernetes本地环境进行开发"></a>Minikube-Kubernetes本地环境进行开发</h1><h2 id="使用Minikube"><a href="#使用Minikube" class="headerlink" title="使用Minikube"></a>使用Minikube</h2><p><strong>启动Minikube</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 指定国内仓库</span></span><br><span class="line"><span class="comment"># minikube start --image-mirror-country=&#x27;cn&#x27; --registry-mirror https://dockerhub.azk8s.cn</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定内存大小以及启动驱动和K8S版本， 自动选择 docker 驱动。其他选项：podman, virtualbox, none, ssh</span></span><br><span class="line"><span class="comment"># minikube start --memory=8192MB --cpus=4 --image-mirror-country=&#x27;cn&#x27; --vm-driver=virtualbox --kubernetes-version v1.23.1 </span></span><br><span class="line">minkube start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查状态</span></span><br><span class="line">minikube status</span><br><span class="line"></span><br><span class="line">host: Running</span><br><span class="line">kubelet: Running</span><br><span class="line">apiserver: Running</span><br><span class="line">kubectl: Correctly Configured: pointing to minikube-vm at 192.168.99.100</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问面板</span></span><br><span class="line">$ minikube dashboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问web前端</span></span><br><span class="line">$ kubectl proxy</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>开启Addons监控等</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取插件列表</span></span><br><span class="line">$ minikube addons list</span><br><span class="line"></span><br><span class="line">|-----------------------------|----------|--------------|                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">|         ADDON NAME          | PROFILE  |    STATUS    |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">|-----------------------------|----------|--------------|                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| ambassador                  | minikube | disabled     |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| csi-hostpath-driver         | minikube | disabled     |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| dashboard                   | minikube | enabled ✅   |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| default-storageclass        | minikube | enabled ✅   |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| efk                         | minikube | disabled     |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| freshpod                    | minikube | disabled     |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| gcp-auth                    | minikube | disabled     |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| gvisor                      | minikube | disabled     |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| helm-tiller                 | minikube | disabled     |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| ingress                     | minikube | disabled     |                                                                                                                                                                                                                                                                                                                  </span><br><span class="line">| ingress-dns                 | minikube | disabled     |                                 </span><br><span class="line">| istio                       | minikube | disabled     |                                 </span><br><span class="line">| istio-provisioner           | minikube | disabled     |                                 </span><br><span class="line">| kubevirt                    | minikube | disabled     |                                 </span><br><span class="line">| logviewer                   | minikube | disabled     |                                 </span><br><span class="line">| metallb                     | minikube | disabled     |                                 </span><br><span class="line">| metrics-server              | minikube | disabled     |                                 </span><br><span class="line">| nvidia-driver-installer     | minikube | disabled     |                                 </span><br><span class="line">| nvidia-gpu-device-plugin    | minikube | disabled     |                                 </span><br><span class="line">| olm                         | minikube | disabled     |                                 </span><br><span class="line">| pod-security-policy         | minikube | disabled     |                                 </span><br><span class="line">| registry                    | minikube | disabled     |                                 </span><br><span class="line">| registry-aliases            | minikube | disabled     |                                 </span><br><span class="line">| registry-creds              | minikube | disabled     |                                 </span><br><span class="line">| storage-provisioner         | minikube | enabled ✅   |                                 </span><br><span class="line">| storage-provisioner-gluster | minikube | disabled     |                                 </span><br><span class="line">| volumesnapshots             | minikube | disabled     |                                 </span><br><span class="line">|-----------------------------|----------|--------------| </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启监控，可以使用 kubectl top pod,node 命令</span></span><br><span class="line">$ minikube addons <span class="built_in">enable</span> heapster</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>获取命名空间</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl get namespaces</span></span><br><span class="line"><span class="comment"># 切换命名空间可以使用： kubens</span></span><br><span class="line">$ kubectl get ns</span><br><span class="line">NAME              STATUS   AGE</span><br><span class="line">default           Active   156m</span><br><span class="line">kube-node-lease   Active   156m</span><br><span class="line">kube-public       Active   156m</span><br><span class="line">kube-system       Active   156m</span><br></pre></td></tr></table></figure>
+
+<p><strong>获取集群信息</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl cluster-info</span><br><span class="line">Kubernetes master is running at https://192.168.99.100:8443</span><br><span class="line">KubeDNS is running at https://192.168.99.100:8443/api/v1/namespaces/kube-system/services/kube-</span><br><span class="line">dns:dns/proxy</span><br><span class="line"></span><br><span class="line">To further debug and diagnose cluster problems, use <span class="string">&#x27;kubectl cluster-info dump&#x27;</span>.</span><br></pre></td></tr></table></figure>
+
+<p><strong>获取节点信息</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get node</span><br><span class="line"></span><br><span class="line">NAME       STATUS   ROLES    AGE    VERSION</span><br><span class="line">minikube   Ready    master   162m   v1.14.1</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行nginx</strong></p>
+<p>直接生成<code>Pod</code>，暴露<code>Service</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行nginx 这里是直接运行pod</span></span><br><span class="line">$ kubectl run nginx --image=nginx:1.21 --port=80 --labels=<span class="string">&quot;app=nginx,env=dev&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加新标签</span></span><br><span class="line"><span class="comment"># kubectl label pod $POD_NAME app2=test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布服务采用对外暴露节点</span></span><br><span class="line"><span class="comment"># NodePort 需要被外部访问</span></span><br><span class="line"><span class="comment"># TargetPort</span></span><br><span class="line"><span class="comment"># Port</span></span><br><span class="line"><span class="comment"># HostPort</span></span><br><span class="line">$ kubectl expose pod nginx --<span class="built_in">type</span>=NodePort</span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问</span></span><br><span class="line">$ minikube service nginx --url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除</span></span><br><span class="line">kubectl delete -n default service,pod nginx</span><br><span class="line">kubectl delete -n default service,pod -l app=nginx</span><br><span class="line">kubectl delete -n default all -l app=nginx</span><br></pre></td></tr></table></figure>
+
+<p>生成<code>Deployment</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment nginx --image=nginx:1.21 --port=80 --replicas=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里会生成Service，通过--type=NodePort可被外部访问</span></span><br><span class="line">kubectl expose deployment nginx --<span class="built_in">type</span>=NodePort --port=80 --labels=<span class="string">&quot;app=nginx,env=dev&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>获取pods</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ kubectl get pods</span><br><span class="line"><span class="comment"># 根据标签查询</span></span><br><span class="line"><span class="comment"># kubectl get pods -l app=nginx</span></span><br><span class="line"></span><br><span class="line">NAME                    READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-fcb945956-t8bqq   1/1     Running   0          67s</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取pod详细信息</span></span><br><span class="line"><span class="comment"># kubectl describe pods -l app=nginx</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>查看Pod日志</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs <span class="variable">$POD_NAME</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>进入Pod中</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看环境</span></span><br><span class="line"><span class="comment"># kubectl exec $POD_NAME env</span></span><br><span class="line"></span><br><span class="line">$ kubectl <span class="built_in">exec</span> -ti nginx-fcb945956-t8bqq /bin/bash</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>获取deployment</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get deployment</span><br><span class="line"></span><br><span class="line">NAME    READY   UP-TO-DATE   AVAILABLE   AGE</span><br><span class="line">nginx   1/1     1            1           18m</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取描述</span></span><br><span class="line">$ kubectl describe deployment</span><br><span class="line"></span><br><span class="line">Name:                   nginx</span><br><span class="line">Namespace:              default</span><br><span class="line">CreationTimestamp:      Wed, 15 May 2019 23:29:23 +0800</span><br><span class="line">Labels:                 app=nginx</span><br><span class="line">                        env=dev</span><br><span class="line">Annotations:            deployment.kubernetes.io/revision: 1</span><br><span class="line">Selector:               app=nginx,env=dev</span><br><span class="line">Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable</span><br><span class="line">StrategyType:           RollingUpdate</span><br><span class="line">MinReadySeconds:        0</span><br><span class="line">RollingUpdateStrategy:  25% max unavailable, 25% max surge</span><br><span class="line">Pod Template:</span><br><span class="line">  Labels:  app=nginx</span><br><span class="line">           env=dev</span><br><span class="line">  Containers:</span><br><span class="line">   nginx:</span><br><span class="line">    Image:        nginx:1.16</span><br><span class="line">    Port:         8081/TCP</span><br><span class="line">    Host Port:    0/TCP</span><br><span class="line">    Environment:  &lt;none&gt;</span><br><span class="line">    Mounts:       &lt;none&gt;</span><br><span class="line">  Volumes:        &lt;none&gt;</span><br><span class="line">Conditions:</span><br><span class="line">  Type           Status  Reason</span><br><span class="line">  ----           ------  ------</span><br><span class="line">  Available      True    MinimumReplicasAvailable</span><br><span class="line">  Progressing    True    NewReplicaSetAvailable</span><br><span class="line">OldReplicaSets:  &lt;none&gt;</span><br><span class="line">NewReplicaSet:   nginx-fcb945956 (1/1 replicas created)</span><br><span class="line">Events:</span><br><span class="line">  Type    Reason             Age   From                   Message</span><br><span class="line">  ----    ------             ----  ----                   -------</span><br><span class="line">  Normal  ScalingReplicaSet  18m   deployment-controller  Scaled up replica <span class="built_in">set</span> nginx-fcb945956 to 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>获取svc(services)</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl get svc</span></span><br><span class="line">$ kubectl get services</span><br><span class="line"></span><br><span class="line">NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE</span><br><span class="line">kubernetes   ClusterIP   10.96.0.1       &lt;none&gt;        443/TCP        3h8m</span><br><span class="line">nginx        NodePort    10.105.192.17   &lt;none&gt;        80:31199/TCP   5m9s</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取详情</span></span><br><span class="line">$ kubectl describe services</span><br><span class="line"></span><br><span class="line">Name:              kubernetes</span><br><span class="line">Namespace:         default</span><br><span class="line">Labels:            component=apiserver</span><br><span class="line">                   provider=kubernetes</span><br><span class="line">Annotations:       &lt;none&gt;</span><br><span class="line">Selector:          &lt;none&gt;</span><br><span class="line">Type:              ClusterIP</span><br><span class="line">IP:                10.96.0.1</span><br><span class="line">Port:              https  443/TCP</span><br><span class="line">TargetPort:        8443/TCP</span><br><span class="line">Endpoints:         192.168.99.100:8443</span><br><span class="line">Session Affinity:  None</span><br><span class="line">Events:            &lt;none&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Name:                     nginx</span><br><span class="line">Namespace:                default</span><br><span class="line">Labels:                   app=nginx</span><br><span class="line">                          env=dev</span><br><span class="line">Annotations:              &lt;none&gt;</span><br><span class="line">Selector:                 app=nginx,env=dev</span><br><span class="line">Type:                     NodePort</span><br><span class="line">IP:                       10.105.192.17</span><br><span class="line">Port:                     &lt;<span class="built_in">unset</span>&gt;  80/TCP</span><br><span class="line">TargetPort:               80/TCP</span><br><span class="line">NodePort:                 &lt;<span class="built_in">unset</span>&gt;  31199/TCP</span><br><span class="line">Endpoints:                172.17.0.5:80</span><br><span class="line">Session Affinity:         None</span><br><span class="line">External Traffic Policy:  Cluster</span><br><span class="line">Events:                   &lt;none&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用Minikube获取服务访问地址"><a href="#使用Minikube获取服务访问地址" class="headerlink" title="使用Minikube获取服务访问地址"></a>使用Minikube获取服务访问地址</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取服务url</span></span><br><span class="line">$ minikube service nginx --url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问测试</span></span><br><span class="line">$ curl $(minikube service nginx --url)</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除服务"><a href="#删除服务" class="headerlink" title="删除服务"></a>删除服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl delete deployments --all</span></span><br><span class="line">$ kubectl delete deployments -l app=nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># kubectl delete pods --all</span></span><br><span class="line">$ kubectl delete pods -l app=nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除service</span></span><br><span class="line">kubectl delete service -l app=nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="停止Minikube"><a href="#停止Minikube" class="headerlink" title="停止Minikube"></a>停止Minikube</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube stop</span><br></pre></td></tr></table></figure>
+
+<h3 id="卸载Minikube"><a href="#卸载Minikube" class="headerlink" title="卸载Minikube"></a>卸载Minikube</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ minikube delete </span><br><span class="line">$ rm -rf ~/.minikube <span class="comment"># 删除配置</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h2><p><strong>kube-proxy无法正常启动</strong><br>可能造成的影响有<code>minikube dashboard --alsologtostderr -v=1</code> 启动dashboard发现报错503</p>
+<p>通过以下命令查看日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取所有运行的pod</span></span><br><span class="line">$ kubectl get pods --all-namespaces</span><br><span class="line"></span><br><span class="line">NAMESPACE              NAME                                        READY   STATUS             RESTARTS   AGE</span><br><span class="line">default                nginx                                       1/1     Running            10         8d</span><br><span class="line">kube-system            coredns-54d67798b7-q7css                    0/1     Running            10         8d</span><br><span class="line">kube-system            etcd-minikube                               1/1     Running            11         8d</span><br><span class="line">kube-system            kube-apiserver-minikube                     1/1     Running            11         8d</span><br><span class="line">kube-system            kube-controller-manager-minikube            1/1     Running            11         8d</span><br><span class="line">kube-system            kube-proxy-97lq4                            0/1     CrashLoopBackOff   93         8d</span><br><span class="line">kube-system            kube-scheduler-minikube                     1/1     Running            11         8d</span><br><span class="line">kube-system            storage-provisioner                         0/1     CrashLoopBackOff   81         8d</span><br><span class="line">kubernetes-dashboard   dashboard-metrics-scraper-c95fcf479-65spj   1/1     Running            10         8d</span><br><span class="line">kubernetes-dashboard   kubernetes-dashboard-6cff4c7c4f-46x4k       0/1     CrashLoopBackOff   79         8d</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看proxy日志</span></span><br><span class="line">$ kubectl logs -f kubernetes-dashboard-6cff4c7c4f-46x4k -n kube-system</span><br><span class="line"></span><br><span class="line">W0207 06:50:25.361857       1 proxier.go:661] Failed to load kernel module ip_vs with modprobe. You can ignore this message when kube-proxy is running inside container without mounting /lib/modules</span><br><span class="line">W0207 06:50:25.363017       1 proxier.go:661] Failed to load kernel module ip_vs_rr with modprobe. You can ignore this message when kube-proxy is running inside container without mounting /lib/modules</span><br><span class="line">W0207 06:50:25.364149       1 proxier.go:661] Failed to load kernel module ip_vs_wrr with modprobe. You can ignore this message when kube-proxy is running inside container without mounting /lib/modules</span><br><span class="line">W0207 06:50:25.365165       1 proxier.go:661] Failed to load kernel module ip_vs_sh with modprobe. You can ignore this message when kube-proxy is running inside container without mounting /lib/modules</span><br><span class="line">I0207 06:50:25.383182       1 node.go:172] Successfully retrieved node IP: 192.168.49.2</span><br><span class="line">I0207 06:50:25.383211       1 server_others.go:142] kube-proxy node IP is an IPv4 address (192.168.49.2), assume IPv4 operation</span><br><span class="line">W0207 06:50:25.401386       1 server_others.go:578] Unknown proxy mode <span class="string">&quot;&quot;</span>, assuming iptables proxy</span><br><span class="line">I0207 06:50:25.401514       1 server_others.go:185] Using iptables Proxier.</span><br><span class="line">I0207 06:50:25.401820       1 server.go:650] Version: v1.20.0</span><br><span class="line">I0207 06:50:25.402289       1 conntrack.go:100] Set sysctl <span class="string">&#x27;net/netfilter/nf_conntrack_max&#x27;</span> to 524288</span><br><span class="line">F0207 06:50:25.402321       1 server.go:495] open /proc/sys/net/netfilter/nf_conntrack_max: permission denied</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>修复：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sysctl net.netfilter.nf_conntrack_max  <span class="comment"># 查看限制</span></span><br><span class="line">sysctl net.netfilter.nf_conntrack_count <span class="comment"># 查看当前是否超限</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改限制</span></span><br><span class="line">sudo <span class="built_in">echo</span> net.ipv4.netfilter.ip_conntrack_max=524288 &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="comment"># 刷新</span></span><br><span class="line">sudo sysctl -p</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://minikube.sigs.k8s.io/docs/">Minikube Document</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/services-networking/service/">K8S官网文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/221687">Minikube - Kubernetes本地实验环境</a></p>
+<p><a target="_blank" rel="noopener" href="https://linux.cn/article-8847-1.html">Minikube：使用 Kubernetes 进行本地开发</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cocowool/p/k8s_describe_node_pod_and_service.html">Kubernetes基础：查看状态、管理服务</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91"><span class="toc-number">1.</span> <span class="toc-text">Minikube-Kubernetes本地环境进行开发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Minikube"><span class="toc-number">1.1.</span> <span class="toc-text">使用Minikube</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Minikube%E8%8E%B7%E5%8F%96%E6%9C%8D%E5%8A%A1%E8%AE%BF%E9%97%AE%E5%9C%B0%E5%9D%80"><span class="toc-number">1.1.1.</span> <span class="toc-text">使用Minikube获取服务访问地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.2.</span> <span class="toc-text">删除服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9C%E6%AD%A2Minikube"><span class="toc-number">1.1.3.</span> <span class="toc-text">停止Minikube</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BDMinikube"><span class="toc-number">1.1.4.</span> <span class="toc-text">卸载Minikube</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">可能遇到的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.3.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&text=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&is_video=false&description=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Minikube-Kubernetes本地环境进行开发&body=Check out this article: http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&title=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&name=【kubernetes】Minikube-Kubernetes本地环境进行开发&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/05/15/%E3%80%90kubernetes%E3%80%91Minikube-Kubernetes%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E5%BC%80%E5%8F%91/&t=【kubernetes】Minikube-Kubernetes本地环境进行开发"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

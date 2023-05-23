@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Jboss部署SpringBoot2 JPA目录结构 12345.└── webapp    └── META-INF        ├── jboss-deployment-structure.xml        └── jboss-web.xml  jboss-deployment-structure.xml 12345678910111213141516171819202122232425">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux】Jboss部署SpringBoot2 JPA">
+<meta property="og:url" content="http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Jboss部署SpringBoot2 JPA目录结构 12345.└── webapp    └── META-INF        ├── jboss-deployment-structure.xml        └── jboss-web.xml  jboss-deployment-structure.xml 12345678910111213141516171819202122232425">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-09-18T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Linux】Jboss部署SpringBoot2 JPA</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2021/01/03/%E3%80%90Linux%E3%80%91Aria2%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2020/07/29/%E3%80%90Java%E3%80%91JVM%E7%9A%84%E5%9F%BA%E5%87%86%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95JMH/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&text=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&is_video=false&description=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】Jboss部署SpringBoot2 JPA&body=Check out this article: http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&name=【Linux】Jboss部署SpringBoot2 JPA&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&t=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Jboss%E9%83%A8%E7%BD%B2SpringBoot2-JPA"><span class="toc-number">1.</span> <span class="toc-text">Jboss部署SpringBoot2 JPA</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%86%E5%90%ABjavax-validation-api%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-number">1.1.</span> <span class="toc-text">使用了含javax.validation.api的情况</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Linux】Jboss部署SpringBoot2 JPA
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-09-18T00:00:00.000Z" itemprop="datePublished">2020-09-18</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Linux/" rel="tag">Linux</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Jboss部署SpringBoot2-JPA"><a href="#Jboss部署SpringBoot2-JPA" class="headerlink" title="Jboss部署SpringBoot2 JPA"></a>Jboss部署SpringBoot2 JPA</h1><p>目录结构</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">└── webapp</span><br><span class="line">    └── META-INF</span><br><span class="line">        ├── jboss-deployment-structure.xml</span><br><span class="line">        └── jboss-web.xml</span><br></pre></td></tr></table></figure>
+
+<p><strong>jboss-deployment-structure.xml</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">jboss-deployment-structure</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">deployment</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">exclude-subsystems</span>&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">&lt;!-- 排除 javax.persistence.api 依赖 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">subsystem</span> <span class="attr">name</span>=<span class="string">&quot;jpa&quot;</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">subsystem</span> <span class="attr">name</span>=<span class="string">&quot;org.hibernate&quot;</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">subsystem</span> <span class="attr">name</span>=<span class="string">&quot;org.hibernate.validator&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">&lt;!-- 排除 org.jboss.logging 依赖 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">subsystem</span> <span class="attr">name</span>=<span class="string">&quot;logging&quot;</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">exclude-subsystems</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">			<span class="comment">&lt;!--&lt;module name=&quot;javax.validation.api&quot; /&gt;--&gt;</span></span><br><span class="line">			<span class="comment">&lt;!--&lt;module name=&quot;org.hibernate.validator&quot; /&gt;--&gt;</span></span><br><span class="line">			<span class="comment">&lt;!--Log4j exclude--&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;org.slf4j&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;org.slf4j.impl&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">&lt;!-- 排除 javax.persistence.api 依赖 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javaee.api&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.persistence.api&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;org.hibernate&quot;</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.validation.api&quot;</span>/&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;org.hibernate.validator&quot;</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--&lt;resources&gt;</span></span><br><span class="line"><span class="comment">			&lt;resource-root path=&quot;lib&quot; /&gt;</span></span><br><span class="line"><span class="comment">		&lt;/resources&gt;</span></span><br><span class="line"><span class="comment">		&lt;local-last value=&quot;true&quot; /&gt;--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">&lt;!-- 排除 org.apache.httpcomponents 依赖 --&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- &lt;module name=&quot;org.apache.httpcomponents&quot; export=&quot;true&quot;/&gt; --&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">&lt;!-- 排除 org.jboss.logging 依赖 --&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- &lt;module name=&quot;org.jboss.logging&quot; export=&quot;true&quot; /&gt; --&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.validation.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.activation.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.annotation.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.ejb.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.el.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.enterprise.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.enterprise.deploy.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.inject.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.interceptor.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.jms.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.jws.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.mail.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.management.j2ee.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">&lt;!-- 排除 javax.persistence.api 依赖 --&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- &lt;module name=&quot;javax.persistence.api&quot; export=&quot;true&quot; /&gt; --&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.resource.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.rmi.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.security.auth.message.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.security.jacc.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.servlet.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.servlet.jsp.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.transaction.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.validation.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.ws.rs.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> <span class="attr">services</span>=<span class="string">&quot;export&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.xml.bind.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.xml.registry.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.xml.soap.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.xml.ws.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.api&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">&lt;!-- 排除掉jboss的 slf4j 和 log4j 实现，使用我们程序自己的包 --&gt;</span></span><br><span class="line">			<span class="comment">&lt;!--&lt;module name=&quot;org.apache.log4j&quot; export=&quot;true&quot; /&gt;--&gt;</span></span><br><span class="line">			<span class="comment">&lt;!--&lt;module name=&quot;org.slf4j&quot; export=&quot;true&quot; /&gt;--&gt;</span></span><br><span class="line">			<span class="comment">&lt;!--&lt;module name=&quot;org.apache.commons.logging&quot; export=&quot;true&quot; /&gt;--&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;org.jboss.logging.jul-to-slf4j-stub&quot;</span> <span class="attr">export</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">deployment</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">jboss-deployment-structure</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>jboss-web.xml</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">jboss-web</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//JBoss//DTD Web Application 5.0//EN&quot;</span>  </span></span><br><span class="line"><span class="meta"><span class="meta-string">&quot;http://www.jboss.org/j2ee/dtd/jboss-web_5_0.dtd&quot;</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">jboss-web</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">context-root</span>&gt;</span>app<span class="tag">&lt;/<span class="name">context-root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">jboss-web</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>有时启动后requestmapping无法正常加载，导致页面404，可以修改启动类如下</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> <span class="keyword">extends</span> <span class="title">SpringBootServletInitializer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> SpringApplicationBuilder()</span><br><span class="line">                .sources(Application.class)</span><br><span class="line">                .bannerMode(Banner.Mode.OFF)</span><br><span class="line">                .run();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> SpringApplicationBuilder <span class="title">configure</span><span class="params">(SpringApplicationBuilder builder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.configure(builder.sources(Application.class));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 自定义DispatcherServlet,拦截/*请求</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ServletRegistrationBean <span class="title">registryRestServlet</span><span class="params">(DispatcherServlet dispatcherServlet)</span> </span>&#123;</span><br><span class="line">        ServletRegistrationBean&lt;?&gt; registrationBean = <span class="keyword">new</span> ServletRegistrationBean&lt;&gt;(dispatcherServlet);</span><br><span class="line">        <span class="comment">// 这个地方是重点，注意匹配/*</span></span><br><span class="line">        registrationBean.addUrlMappings(<span class="string">&quot;/*&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> registrationBean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="使用了含javax-validation-api的情况"><a href="#使用了含javax-validation-api的情况" class="headerlink" title="使用了含javax.validation.api的情况"></a>使用了含javax.validation.api的情况</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">jboss-deployment-structure</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">deployment</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclude-subsystems</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 排除 javax.persistence.api 依赖 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">subsystem</span> <span class="attr">name</span>=<span class="string">&quot;jpa&quot;</span>/&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 排除 org.jboss.logging 依赖 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">subsystem</span> <span class="attr">name</span>=<span class="string">&quot;logging&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">subsystem</span> <span class="attr">name</span>=<span class="string">&quot;jaxrs&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclude-subsystems</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.validation.api&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;org.hibernate.validator&quot;</span> /&gt;</span></span><br><span class="line">      <span class="comment">&lt;!--Log4j exclude--&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;org.slf4j&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;org.slf4j.impl&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;org.apache.httpcomponents&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javaee.api&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">module</span> <span class="attr">name</span>=<span class="string">&quot;javax.faces.api&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">deployment</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">jboss-deployment-structure</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Jboss%E9%83%A8%E7%BD%B2SpringBoot2-JPA"><span class="toc-number">1.</span> <span class="toc-text">Jboss部署SpringBoot2 JPA</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%86%E5%90%ABjavax-validation-api%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-number">1.1.</span> <span class="toc-text">使用了含javax.validation.api的情况</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&text=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&is_video=false&description=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】Jboss部署SpringBoot2 JPA&body=Check out this article: http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&title=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&name=【Linux】Jboss部署SpringBoot2 JPA&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/09/18/%E3%80%90Linux%E3%80%91Jboss%E9%83%A8%E7%BD%B2SpringBoot2%20JPA/&t=【Linux】Jboss部署SpringBoot2 JPA"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

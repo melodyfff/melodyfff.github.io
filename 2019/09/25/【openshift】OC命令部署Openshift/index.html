@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="OC命令部署Openshift1234567891011121314151617181920212223242526# install openshiftwget -c https:&#x2F;&#x2F;github.com&#x2F;openshift&#x2F;origin&#x2F;releases&#x2F;download&#x2F;v3.11.0&#x2F;openshift-origin-client-tools-v3.11.0-0cbc58b-linux-6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【openshift】OC命令部署Openshift">
+<meta property="og:url" content="http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="OC命令部署Openshift1234567891011121314151617181920212223242526# install openshiftwget -c https:&#x2F;&#x2F;github.com&#x2F;openshift&#x2F;origin&#x2F;releases&#x2F;download&#x2F;v3.11.0&#x2F;openshift-origin-client-tools-v3.11.0-0cbc58b-linux-6">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-09-25T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="openshift">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【openshift】OC命令部署Openshift</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/10/18/%E3%80%90Java%E3%80%91Spring%20Security%20Architecture%20and%20Implementation(%E6%9E%B6%E6%9E%84%E5%92%8C%E5%AE%9E%E7%8E%B0)/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&text=【openshift】OC命令部署Openshift"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&is_video=false&description=【openshift】OC命令部署Openshift"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【openshift】OC命令部署Openshift&body=Check out this article: http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&name=【openshift】OC命令部署Openshift&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&t=【openshift】OC命令部署Openshift"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift"><span class="toc-number">1.</span> <span class="toc-text">OC命令部署Openshift</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【openshift】OC命令部署Openshift
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-09-25T00:00:00.000Z" itemprop="datePublished">2019-09-25</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/openshift/" rel="tag">openshift</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="OC命令部署Openshift"><a href="#OC命令部署Openshift" class="headerlink" title="OC命令部署Openshift"></a>OC命令部署Openshift</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install openshift</span></span><br><span class="line">wget -c https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz </span><br><span class="line">tar -zxvf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz</span><br><span class="line">mv openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/<span class="built_in">local</span>/bin/</span><br><span class="line">mv openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/kubectl /usr/<span class="built_in">local</span>/bin/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成配置文件,改了hosts之后最好重启一下在进行后面的操作</span></span><br><span class="line">cat &lt;&lt; <span class="string">EOF &gt;&gt; /etc/hosts</span></span><br><span class="line"><span class="string">172.26.252.34 okd.xc</span></span><br><span class="line"><span class="string">127.0.0.1 okd.xc</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除本地可能之前生成的配置文件,并生成配置文件</span></span><br><span class="line">rm -rf openshift.local.clusterup</span><br><span class="line">oc cluster up --skip-registry-check=<span class="literal">true</span> --public-hostname=okd.xc --write-config=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换 subdomain</span></span><br><span class="line">sed -i <span class="string">&#x27;s/router\.default\.svc\.cluster\.local/pod\.xc/g&#x27;</span> openshift.local.clusterup/openshift-controller-manager/master-config.yaml</span><br><span class="line">sed -i <span class="string">&#x27;s/router\.default\.svc\.cluster\.local/pod\.xc/g&#x27;</span> openshift.local.clusterup/openshift-apiserver/master-config.yaml</span><br><span class="line">sed -i <span class="string">&#x27;s/127\.0\.0\.1\.nip\.io/pod\.xc/g&#x27;</span> openshift.local.clusterup/openshift-controller-manager/master-config.yaml</span><br><span class="line">sed -i <span class="string">&#x27;s/127\.0\.0\.1\.nip\.io/pod\.xc/g&#x27;</span> openshift.local.clusterup/openshift-apiserver/master-config.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动 OKD 集群</span></span><br><span class="line">oc cluster up --skip-registry-check=<span class="literal">true</span> --public-hostname=okd.xc</span><br><span class="line">oc login -u system:admin</span><br><span class="line">oc adm policy add-cluster-role-to-user admin xinchen</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift"><span class="toc-number">1.</span> <span class="toc-text">OC命令部署Openshift</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&text=【openshift】OC命令部署Openshift"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&is_video=false&description=【openshift】OC命令部署Openshift"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【openshift】OC命令部署Openshift&body=Check out this article: http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&title=【openshift】OC命令部署Openshift"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&name=【openshift】OC命令部署Openshift&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/&t=【openshift】OC命令部署Openshift"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

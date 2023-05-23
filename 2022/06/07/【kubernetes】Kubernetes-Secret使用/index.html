@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Kubernetes-Secret使用 使用 kubectl 命令来创建 Secret 1234567891011121314151617181920212223# 默认密钥名称是文件名。# db-user-passecho -n &amp;#x27;admin&amp;#x27; &gt; .&#x2F;username.txtecho -n &amp;#x27;1f2d1e2e67df&amp;#x27; &gt; .&#x2F;passwor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【kubernetes】Kubernetes-Secret使用">
+<meta property="og:url" content="http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Kubernetes-Secret使用 使用 kubectl 命令来创建 Secret 1234567891011121314151617181920212223# 默认密钥名称是文件名。# db-user-passecho -n &amp;#x27;admin&amp;#x27; &gt; .&#x2F;username.txtecho -n &amp;#x27;1f2d1e2e67df&amp;#x27; &gt; .&#x2F;passwor">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-07T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【kubernetes】Kubernetes-Secret使用</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2022/08/06/%E3%80%90Java%E3%80%91%20Kafka%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5Fault%20Injection/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&text=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&is_video=false&description=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Kubernetes-Secret使用&body=Check out this article: http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&name=【kubernetes】Kubernetes-Secret使用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&t=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kubernetes-Secret%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes-Secret使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">1.1.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【kubernetes】Kubernetes-Secret使用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-07T00:00:00.000Z" itemprop="datePublished">2022-06-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Kubernetes-Secret使用"><a href="#Kubernetes-Secret使用" class="headerlink" title="Kubernetes-Secret使用"></a>Kubernetes-Secret使用</h1><ul>
+<li><p>使用 <code>kubectl</code> 命令来创建 <code>Secret</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认密钥名称是文件名。</span></span><br><span class="line"><span class="comment"># db-user-pass</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&#x27;admin&#x27;</span> &gt; ./username.txt</span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&#x27;1f2d1e2e67df&#x27;</span> &gt; ./password.txt</span><br><span class="line">kubectl create secret generic db-user-pass \</span><br><span class="line">  --from-file=username=./username.txt \</span><br><span class="line">  --from-file=password=./password.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># db-user-pass2</span></span><br><span class="line">kubectl create secret generic db-user-pass2 \</span><br><span class="line">  --from-literal=username=devuser \</span><br><span class="line">  --from-literal=password=<span class="string">&#x27;S!B\*d$zDsb=&#x27;</span>  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证</span></span><br><span class="line">kubectl get secrets </span><br><span class="line">kubectl describe secrets/db-user-pass</span><br><span class="line">kubectl get secret db-user-pass -o jsonpath=<span class="string">&#x27;&#123;.data&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 解码</span></span><br><span class="line">kubectl get secret db-user-pass -o jsonpath=<span class="string">&#x27;&#123;.data.password&#125;&#x27;</span> | base64 --decode</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清除</span></span><br><span class="line">kubectl delete secret db-user-pass</span><br></pre></td></tr></table></figure></li>
+<li><p>基于配置文件来创建 <code>Secret</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># echo -n &#x27;admin&#x27; | base64                  YWRtaW4=</span></span><br><span class="line"><span class="comment"># echo -n &#x27;1f2d1e2e67df&#x27; | base64           MWYyZDFlMmU2N2Rm</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&#x27;</span></span><br><span class="line"><span class="string">apiVersion: v1</span></span><br><span class="line"><span class="string">kind: Secret</span></span><br><span class="line"><span class="string">metadata:</span></span><br><span class="line"><span class="string">  name: mysecret1</span></span><br><span class="line"><span class="string">type: Opaque</span></span><br><span class="line"><span class="string">data:</span></span><br><span class="line"><span class="string">  username: YWRtaW4=</span></span><br><span class="line"><span class="string">  password: MWYyZDFlMmU2N2Rm</span></span><br><span class="line"><span class="string">&#x27;</span> | kubectl create -f -</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里如果有重名dada.username与stringData.username，会取stringData中的，并且进行加密</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&#x27;</span></span><br><span class="line"><span class="string">apiVersion: v1</span></span><br><span class="line"><span class="string">kind: Secret</span></span><br><span class="line"><span class="string">metadata:</span></span><br><span class="line"><span class="string">  name: mysecret2</span></span><br><span class="line"><span class="string">type: Opaque</span></span><br><span class="line"><span class="string">data:</span></span><br><span class="line"><span class="string">  username: YWRtaW4=</span></span><br><span class="line"><span class="string">stringData:</span></span><br><span class="line"><span class="string">  username: administrator</span></span><br><span class="line"><span class="string">&#x27;</span> | kubectl create -f -</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>POD中引用Secret</strong></p>
+<ul>
+<li><p>直接引用</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mypod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">testredis</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line">    <span class="attr">volumeMounts:</span>             <span class="comment">#挂载一个卷</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">foo</span>               <span class="comment">#这个名字需要与定义的卷的名字一致</span></span><br><span class="line">      <span class="attr">mountPath:</span> <span class="string">&quot;/etc/foo&quot;</span>   <span class="comment">#挂载到容器里哪个目录下，随便写</span></span><br><span class="line">      <span class="attr">readOnly:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">volumes:</span>                    <span class="comment">#数据卷的定义</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">foo</span>                 <span class="comment">#卷的名字这个名字自定义</span></span><br><span class="line">    <span class="attr">secret:</span>                   <span class="comment">#卷是直接使用的secret。</span></span><br><span class="line">      <span class="attr">secretName:</span> <span class="string">mysecret</span>    <span class="comment">#调用刚才定义的secret</span></span><br></pre></td></tr></table></figure></li>
+<li><p>映射secret key到指定的路径</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mypod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">testredis</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line">    <span class="attr">volumeMounts:</span>             <span class="comment">#挂载一个卷</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">foo</span>               <span class="comment">#这个名字需要与定义的卷的名字一致</span></span><br><span class="line">      <span class="attr">mountPath:</span> <span class="string">&quot;/etc/foo&quot;</span>   <span class="comment">#挂载到容器里哪个目录下，随便写</span></span><br><span class="line">      <span class="attr">readOnly:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">volumes:</span>                    <span class="comment">#数据卷的定义</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">foo</span>                 <span class="comment">#卷的名字这个名字自定义</span></span><br><span class="line">    <span class="attr">secret:</span>                   <span class="comment">#卷是直接使用的secret。</span></span><br><span class="line">      <span class="attr">secretName:</span> <span class="string">mysecret</span>    <span class="comment">#调用刚才定义的secret</span></span><br><span class="line">      <span class="attr">items:</span>                  <span class="comment">#定义一个items</span></span><br><span class="line">       <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">username</span>        <span class="comment">#将那个key重新定义到那个目录下</span></span><br><span class="line">         <span class="attr">path:</span> <span class="string">my-group/my-username</span>  <span class="comment">#路径为/etc/foo/my-group/my-username</span></span><br></pre></td></tr></table></figure></li>
+<li><p>以环境变量的形式使用Secret</p>
+</li>
+</ul>
+<p>挂载启动后，进入容器通过<code>echo $SECRET_USERNAME</code>查看值</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mypod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">testredis</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line">    <span class="attr">env:</span>                       <span class="comment">#定义环境变量</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">SECRET_USERNAME</span>   <span class="comment">#创建新的环境变量名称</span></span><br><span class="line">       <span class="attr">valueFrom:</span></span><br><span class="line">        <span class="attr">secretKeyRef:</span>           <span class="comment">#调用的key是什么</span></span><br><span class="line">         <span class="attr">name:</span> <span class="string">mysecret</span>         <span class="comment">#变量的值来自于mysecret</span></span><br><span class="line">         <span class="attr">key:</span> <span class="string">username</span>          <span class="comment">#username里面的值</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/concepts/configuration/secret/">Kubernetes官方文档 Secret</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/tasks/configmap-secret/managing-secret-using-kubectl/">使用 kubectl 管理 Secret</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/tasks/configmap-secret/managing-secret-using-config-file/">基于配置文件来创建 Secret</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kubernetes-Secret%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes-Secret使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">1.1.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&text=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&is_video=false&description=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Kubernetes-Secret使用&body=Check out this article: http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&title=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&name=【kubernetes】Kubernetes-Secret使用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/07/%E3%80%90kubernetes%E3%80%91Kubernetes-Secret%E4%BD%BF%E7%94%A8/&t=【kubernetes】Kubernetes-Secret使用"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

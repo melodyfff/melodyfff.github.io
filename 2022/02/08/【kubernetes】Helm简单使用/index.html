@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Helm简单使用简介Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。 Repository（仓库） 是用来存放和共享 charts 的地方。它就像 Perl 的 CPAN 档案库网络 或是 Fedora">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【kubernetes】Helm简单使用">
+<meta property="og:url" content="http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Helm简单使用简介Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。 Repository（仓库） 是用来存放和共享 charts 的地方。它就像 Perl 的 CPAN 档案库网络 或是 Fedora">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-08T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【kubernetes】Helm简单使用</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2022/02/14/%E3%80%90kubernetes%E3%80%91Minikube-%E4%BD%BF%E7%94%A8NGINX-ingress%E6%8E%A7%E5%88%B6%E5%99%A8%E8%AE%BF%E9%97%AE%E5%BA%94%E7%94%A8/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2022/02/08/%E3%80%90kubernetes%E3%80%91Kubernetes%E6%9C%8D%E5%8A%A1%E8%B4%A6%E5%8F%B7ServiceAccount/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&text=【kubernetes】Helm简单使用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&is_video=false&description=【kubernetes】Helm简单使用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Helm简单使用&body=Check out this article: http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&name=【kubernetes】Helm简单使用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&t=【kubernetes】Helm简单使用"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">Helm简单使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.</span> <span class="toc-text">安装配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AA-helm-%E5%8C%85"><span class="toc-number">1.3.</span> <span class="toc-text">安装一个 helm 包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E8%AE%BF%E9%97%AEPod%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="toc-number">1.4.</span> <span class="toc-text">快速访问Pod小技巧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">1.5.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【kubernetes】Helm简单使用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-02-08T00:00:00.000Z" itemprop="datePublished">2022-02-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Helm简单使用"><a href="#Helm简单使用" class="headerlink" title="Helm简单使用"></a>Helm简单使用</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。</p>
+<p>Repository（仓库） 是用来存放和共享 charts 的地方。它就像 Perl 的 CPAN 档案库网络 或是 Fedora 的 软件包仓库，只不过它是供 Kubernetes 包所使用的。</p>
+<p>Release 是运行在 Kubernetes 集群中的 chart 的实例。一个 chart 通常可以在同一个集群中安装多次。每一次安装都会创建一个新的 release。以 MySQL chart为例，如果你想在你的集群中运行两个数据库，你可以安装该chart两次。每一个数据库都会拥有它自己的 release 和 release name。</p>
+<p>在了解了上述这些概念以后，我们就可以这样来解释 Helm：</p>
+<p>Helm 安装 charts 到 Kubernetes 集群中，每次安装都会创建一个新的 release。你可以在 Helm 的 chart repositories 中寻找新的 chart。</p>
+<h2 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h2><p>安装<code>helm3</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S helm</span><br></pre></td></tr></table></figure>
+
+<p>添加<code>Azure charts</code>仓库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">helm repo add stable https://mirror.azure.cn/kubernetes/charts/</span><br><span class="line">helm repo add incubator http://mirror.azure.cn/kubernetes/charts-incubator/</span><br></pre></td></tr></table></figure>
+
+<p>搜索</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从 Artifact Hub 中查找并列出 helm charts</span></span><br><span class="line">helm search hub </span><br><span class="line"><span class="comment"># 从你添加（使用 helm repo add）到本地 helm 客户端中的仓库中进行查找。该命令基于本地数据进行搜索，无需连接互联网</span></span><br><span class="line">helm search repo</span><br><span class="line"></span><br><span class="line">helm search repo wordpress</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="安装一个-helm-包"><a href="#安装一个-helm-包" class="headerlink" title="安装一个 helm 包"></a>安装一个 helm 包</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建chart</span></span><br><span class="line">$ helm create nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 chart 中的可配置选项</span></span><br><span class="line">$ helm show values nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改nginx/Chart.yaml中appVersion: &quot;1.21&quot;</span></span><br><span class="line">$ helm package nginx</span><br><span class="line">Successfully packaged chart and saved it to: /home/xinchen/nginx-0.1.0.tgz</span><br><span class="line"></span><br><span class="line"><span class="comment"># helm install nginx nginx.tar -n default</span></span><br><span class="line"><span class="comment"># helm install nginx https://example.com/charts/nginx.tar</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 尝试部署，并未真正部署</span></span><br><span class="line">$ helm install nginx nginx/ --dry-run --debug -n default</span><br><span class="line">$ helm install nginx nginx/ -n default</span><br><span class="line"></span><br><span class="line">$ helm list</span><br><span class="line">NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION</span><br><span class="line">nginx   default         1               2022-02-09 05:49:30.314746649 +0800 CST deployed        nginx-0.1.0     1.21</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">$ helm status nginx</span><br><span class="line">NAME: nginx</span><br><span class="line">LAST DEPLOYED: Wed Feb  9 05:24:00 2022</span><br><span class="line">NAMESPACE: default</span><br><span class="line">STATUS: deployed</span><br><span class="line">REVISION: 1</span><br><span class="line">NOTES:</span><br><span class="line">1. Get the application URL by running these commands:</span><br><span class="line">  <span class="built_in">export</span> POD_NAME=$(kubectl get pods --namespace default -l <span class="string">&quot;app.kubernetes.io/name=nginx,app.kubernetes.io/instance=nginx&quot;</span> -o jsonpath=<span class="string">&quot;&#123;.items[0].metadata.name&#125;&quot;</span>)</span><br><span class="line">  <span class="built_in">export</span> CONTAINER_PORT=$(kubectl get pod --namespace default <span class="variable">$POD_NAME</span> -o jsonpath=<span class="string">&quot;&#123;.spec.containers[0].ports[0].containerPort&#125;&quot;</span>)</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Visit http://127.0.0.1:8080 to use your application&quot;</span></span><br><span class="line">  kubectl --namespace default port-forward <span class="variable">$POD_NAME</span> 8080:<span class="variable">$CONTAINER_PORT</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改nginx/Chart.yaml中version: 0.2.0</span></span><br><span class="line">$ helm package nginx</span><br><span class="line">Successfully packaged chart and saved it to: /home/xinchen/nginx-0.2.0.tgz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 升级</span></span><br><span class="line">$ helm upgrade nginx nginx-0.2.0.tgz -n default --dry-run --debug  <span class="comment"># 尝试升级，并未真正升级</span></span><br><span class="line">$ helm upgrade nginx nginx-0.2.0.tgz</span><br><span class="line">$ helm list</span><br><span class="line">NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION</span><br><span class="line">nginx   default         2               2022-02-09 05:58:19.435396187 +0800 CST deployed        nginx-0.2.0     1.21</span><br><span class="line"></span><br><span class="line"><span class="comment"># 回滚 helm rollback [RELEASE] [REVISION]</span></span><br><span class="line"><span class="comment"># 回滚命令的第一个参数是发布的名称，第二是修订（版本）号，如果省略此参数，会回滚到上一个版本</span></span><br><span class="line"><span class="comment"># 要查看修订号，执行&#x27;helm history RELEASE&#x27;</span></span><br><span class="line">$ helm rollback ngin</span><br><span class="line">$ helm list</span><br><span class="line">NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION</span><br><span class="line">nginx   default         3               2022-02-09 06:02:25.224998651 +0800 CST deployed        nginx-0.1.0     1.21</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 卸载</span></span><br><span class="line"><span class="comment"># helm uninstall nginx --keep-history 保留历史记录</span></span><br><span class="line">$ helm uninstall nginx</span><br><span class="line">$ helm list --all</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="快速访问Pod小技巧"><a href="#快速访问Pod小技巧" class="headerlink" title="快速访问Pod小技巧"></a>快速访问Pod小技巧</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> POD_NAME=$(kubectl get pods --namespace default -l <span class="string">&quot;app=nginx&quot;</span> -o jsonpath=<span class="string">&quot;&#123;.items[0].metadata.name&#125;&quot;</span>)</span><br><span class="line"><span class="built_in">export</span> CONTAINER_PORT=$(kubectl get pod --namespace default <span class="variable">$POD_NAME</span> -o jsonpath=<span class="string">&quot;&#123;.spec.containers[0].ports[0].containerPort&#125;&quot;</span>)</span><br><span class="line">kubectl --namespace default port-forward --address 0.0.0.0 <span class="variable">$POD_NAME</span> 8080:<span class="variable">$CONTAINER_PORT</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a target="_blank" rel="noopener" href="https://helm.sh/zh/docs/intro/">Helm官方文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://helm.sh/zh/docs/topics/v2_v3_migration/">helm3 与helm2对比，官方文档</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">Helm简单使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.</span> <span class="toc-text">安装配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AA-helm-%E5%8C%85"><span class="toc-number">1.3.</span> <span class="toc-text">安装一个 helm 包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E8%AE%BF%E9%97%AEPod%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="toc-number">1.4.</span> <span class="toc-text">快速访问Pod小技巧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">1.5.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&text=【kubernetes】Helm简单使用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&is_video=false&description=【kubernetes】Helm简单使用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Helm简单使用&body=Check out this article: http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&title=【kubernetes】Helm简单使用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&name=【kubernetes】Helm简单使用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/08/%E3%80%90kubernetes%E3%80%91Helm%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/&t=【kubernetes】Helm简单使用"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

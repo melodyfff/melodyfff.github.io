@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="装饰器模式(Decorator Pattern)  定义： 在面向对象的编程中，装饰器模式是一种设计模式，又名包装(Wrapper)，它允许动态地将行为添加到单个对象，而不会影响来自同一类的其他对象的行为。Definition: In object-oriented programming, the decorator pattern is a design pattern that allows">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Design Patterns】装饰器模式">
+<meta property="og:url" content="http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="装饰器模式(Decorator Pattern)  定义： 在面向对象的编程中，装饰器模式是一种设计模式，又名包装(Wrapper)，它允许动态地将行为添加到单个对象，而不会影响来自同一类的其他对象的行为。Definition: In object-oriented programming, the decorator pattern is a design pattern that allows">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/W3sDesign_Decorator_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://example.com/images/Decorator-uml.png">
+<meta property="og:image" content="http://example.com/images/UML2_Decorator_Pattern.png">
+<meta property="article:published_time" content="2019-02-24T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.514Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Design Patterns">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/W3sDesign_Decorator_Design_Pattern_UML.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Design Patterns】装饰器模式</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/03/02/%E3%80%90Linux%E3%80%91Linux%E4%B8%8A%E4%BC%A0FTP%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】装饰器模式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】装饰器模式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】装饰器模式&body=Check out this article: http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】装饰器模式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】装饰器模式"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Decorator-Pattern"><span class="toc-number">1.</span> <span class="toc-text">装饰器模式(Decorator Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Decorator%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%86%B3%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">Decorator设计模式可以解决哪些问题？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Decorator%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%8F%8F%E8%BF%B0%E4%BA%86%E4%BB%80%E4%B9%88%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9F"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">Decorator设计模式描述了什么解决方案？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%A7%92%E8%89%B2%E6%9C%89%EF%BC%9A"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">在装饰器模式中的角色有：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">装饰器实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">装饰器模式的优缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E5%92%8C%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.3.</span> <span class="toc-text">装饰器模式和适配器模式的区别</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Design Patterns】装饰器模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-02-24T00:00:00.000Z" itemprop="datePublished">2019-02-24</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Design-Patterns/" rel="tag">Design Patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="装饰器模式-Decorator-Pattern"><a href="#装饰器模式-Decorator-Pattern" class="headerlink" title="装饰器模式(Decorator Pattern)"></a>装饰器模式(Decorator Pattern)</h1><p><img src="/images/W3sDesign_Decorator_Design_Pattern_UML.jpg"></p>
+<blockquote>
+<p>定义： 在面向对象的编程中，装饰器模式是一种设计模式，又名包装(Wrapper)，它允许动态地将行为添加到单个对象，而不会影响来自同一类的其他对象的行为。<br>Definition: In object-oriented programming, the decorator pattern is a design pattern that allows behavior to be added to an individual object, dynamically, without affecting the behavior of other objects from the same class.</p>
+</blockquote>
+<p><strong><strong>类型：</strong></strong> 结构型</p>
+<p><strong><strong>类比：</strong></strong> 装饰者模式在结构上几乎与责任链模式相同，不同之处在于，在一个责任链中，其中一个类正好处理请求，而对于装饰器，所有类都处理请求。</p>
+<p><strong><strong>UML</strong></strong></p>
+<p><img src="/images/Decorator-uml.png"></p>
+<h4 id="Decorator设计模式可以解决哪些问题？"><a href="#Decorator设计模式可以解决哪些问题？" class="headerlink" title="Decorator设计模式可以解决哪些问题？"></a>Decorator设计模式可以解决哪些问题？</h4><ul>
+<li>应在运行时动态地将责任添加到对象中（并从中删除）。</li>
+<li>应提供用于扩展功能（继承）的子类化的灵活替代方案。</li>
+</ul>
+<h4 id="Decorator设计模式描述了什么解决方案？"><a href="#Decorator设计模式描述了什么解决方案？" class="headerlink" title="Decorator设计模式描述了什么解决方案？"></a>Decorator设计模式描述了什么解决方案？</h4><p>定义那些Decorator对象</p>
+<ul>
+<li><code>Component</code>通过将所有请求转发给它来透明地实现扩展（装饰）对象的接口</li>
+<li>在转发请求之前/之后执行其他功能。</li>
+</ul>
+<h4 id="在装饰器模式中的角色有："><a href="#在装饰器模式中的角色有：" class="headerlink" title="在装饰器模式中的角色有："></a>在装饰器模式中的角色有：</h4><ul>
+<li><strong><strong>抽象构件(Component)角色：</strong></strong> 给出一个抽象接口，已规范准备接收附加责任的对象。</li>
+<li><strong><strong>具体构件(ConcreteComponent)角色：</strong></strong> 定义一个将要接收附加责任的类</li>
+<li><strong><strong>装饰(Decorator)角色：</strong></strong> 持有一个构件(Component)对象的实例，并定义一个与抽象构件接口一致的接口。</li>
+<li><strong><strong>具体装饰(ConcreteDecorator)角色:</strong></strong> 负责给构件对象“贴上”附加的责任</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Pattern</th>
+<th align="right">Intent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Adapter or Wrapper</td>
+<td align="right">Converts one interface to another so that it matches what the client is expecting</td>
+</tr>
+<tr>
+<td align="left">Decorator</td>
+<td align="right">Dynamically adds responsibility to the interface by wrapping the original code</td>
+</tr>
+<tr>
+<td align="left">Delegation(委派模式)</td>
+<td align="right">Support “composition over inheritance”</td>
+</tr>
+<tr>
+<td align="left">Facade</td>
+<td align="right">Provides a simplified interface</td>
+</tr>
+</tbody></table>
+<h2 id="装饰器实例"><a href="#装饰器实例" class="headerlink" title="装饰器实例"></a>装饰器实例</h2><p><img src="/images/UML2_Decorator_Pattern.png"></p>
+<p><strong><strong>抽象构件(Component)角色：</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Window</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** Draws the window */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns a description of window</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Description</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">String <span class="title">getDescription</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><strong>具体构件(ConcreteComponent)角色：</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleWindow</span> <span class="keyword">implements</span> <span class="title">Window</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Draw simple window...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Simple Window&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><strong>装饰(Decorator)角色：</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">WindowDecorator</span> <span class="keyword">implements</span> <span class="title">Window</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 被装饰的类 */</span></span><br><span class="line">    <span class="keyword">protected</span> Window windowToBeDecorated;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WindowDecorator</span><span class="params">(Window windowToBeDecorated)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.windowToBeDecorated = windowToBeDecorated;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 被装饰对象执行方法</span></span><br><span class="line">        windowToBeDecorated.draw();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 被装饰对象执行方法</span></span><br><span class="line">        <span class="keyword">return</span> windowToBeDecorated.getDescription();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><strong>具体装饰(ConcreteDecorator)角色:</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HorizontalScrollBarDecorator</span> <span class="keyword">extends</span> <span class="title">WindowDecorator</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HorizontalScrollBarDecorator</span><span class="params">(Window windowToBeDecorated)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(windowToBeDecorated);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.draw();</span><br><span class="line">        <span class="keyword">this</span>.drawHorizontalScrollBar();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绘制水平滚动条</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">drawHorizontalScrollBar</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Draw the horizontal scrollbar</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Draw the horizontal scrollbar...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.getDescription() + <span class="string">&quot;, including horizontal scrollbars&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VerticalScrollBarDecorator</span> <span class="keyword">extends</span> <span class="title">WindowDecorator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">VerticalScrollBarDecorator</span><span class="params">(Window windowToBeDecorated)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(windowToBeDecorated);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.draw();</span><br><span class="line">        <span class="keyword">this</span>.drawVerticalScrollBar();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绘制垂直滚动条</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">drawVerticalScrollBar</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// Draw the vertical scrollbar</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Draw the vertical scrollbar...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.getDescription() + <span class="string">&quot;, including vertical scrollbars&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><strong>客户端：</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DecoratedWindowTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 装饰器动态追加功能</span></span><br><span class="line">        <span class="comment">// 1. 简单窗口</span></span><br><span class="line">        <span class="keyword">final</span> Window window = <span class="keyword">new</span> SimpleWindow();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 向简单窗口追加垂直滚动条</span></span><br><span class="line">        <span class="keyword">final</span> VerticalScrollBarDecorator verticalScrollBarDecorator = <span class="keyword">new</span> VerticalScrollBarDecorator(window);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 向垂直滚动条窗口添加水平滚动条</span></span><br><span class="line">        <span class="keyword">final</span> HorizontalScrollBarDecorator horizontalScrollBarDecorator = <span class="keyword">new</span> HorizontalScrollBarDecorator(verticalScrollBarDecorator);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 绘画最终窗口</span></span><br><span class="line">        horizontalScrollBarDecorator.draw();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 5. 打印窗口描述</span></span><br><span class="line">        System.out.println(horizontalScrollBarDecorator.getDescription());</span><br><span class="line">        <span class="comment">//  Draw simple window...</span></span><br><span class="line">        <span class="comment">//  Draw the vertical scrollbar...</span></span><br><span class="line">        <span class="comment">//  Draw the horizontal scrollbar...</span></span><br><span class="line">        <span class="comment">//  Simple Window, including vertical scrollbars, including horizontal scrollbars</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="装饰器模式的优缺点"><a href="#装饰器模式的优缺点" class="headerlink" title="装饰器模式的优缺点"></a>装饰器模式的优缺点</h2><p><strong><strong>优点</strong></strong></p>
+<ul>
+<li>装饰器模式与继承关系的目的都是要扩展对象的功能，但是装饰器模式可以提供比继承更多的灵活性。装饰器模式允许系统动态决定贴上一个需要的装饰，或者除掉一个不需要的装饰。继承关系是不同，继承关系是静态的，它在系统运行前就决定了</li>
+<li>通过使用不同的具体装饰器以及这些装饰类的排列组合，设计师可以创造出很多不同的行为组合</li>
+</ul>
+<p><strong><strong>缺点</strong></strong></p>
+<p>由于使用装饰器模式，可以比使用继承关系需要较少数目的类。使用较少的类，当然使设计比较易于进行。但是另一方面，由于使用装饰器模式会产生比使用继承关系更多的对象，更多的对象会使得查错变得困难，特别是这些对象看上去都很像。</p>
+<h2 id="装饰器模式和适配器模式的区别"><a href="#装饰器模式和适配器模式的区别" class="headerlink" title="装饰器模式和适配器模式的区别"></a>装饰器模式和适配器模式的区别</h2><p>其实适配器模式也是一种包装（<code>Wrapper</code>）模式，它们看似都是起到包装一个类或对象的作用，但是它们使用的目的非常不一样：</p>
+<ul>
+<li>适配器模式的意义是要将一个接口转变成另外一个接口，它的目的是通过改变接口来达到重复使用的目的</li>
+<li>装饰器模式不要改变被装饰对象的接口，而是恰恰要保持原有的接口，但是增强原有接口的功能，或者改变元有对象的处理方法而提升性能</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Decorator-Pattern"><span class="toc-number">1.</span> <span class="toc-text">装饰器模式(Decorator Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Decorator%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%86%B3%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">Decorator设计模式可以解决哪些问题？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Decorator%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%8F%8F%E8%BF%B0%E4%BA%86%E4%BB%80%E4%B9%88%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9F"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">Decorator设计模式描述了什么解决方案？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%A7%92%E8%89%B2%E6%9C%89%EF%BC%9A"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">在装饰器模式中的角色有：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">装饰器实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">装饰器模式的优缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E5%92%8C%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.3.</span> <span class="toc-text">装饰器模式和适配器模式的区别</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】装饰器模式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】装饰器模式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】装饰器模式&body=Check out this article: http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】装饰器模式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】装饰器模式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】装饰器模式"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="上传到Soanr时，项目有单元测试数,但是覆盖率为0  修改pom.xml1234567891011121314151617181920212223242526272829&lt;plugin&gt;    &lt;groupId&gt;org.apache.maven.plugins&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;maven-surefire-plu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Java】 Maven多模块项目上传到Sonar扫描问题合集">
+<meta property="og:url" content="http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="上传到Soanr时，项目有单元测试数,但是覆盖率为0  修改pom.xml1234567891011121314151617181920212223242526272829&lt;plugin&gt;    &lt;groupId&gt;org.apache.maven.plugins&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;maven-surefire-plu">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-03-07T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Java】 Maven多模块项目上传到Sonar扫描问题合集</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&text=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&is_video=false&description=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】 Maven多模块项目上传到Sonar扫描问题合集&body=Check out this article: http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&name=【Java】 Maven多模块项目上传到Sonar扫描问题合集&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&t=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9pom-xml"><span class="toc-number">1.</span> <span class="toc-text">修改pom.xml</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%85%E8%A6%81%E6%97%B6%E5%B8%A6%E4%B8%8A%E5%8F%82%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">必要时带上参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9pom-xml-1"><span class="toc-number">3.</span> <span class="toc-text">修改pom.xml</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Java】 Maven多模块项目上传到Sonar扫描问题合集
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-03-07T00:00:00.000Z" itemprop="datePublished">2018-03-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Java/" rel="tag">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>上传到Soanr时，项目有单元测试数,但是覆盖率为0</p>
+</blockquote>
+<h3 id="修改pom-xml"><a href="#修改pom-xml" class="headerlink" title="修改pom.xml"></a>修改pom.xml</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-surefire-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.4.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">skipTests</span>&gt;</span>false<span class="tag">&lt;/<span class="name">skipTests</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">testFailureIgnore</span>&gt;</span>true<span class="tag">&lt;/<span class="name">testFailureIgnore</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">includes</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*Test.java<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">excludes</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--&lt;exclude&gt;**/Abstract*.java&lt;/exclude&gt;--&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--&lt;exclude&gt;**/*Service.java&lt;/exclude&gt;--&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.jacoco<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jacoco-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.7.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>pre-test<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>prepare-agent<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="必要时带上参数"><a href="#必要时带上参数" class="headerlink" title="必要时带上参数"></a>必要时带上参数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clean cobertura:cobertura -Dcobertura.report.format=xml package -Dmaven.test.failure.ignore=<span class="literal">true</span> sonar:sonar -Dsonar.language=java</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>多模块项目通过Jenkins构建扫描上传到Sonar时,代码覆盖率很低,只覆盖了单模块的代码,这时可以通过配置JaCoCo解决该问题。<br><a target="_blank" rel="noopener" href="https://stackoverflow.com/search?q=maven+Multi-module+cover">参考资料</a></p>
+</blockquote>
+<h3 id="修改pom-xml-1"><a href="#修改pom-xml-1" class="headerlink" title="修改pom.xml"></a>修改pom.xml</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.jacoco<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jacoco-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.7.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>prepare-agent<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>report<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>prepare-package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>report<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过<code>clean org.jacoco:jacoco-maven-plugin:prepare-agent jacoco:report-aggregate install</code> 可在target下生成<code>jacoco-aggregate</code>覆盖相关报告</p>
+<blockquote>
+<p>注：jacoco版本低于0.7.9 <code>jacoco:report-aggregate</code>参数可能不存在<br>多模块项目整合覆盖率还可以指定<code>report</code>目录</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">sonar.java.coveragePlugin</span>&gt;</span>jacoco<span class="tag">&lt;/<span class="name">sonar.java.coveragePlugin</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">sonar.dynamicAnalysis</span>&gt;</span>reuseReports<span class="tag">&lt;/<span class="name">sonar.dynamicAnalysis</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">sonar.jacoco.reportPath</span>&gt;</span>$&#123;project.basedir&#125;/../target/jacoco.exec<span class="tag">&lt;/<span class="name">sonar.jacoco.reportPath</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span>        </span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.jacoco<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jacoco-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.7.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">destFile</span>&gt;</span>$&#123;sonar.jacoco.reportPath&#125;<span class="tag">&lt;/<span class="name">destFile</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">append</span>&gt;</span>true<span class="tag">&lt;/<span class="name">append</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                               <span class="tag">&lt;<span class="name">goal</span>&gt;</span>prepare-agent<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;<span class="name">id</span>&gt;</span>report<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;<span class="name">phase</span>&gt;</span>prepare-package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                               <span class="tag">&lt;<span class="name">goal</span>&gt;</span>report<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9pom-xml"><span class="toc-number">1.</span> <span class="toc-text">修改pom.xml</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%85%E8%A6%81%E6%97%B6%E5%B8%A6%E4%B8%8A%E5%8F%82%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">必要时带上参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9pom-xml-1"><span class="toc-number">3.</span> <span class="toc-text">修改pom.xml</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&text=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&is_video=false&description=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】 Maven多模块项目上传到Sonar扫描问题合集&body=Check out this article: http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&title=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&name=【Java】 Maven多模块项目上传到Sonar扫描问题合集&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/&t=【Java】 Maven多模块项目上传到Sonar扫描问题合集"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

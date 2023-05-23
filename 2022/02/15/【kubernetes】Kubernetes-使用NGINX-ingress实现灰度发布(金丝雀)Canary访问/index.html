@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问Ingress-Nginx 是一个K8S ingress工具，支持配置 Ingress Annotations 来实现不同场景下的灰度发布和测试。 Nginx Annotations 支持以下 4 种 Canary 规则：  nginx.ingress.kubernetes.io&#x2F;canary-by-head">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问">
+<meta property="og:url" content="http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问Ingress-Nginx 是一个K8S ingress工具，支持配置 Ingress Annotations 来实现不同场景下的灰度发布和测试。 Nginx Annotations 支持以下 4 种 Canary 规则：  nginx.ingress.kubernetes.io&#x2F;canary-by-head">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2022/02/16/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E6%B5%81%E9%87%8F%E5%88%86%E5%8F%91Request%20Routing/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&text=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&is_video=false&description=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问&body=Check out this article: http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&name=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&t=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83-%E9%87%91%E4%B8%9D%E9%9B%80-Canary%E8%AE%BF%E9%97%AE"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%B8%80%E4%B8%AAnginx%E5%BA%94%E7%94%A8"><span class="toc-number">1.1.</span> <span class="toc-text">部署一个nginx应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAIngress"><span class="toc-number">1.2.</span> <span class="toc-text">创建一个Ingress</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%BA%8C%E4%B8%AADeployment"><span class="toc-number">1.3.</span> <span class="toc-text">创建第二个Deployment</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%85%B7%E6%9C%89%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83%E5%8A%9F%E8%83%BD%E7%9A%84Ingress-yaml"><span class="toc-number">1.4.</span> <span class="toc-text">创建具有灰度发布功能的Ingress.yaml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-02-15T00:00:00.000Z" itemprop="datePublished">2022-02-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Kubernetes-使用NGINX-ingress实现灰度发布-金丝雀-Canary访问"><a href="#Kubernetes-使用NGINX-ingress实现灰度发布-金丝雀-Canary访问" class="headerlink" title="Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"></a>Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问</h1><p>Ingress-Nginx 是一个K8S ingress工具，支持配置 Ingress Annotations 来实现不同场景下的灰度发布和测试。 <a target="_blank" rel="noopener" href="https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#canary">Nginx Annotations</a> 支持以下 4 种 Canary 规则：</p>
+<ul>
+<li><code>nginx.ingress.kubernetes.io/canary-by-header</code>：基于 Request Header 的流量切分，适用于灰度发布以及 A/B 测试。当 Request Header 设置为 always时，请求将会被一直发送到 Canary 版本；当 Request Header 设置为 never时，请求不会被发送到 Canary 入口；对于任何其他 Header 值，将忽略 Header，并通过优先级将请求与其他金丝雀规则进行优先级的比较。</li>
+<li><code>nginx.ingress.kubernetes.io/canary-by-header-value</code>：要匹配的 Request Header 的值，用于通知 Ingress 将请求路由到 Canary Ingress 中指定的服务。当 Request Header 设置为此值时，它将被路由到 Canary 入口。该规则允许用户自定义 Request Header 的值，必须与上一个 annotation (即：canary-by-header）一起使用。</li>
+<li><code>nginx.ingress.kubernetes.io/canary-weight</code>：基于服务权重的流量切分，适用于蓝绿部署，权重范围 0 - 100 按百分比将请求路由到 Canary Ingress 中指定的服务。权重为 0 意味着该金丝雀规则不会向 Canary 入口的服务发送任何请求。权重为 100 意味着所有请求都将被发送到 Canary 入口。</li>
+<li><code>nginx.ingress.kubernetes.io/canary-by-cookie</code>：基于 Cookie 的流量切分，适用于灰度发布与 A/B 测试。用于通知 Ingress 将请求路由到 Canary Ingress 中指定的服务的cookie。当 cookie 值设置为 always时，它将被路由到 Canary 入口；当 cookie 值设置为 never时，请求不会被发送到 Canary 入口；对于任何其他值，将忽略 cookie 并将请求与其他金丝雀规则进行优先级的比较。</li>
+</ul>
+<blockquote>
+<p>注意：金丝雀规则按优先顺序进行如下排序: <strong>canary-by-header - &gt; canary-by-cookie - &gt; canary-weight</strong>  </p>
+</blockquote>
+<blockquote>
+<p>注意： Ingress-Nginx 实在0.21.0 版本 中，引入的Canary 功能</p>
+</blockquote>
+<h2 id="部署一个nginx应用"><a href="#部署一个nginx应用" class="headerlink" title="部署一个nginx应用"></a>部署一个nginx应用</h2><ol>
+<li><p>创建Deployment</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment app1 --image=cilium/echoserver</span><br></pre></td></tr></table></figure></li>
+<li><p>暴露Deployment</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl expose deployment app1 --<span class="built_in">type</span>=NodePort --port 80</span><br></pre></td></tr></table></figure></li>
+<li><p>使用节点端口访问服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube service app1 --url</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="创建一个Ingress"><a href="#创建一个Ingress" class="headerlink" title="创建一个Ingress"></a>创建一个Ingress</h2><ol>
+<li>通过运行下面的命令创建 Ingress 对象：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&#x27;</span></span><br><span class="line"><span class="string">apiVersion: networking.k8s.io/v1</span></span><br><span class="line"><span class="string">kind: Ingress</span></span><br><span class="line"><span class="string">metadata:</span></span><br><span class="line"><span class="string">  annotations:</span></span><br><span class="line"><span class="string">    nginx.ingress.kubernetes.io/rewrite-target: /</span></span><br><span class="line"><span class="string">  name: app-demo-ingress</span></span><br><span class="line"><span class="string">  namespace: default</span></span><br><span class="line"><span class="string">spec:</span></span><br><span class="line"><span class="string">  ingressClassName: nginx</span></span><br><span class="line"><span class="string">  rules:</span></span><br><span class="line"><span class="string">  - host: hello-world.info</span></span><br><span class="line"><span class="string">    http:</span></span><br><span class="line"><span class="string">      paths:</span></span><br><span class="line"><span class="string">      - path: /</span></span><br><span class="line"><span class="string">        pathType: Prefix</span></span><br><span class="line"><span class="string">        backend:</span></span><br><span class="line"><span class="string">          service:</span></span><br><span class="line"><span class="string">            name: app1</span></span><br><span class="line"><span class="string">            port: </span></span><br><span class="line"><span class="string">              number: 80</span></span><br><span class="line"><span class="string">&#x27;</span> | kubectl create -f -</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>验证 IP 地址已被设置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kc get ingress</span><br><span class="line">NAME               CLASS   HOSTS              ADDRESS     PORTS   AGE</span><br><span class="line">app-demo-ingress   nginx   hello-world.info   localhost   80      113s</span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/etc/hosts</code>里面添加host</p>
+<blockquote>
+<p>注： minikube ip 获取外部ip地址配置在host中，Ingress中显示的回事内部ip地址</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.49.2 hello-world.info</span><br></pre></td></tr></table></figure></li>
+<li><p>验证通过Ingress控制器能够转发请求流量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl hello-world.info</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="创建第二个Deployment"><a href="#创建第二个Deployment" class="headerlink" title="创建第二个Deployment"></a>创建第二个Deployment</h2><ol>
+<li><p>创建Deployment</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment app2 --image=cilium/echoserver</span><br></pre></td></tr></table></figure></li>
+<li><p>暴露Deployment</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl expose deployment app2 --<span class="built_in">type</span>=NodePort --port 80</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="创建具有灰度发布功能的Ingress-yaml"><a href="#创建具有灰度发布功能的Ingress-yaml" class="headerlink" title="创建具有灰度发布功能的Ingress.yaml"></a>创建具有灰度发布功能的Ingress.yaml</h2><ol>
+<li>通过运行下面的命令创建 Ingress 对象：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&#x27;</span></span><br><span class="line"><span class="string">apiVersion: networking.k8s.io/v1</span></span><br><span class="line"><span class="string">kind: Ingress</span></span><br><span class="line"><span class="string">metadata:</span></span><br><span class="line"><span class="string">  annotations:</span></span><br><span class="line"><span class="string">    nginx.ingress.kubernetes.io/rewrite-target: / </span></span><br><span class="line"><span class="string">    nginx.ingress.kubernetes.io/canary: &quot;true&quot;</span></span><br><span class="line"><span class="string">    nginx.ingress.kubernetes.io/canary-by-header: &quot;canary&quot;</span></span><br><span class="line"><span class="string">    nginx.ingress.kubernetes.io/canary-by-header-value: &quot;true&quot;</span></span><br><span class="line"><span class="string">  name: app-canary-ingress</span></span><br><span class="line"><span class="string">  namespace: default</span></span><br><span class="line"><span class="string">spec:</span></span><br><span class="line"><span class="string">  ingressClassName: nginx</span></span><br><span class="line"><span class="string">  rules:</span></span><br><span class="line"><span class="string">  - host: hello-world.info</span></span><br><span class="line"><span class="string">    http:</span></span><br><span class="line"><span class="string">      paths:</span></span><br><span class="line"><span class="string">      - path: /</span></span><br><span class="line"><span class="string">        pathType: Prefix</span></span><br><span class="line"><span class="string">        backend:</span></span><br><span class="line"><span class="string">          service:</span></span><br><span class="line"><span class="string">            name: app2</span></span><br><span class="line"><span class="string">            port: </span></span><br><span class="line"><span class="string">              number: 80</span></span><br><span class="line"><span class="string">&#x27;</span> | kubectl create -f - </span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>访问第一个第二个应用<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一个</span></span><br><span class="line">curl http://hello-world.info</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二个</span></span><br><span class="line">curl http://hello-world.info/ -H <span class="string">&quot;canary: true&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#canary">ingress-nginx/Nginx Annotations</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/concepts/services-networking/ingress/">Ingress</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/concepts/services-networking/ingress-controllers/">Ingress 控制器</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaoqi/p/ingress-nginx-canary.html">K8S基于ingress-nginx实现灰度发布</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.nginx.com/nginx-ingress-controller/intro/how-nginx-ingress-controller-works/">How NGINX Ingress Controller Works</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83-%E9%87%91%E4%B8%9D%E9%9B%80-Canary%E8%AE%BF%E9%97%AE"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%B8%80%E4%B8%AAnginx%E5%BA%94%E7%94%A8"><span class="toc-number">1.1.</span> <span class="toc-text">部署一个nginx应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAIngress"><span class="toc-number">1.2.</span> <span class="toc-text">创建一个Ingress</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%BA%8C%E4%B8%AADeployment"><span class="toc-number">1.3.</span> <span class="toc-text">创建第二个Deployment</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%85%B7%E6%9C%89%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83%E5%8A%9F%E8%83%BD%E7%9A%84Ingress-yaml"><span class="toc-number">1.4.</span> <span class="toc-text">创建具有灰度发布功能的Ingress.yaml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&text=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&is_video=false&description=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问&body=Check out this article: http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&title=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&name=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/15/%E3%80%90kubernetes%E3%80%91Kubernetes-%E4%BD%BF%E7%94%A8NGINX-ingress%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83(%E9%87%91%E4%B8%9D%E9%9B%80)Canary%E8%AE%BF%E9%97%AE/&t=【kubernetes】Kubernetes-使用NGINX-ingress实现灰度发布(金丝雀)Canary访问"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

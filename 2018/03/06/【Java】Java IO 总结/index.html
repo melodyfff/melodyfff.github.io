@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Java IO 总结 Java的IO模型使用Decorator(装饰者)模式，按功能划分Stream，可以动态装配这些Stream，以便获得需要的功能。  例如，需要一个具有缓冲的文件输入流，则应当组合使用FileInputStream和BufferedInputStream。 Java IO 体系的层次   Part Description    流式部分 字节流(InputStream,Out">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Java】Java IO 总结">
+<meta property="og:url" content="http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Java IO 总结 Java的IO模型使用Decorator(装饰者)模式，按功能划分Stream，可以动态装配这些Stream，以便获得需要的功能。  例如，需要一个具有缓冲的文件输入流，则应当组合使用FileInputStream和BufferedInputStream。 Java IO 体系的层次   Part Description    流式部分 字节流(InputStream,Out">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-03-06T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Java】Java IO 总结</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2018/02/27/%E3%80%90Python%E3%80%91%E8%B0%83%E7%94%A8gitlab-api%E5%88%9B%E5%BB%BApipline/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&text=【Java】Java IO 总结"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&is_video=false&description=【Java】Java IO 总结"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】Java IO 总结&body=Check out this article: http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&name=【Java】Java IO 总结&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&t=【Java】Java IO 总结"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-IO-%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">Java IO 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-IO-%E4%BD%93%E7%B3%BB%E7%9A%84%E5%B1%82%E6%AC%A1"><span class="toc-number">1.1.</span> <span class="toc-text">Java IO 体系的层次</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-IO-%E6%B5%81%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">Java IO 流的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E6%B5%81%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81"><span class="toc-number">1.2.1.</span> <span class="toc-text">字符流和字节流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B5%81%E5%92%8C%E8%BE%93%E5%87%BA%E6%B5%81"><span class="toc-number">1.2.2.</span> <span class="toc-text">输入流和输出流</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-IO-%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB"><span class="toc-number">1.3.</span> <span class="toc-text">Java IO 中常用的类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#File%E7%B1%BB"><span class="toc-number">1.4.</span> <span class="toc-text">File类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fiels-%E5%B8%B8%E9%87%8F"><span class="toc-number">1.4.1.</span> <span class="toc-text">Fiels 常量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Constructors-%E6%9E%84%E9%80%A0%E5%99%A8"><span class="toc-number">1.4.2.</span> <span class="toc-text">Constructors 构造器</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Java】Java IO 总结
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-03-06T00:00:00.000Z" itemprop="datePublished">2018-03-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/java/" rel="tag">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Java-IO-总结"><a href="#Java-IO-总结" class="headerlink" title="Java IO 总结"></a>Java IO 总结</h1><p> Java的IO模型使用Decorator(装饰者)模式，按功能划分Stream，可以动态装配这些Stream，以便获得需要的功能。</p>
+<p> 例如，需要一个具有缓冲的文件输入流，则应当组合使用<code>FileInputStream</code>和<code>BufferedInputStream</code>。</p>
+<h2 id="Java-IO-体系的层次"><a href="#Java-IO-体系的层次" class="headerlink" title="Java IO 体系的层次"></a>Java IO 体系的层次</h2><table>
+<thead>
+<tr>
+<th align="left">Part</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">流式部分</td>
+<td align="left">字节流(<code>InputStream</code>,<code>OutputStream</code>) 、字符流(<code>Writer</code>,<code>Reader</code>)</td>
+</tr>
+<tr>
+<td align="left">非流式部分</td>
+<td align="left">主要包含一些辅助流式部分的类，如: <code>File</code>、<code>RandomAssessFile</code>、 <code>FileDescriptor</code>…</td>
+</tr>
+<tr>
+<td align="left">其他类</td>
+<td align="left">文件读取部分的与安全相关的类,如：<code>SerializablePermission</code>类，以及与本地操作系统相关的文件系统的类，如：<code>FileSystem</code>类和<code>Win32FileSystem</code>类和<code>WinNTFileSystem</code>类。</td>
+</tr>
+</tbody></table>
+<h2 id="Java-IO-流的分类"><a href="#Java-IO-流的分类" class="headerlink" title="Java IO 流的分类"></a>Java IO 流的分类</h2><ul>
+<li>根据处理数据类型的不同分为：字符流和字节流</li>
+<li>根据数据流向不同分为：输入流和输出流</li>
+<li>按数据来源（去向）分类：<ul>
+<li>File（文件）： FileInputStream, FileOutputStream, FileReader, FileWriter </li>
+<li>byte[]：ByteArrayInputStream, ByteArrayOutputStream</li>
+<li>Char[]: CharArrayReader,CharArrayWriter </li>
+<li>String(字符):StringBufferInputStream, StringReader, StringWriter </li>
+<li>网络数据流：InputStream,OutputStream, Reader, Writer </li>
+</ul>
+</li>
+</ul>
+<h3 id="字符流和字节流"><a href="#字符流和字节流" class="headerlink" title="字符流和字节流"></a>字符流和字节流</h3><p>流序列中的数据既可以是未经加工的原始二进制数据，也可以是经一定编码处理后符合某种格式规定的特定数据。</p>
+<p>因此Java中的流分为两种：</p>
+<ul>
+<li><code>字节流</code>：数据流中最小的数据单元是字节</li>
+<li><code>字符流</code>：数据流中最小的数据单元是字符， Java中的字符是Unicode编码，一个字符占用两个字节<ul>
+<li>字符流的由来： Java中字符是采用Unicode标准，一个字符是16位，即一个字符使用两个字节来表示,为此，JAVA中引入了处理字符的流。</li>
+<li>因为数据编码的不同，而有了对字符进行高效操作的流对象。<code>本质其实就是基于字节流读取时，去查了指定的码表</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="输入流和输出流"><a href="#输入流和输出流" class="headerlink" title="输入流和输出流"></a>输入流和输出流</h3><p>采用数据流的目的就是使得输出输入独立于设备。</p>
+<p><code>输入流( Input  Stream )/输出流( Output Stream )</code>不关心数据源<code>来自/流向</code>何种设备（键盘，文件，网络）。</p>
+<ul>
+<li><code>输入流(Source 2 Program)</code>：程序从输入流读取数据源。数据源包括外界(键盘、文件、网络…)，即是将数据源读入到程序的通信通道</li>
+<li><code>输出流(Program 2 device)</code>：程序向输出流写入数据。将程序中的数据输出到外界（显示器、打印机、文件、网络…）的通信通道。</li>
+</ul>
+<p>相对于程序来说，输出流是往存储介质或数据通道写入数据，而输入流是从存储介质或数据通道中读取数据，一般来说关于流的特性有下面几点：</p>
+<ul>
+<li>先进先出，最先写入输出流的数据最先被输入流读取到</li>
+<li>顺序存取，可以一个接一个地往流中写入一串字节，读出时也将按写入顺序读取一串字节，不能随机访问中间的数据。<code>RandomAccessFile可以从文件的任意位置进行存取（输入输出）操作</code></li>
+<li>只读或只写，每个流只能是输入流或输出流的一种，不能同时具备两个功能，输入流只能进行读操作，对输出流只能进行写操作。在一个数据传输通道中，如果既要写入数据，又要读取数据，则要分别提供两个流。</li>
+</ul>
+<h2 id="Java-IO-中常用的类"><a href="#Java-IO-中常用的类" class="headerlink" title="Java IO 中常用的类"></a>Java IO 中常用的类</h2><table>
+<thead>
+<tr>
+<th align="left">Class</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>File</code></td>
+<td align="left">文件类（文件特征与管理）</td>
+</tr>
+<tr>
+<td align="left"><code>RandomAccessFile</code></td>
+<td align="left">随机存取文件类</td>
+</tr>
+<tr>
+<td align="left"><code>InputStream</code></td>
+<td align="left">字节输入流（二进制格式操作） 抽象类，基于字节的输入操作，所有输入流的父类</td>
+</tr>
+<tr>
+<td align="left"><code>OutputStream</code></td>
+<td align="left">字节输出流（二进制格式操作） 抽象类，基于字节的输出操作，所有输出流的父类</td>
+</tr>
+<tr>
+<td align="left"><code>Reader</code></td>
+<td align="left">字符输入流 （文件格式操作） 抽象类，基于字符的输入操作</td>
+</tr>
+<tr>
+<td align="left"><code>Writer</code></td>
+<td align="left">字符输出流 （文件格式操作） 抽象类，基于字符的输出操作</td>
+</tr>
+</tbody></table>
+<h2 id="File类"><a href="#File类" class="headerlink" title="File类"></a>File类</h2><blockquote>
+<p>在Java语言的java.io包中，由File类提供了描述文件和目录的操作与管理方法。但File类不是InputStream、OutputStream或Reader、Writer的子类，因为它不负责数据的输入输出，而专门用来管理磁盘文件与目录。</p>
+</blockquote>
+<h3 id="Fiels-常量"><a href="#Fiels-常量" class="headerlink" title="Fiels 常量"></a>Fiels 常量</h3><table>
+<thead>
+<tr>
+<th align="left">Modifier and Type</th>
+<th align="left">Field</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">static <code>String</code></td>
+<td align="left"><code>pathSeparator</code></td>
+<td align="left">The system-dependent path-separator character, represented as a string for convenience.</td>
+</tr>
+<tr>
+<td align="left">static char</td>
+<td align="left"><code>pathSeparatorChar</code></td>
+<td align="left">The system-dependent path-separator character.</td>
+</tr>
+<tr>
+<td align="left">static <code>String</code></td>
+<td align="left"><code>separator</code></td>
+<td align="left">The system-dependent default name-separator character, represented as a string for convenience.</td>
+</tr>
+<tr>
+<td align="left">static char</td>
+<td align="left"><code>separatorChar</code></td>
+<td align="left">The system-dependent default name-separator character.</td>
+</tr>
+</tbody></table>
+<ul>
+<li><code>File.separator</code> -&gt; 系统相关的默认名称分隔符字符——&gt;<code>\</code></li>
+<li><code>File.pathSeparator</code> -&gt; 系统相关的路径分隔符字符—–&gt;<code>;</code></li>
+</ul>
+<h3 id="Constructors-构造器"><a href="#Constructors-构造器" class="headerlink" title="Constructors 构造器"></a>Constructors 构造器</h3><table>
+<thead>
+<tr>
+<th align="left">Constructors</th>
+<th align="left">Description</th>
+<th align="left">Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">File(File parent,String child)</td>
+<td align="left">Creates a new File instance from a parent abstract pathname and a child pathname string.</td>
+<td align="left">从父抽象路径名和子路径名字符串创建一个新的File实例</td>
+</tr>
+<tr>
+<td align="left">File(String pathname)</td>
+<td align="left">Creates a new File instance by converting the given pathname string into an abstract pathname.</td>
+<td align="left">通过将给定的路径名字符串转换为抽象路径名创建一个新的File实例</td>
+</tr>
+<tr>
+<td align="left">File(String parent,String child)</td>
+<td align="left">Creates a new File instance from a parent pathname string and a child pathname string.</td>
+<td align="left">从父路径名字符串和子路径名字符串创建一个新的File实例</td>
+</tr>
+<tr>
+<td align="left">File(URI url)</td>
+<td align="left">Creates a new File instance by converting the given file: URI into an abstract pathname.</td>
+<td align="left">通过将给定文件：URI转换为抽象路径名创建一个新的File实例。</td>
+</tr>
+</tbody></table>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-IO-%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">Java IO 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-IO-%E4%BD%93%E7%B3%BB%E7%9A%84%E5%B1%82%E6%AC%A1"><span class="toc-number">1.1.</span> <span class="toc-text">Java IO 体系的层次</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-IO-%E6%B5%81%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">Java IO 流的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E6%B5%81%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81"><span class="toc-number">1.2.1.</span> <span class="toc-text">字符流和字节流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B5%81%E5%92%8C%E8%BE%93%E5%87%BA%E6%B5%81"><span class="toc-number">1.2.2.</span> <span class="toc-text">输入流和输出流</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-IO-%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB"><span class="toc-number">1.3.</span> <span class="toc-text">Java IO 中常用的类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#File%E7%B1%BB"><span class="toc-number">1.4.</span> <span class="toc-text">File类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fiels-%E5%B8%B8%E9%87%8F"><span class="toc-number">1.4.1.</span> <span class="toc-text">Fiels 常量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Constructors-%E6%9E%84%E9%80%A0%E5%99%A8"><span class="toc-number">1.4.2.</span> <span class="toc-text">Constructors 构造器</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&text=【Java】Java IO 总结"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&is_video=false&description=【Java】Java IO 总结"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】Java IO 总结&body=Check out this article: http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&title=【Java】Java IO 总结"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&name=【Java】Java IO 总结&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/03/06/%E3%80%90Java%E3%80%91Java%20IO%20%E6%80%BB%E7%BB%93/&t=【Java】Java IO 总结"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="抽象工厂模式(Abstract Factory Pattern) wiki: The abstract factory pattern provides a way to encapsulate a group of individual factories that have a common theme without specifying their concrete classes.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Design Patterns】抽象工厂模式">
+<meta property="og:url" content="http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="抽象工厂模式(Abstract Factory Pattern) wiki: The abstract factory pattern provides a way to encapsulate a group of individual factories that have a common theme without specifying their concrete classes.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/W3sDesign_Abstract_Factory_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://example.com/images/Abstract_factory_UML.svg">
+<meta property="og:image" content="http://example.com/images/abstract_factory.png">
+<meta property="article:published_time" content="2019-01-27T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.514Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Design Patterns">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/W3sDesign_Abstract_Factory_Design_Pattern_UML.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Design Patterns】抽象工厂模式</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/01/23/%E3%80%90Design%20Patterns%E3%80%91%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】抽象工厂模式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】抽象工厂模式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】抽象工厂模式&body=Check out this article: http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】抽象工厂模式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】抽象工厂模式"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Abstract-Factory-Pattern"><span class="toc-number">1.</span> <span class="toc-text">抽象工厂模式(Abstract Factory Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">抽象工厂实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">抽象工厂模式的优缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E5%92%8C%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">1.3.</span> <span class="toc-text">抽象工厂和工厂方法的对比</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Design Patterns】抽象工厂模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-27T00:00:00.000Z" itemprop="datePublished">2019-01-27</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Design-Patterns/" rel="tag">Design Patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="抽象工厂模式-Abstract-Factory-Pattern"><a href="#抽象工厂模式-Abstract-Factory-Pattern" class="headerlink" title="抽象工厂模式(Abstract Factory Pattern)"></a>抽象工厂模式(Abstract Factory Pattern)</h1><blockquote>
+<p>wiki: The abstract factory pattern provides a way to encapsulate a group of individual factories that have a common theme without specifying their concrete classes.</p>
+</blockquote>
+<p><img src="/images/W3sDesign_Abstract_Factory_Design_Pattern_UML.jpg"></p>
+<blockquote>
+<p>提供一个创建一系列相关或相互依赖对象的接口，而无需指定它们具体的类。</p>
+</blockquote>
+<blockquote>
+<p>主要解决：主要解决接口选择的问题。</p>
+</blockquote>
+<blockquote>
+<p>何时使用：系统的产品有多于一个的产品族，而系统只消费其中某一族的产品。</p>
+</blockquote>
+<blockquote>
+<p>与工厂方法模式的区别为： 工厂方法是由子类自行决定实例化那个类，而抽象工厂是自己决定实例化哪个类。</p>
+</blockquote>
+<p><img src="/images/Abstract_factory_UML.svg"></p>
+<p>抽象工厂设计模式解决了以下问题：</p>
+<ul>
+<li>应用程序如何独立于其对象的创建方式？</li>
+<li>一个类如何独立于它所需的对象来创建？</li>
+<li>如何创建相关或依赖对象的族？</li>
+</ul>
+<p>抽象工厂设计模式描述了如何解决这些问题:</p>
+<ul>
+<li>将对象创建封装在单独的（工厂）对象中。也就是说，定义一个用于创建对象的接口（AbstractFactory），并实现该接口。</li>
+<li>类将对象创建委托给工厂对象，而不是直接创建对象。</li>
+</ul>
+<h2 id="抽象工厂实例"><a href="#抽象工厂实例" class="headerlink" title="抽象工厂实例"></a>抽象工厂实例</h2><p><strong>UML：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">class Client&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">interface ProductA&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ConcreteProductA&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface ProductB&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ConcreteProductB&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">interface AbstractFactory&#123;</span><br><span class="line">    + createProductA()</span><br><span class="line">    + createProductB()</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class FactoryA&#123;</span><br><span class="line">    + createProductA()</span><br><span class="line">    + createProductB()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Client --&gt; AbstractFactory </span><br><span class="line">Client --&gt; ProductA </span><br><span class="line">Client --&gt; ProductB </span><br><span class="line"></span><br><span class="line">AbstractFactory &lt;|.. FactoryA</span><br><span class="line"></span><br><span class="line">ProductA &lt;|.. ConcreteProductA</span><br><span class="line"></span><br><span class="line">ProductB &lt;|.. ConcreteProductB</span><br><span class="line"></span><br><span class="line">FactoryA ..&gt; ConcreteProductA:&lt;&lt;Create&gt;&gt;</span><br><span class="line">FactoryA ..&gt; ConcreteProductB:&lt;&lt;Create&gt;&gt;</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/abstract_factory.png"></p>
+<p><strong>产品抽象接口</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ProductA</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ProductB</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>具体产品实现类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteProductA</span> <span class="keyword">implements</span> <span class="title">ProductA</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteProductA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;init ConcreteProductA...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteProductB</span> <span class="keyword">implements</span> <span class="title">ProductB</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteProductB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;init ConcreteProductB...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>抽象工厂接口</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建产品A</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cls 具体产品类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;T&gt; 具体产品类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 具体产品类A</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    &lt;T extends ProductA&gt; <span class="function">T <span class="title">createProductA</span><span class="params">(Class&lt;T&gt; cls)</span></span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建产品B</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cls 具体产品类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;T&gt; 具体产品类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 具体产品类AB</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    &lt;T extends ProductB&gt; <span class="function">T <span class="title">createProductB</span><span class="params">(Class&lt;T&gt; cls)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>具体工厂类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryA</span> <span class="keyword">implements</span> <span class="title">AbstractFactory</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T extends ProductA&gt; <span class="function">T <span class="title">createProductA</span><span class="params">(Class&lt;T&gt; cls)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> != cls)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">final</span> Object o = Class.forName(cls.getName()).newInstance();</span><br><span class="line">                <span class="comment">// noinspection unchecked</span></span><br><span class="line">                <span class="keyword">return</span> (T) o;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T extends ProductB&gt; <span class="function">T <span class="title">createProductB</span><span class="params">(Class&lt;T&gt; cls)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> != cls)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">final</span> Object o = Class.forName(cls.getName()).newInstance();</span><br><span class="line">                <span class="comment">// noinspection unchecked</span></span><br><span class="line">                <span class="keyword">return</span> (T) o;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InstantiationException | IllegalAccessException | ClassNotFoundException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>场景类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        AbstractFactory factory = <span class="keyword">new</span> FactoryA();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> ConcreteProductA productA = factory.createProductA(ConcreteProductA.class);</span><br><span class="line">        <span class="keyword">final</span> ConcreteProductB productB = factory.createProductB(ConcreteProductB.class);</span><br><span class="line">        <span class="comment">// init ConcreteProductA...</span></span><br><span class="line">        <span class="comment">// init ConcreteProductB...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="抽象工厂模式的优缺点"><a href="#抽象工厂模式的优缺点" class="headerlink" title="抽象工厂模式的优缺点"></a>抽象工厂模式的优缺点</h2><p><strong>优点：</strong></p>
+<ul>
+<li>抽象工厂模式隔离了具体类的生产，使得客户并不需要知道什么被创建。</li>
+<li>当一个产品族中的多个对象被设计成一起工作时，它能保证客户端始终只使用同一个产品族中的对象。</li>
+<li>增加新的具体工厂和产品族很方便，无须修改已有系统，符合“开闭原则”。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>产品族扩展非常困难，要增加一个系列的某一产品，既要在抽象的 Creator 里加代码，又要在具体的里面加代码。</li>
+</ul>
+<h2 id="抽象工厂和工厂方法的对比"><a href="#抽象工厂和工厂方法的对比" class="headerlink" title="抽象工厂和工厂方法的对比"></a>抽象工厂和工厂方法的对比</h2><table>
+<thead>
+<tr>
+<th align="left">工厂方法模式</th>
+<th align="left">抽象工厂模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">针对的是一个产品等级结构</td>
+<td align="left">针对的是面向多个产品(产品族)等级结构</td>
+</tr>
+<tr>
+<td align="left">一个抽象产品类</td>
+<td align="left">多个抽象产品类</td>
+</tr>
+<tr>
+<td align="left">可以派生出多个具体产品类</td>
+<td align="left">每个抽象产品类可以派生出多个具体产品类</td>
+</tr>
+<tr>
+<td align="left">一个抽象工厂类，可以派生出多个具体工厂类</td>
+<td align="left">一个抽象工厂类，可以派生出多个具体工厂类</td>
+</tr>
+<tr>
+<td align="left">每个具体工厂类只能创建一个具体产品类的实例</td>
+<td align="left">每个具体工厂类可以创建多个具体产品类的实例</td>
+</tr>
+</tbody></table>
+<p><strong>简单工厂模式：</strong> 他的最大优点就是在于工厂类包含了必要的逻辑判断，根据客户端的选择条件动态实例化相关的类，对于客户端来说，去除了与具体产品的依赖，当算法比较稳定，一般不会对它进行新增，或删除等就适合用词模式；否则就会违背了“开放-封闭”原则</p>
+<p><strong>工厂方法模式：</strong> 它定义了用于创建对象的接口，让子类决定实例化哪一个类，工厂方法使一个类的实例化延迟到其子类。</p>
+<p><strong>抽象工厂模式：</strong> 当产品有不同的系列，而不同的系列又有不同的创建方式，此时就适合用此模式</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Abstract-Factory-Pattern"><span class="toc-number">1.</span> <span class="toc-text">抽象工厂模式(Abstract Factory Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">抽象工厂实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">抽象工厂模式的优缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E5%92%8C%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">1.3.</span> <span class="toc-text">抽象工厂和工厂方法的对比</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】抽象工厂模式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】抽象工厂模式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】抽象工厂模式&body=Check out this article: http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】抽象工厂模式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】抽象工厂模式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/01/27/%E3%80%90Design%20Patterns%E3%80%91%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】抽象工厂模式"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="适配器模式(Adapter Pattern)  定义: 适配器允许两个不兼容的接口一起工作.Definition: An adapter allows two incompatible interfaces to work together.    类型: 结构型  用法:When?: An adapter can be used when the wrapper must respect(遵循)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Design Patterns】适配器模式">
+<meta property="og:url" content="http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="适配器模式(Adapter Pattern)  定义: 适配器允许两个不兼容的接口一起工作.Definition: An adapter allows two incompatible interfaces to work together.    类型: 结构型  用法:When?: An adapter can be used when the wrapper must respect(遵循)">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/W3sDesign_Adapter_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://example.com/images/object-adapter.png">
+<meta property="og:image" content="http://example.com/images/class-adapter.png">
+<meta property="og:image" content="http://example.com/images/adapter_pattern_uml_diagram.jpg">
+<meta property="article:published_time" content="2019-02-19T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.514Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Design Patterns">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/W3sDesign_Adapter_Design_Pattern_UML.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Design Patterns】适配器模式</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/02/24/%E3%80%90Design%20Patterns%E3%80%91%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/02/17/%E3%80%90Design%20Patterns%E3%80%91%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】适配器模式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】适配器模式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】适配器模式&body=Check out this article: http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】适配器模式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】适配器模式"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter-Pattern"><span class="toc-number">1.</span> <span class="toc-text">适配器模式(Adapter Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%B3%95"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">用法:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Object-adapter-pattern"><span class="toc-number">1.0.1.</span> <span class="toc-text">对象适配器模式(Object adapter pattern)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Class-adapter-pattern"><span class="toc-number">1.0.2.</span> <span class="toc-text">类适配器模式(Class adapter pattern)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">适配器模式实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adapter-Pattern%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">Adapter Pattern的优缺点</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Design Patterns】适配器模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-02-19T00:00:00.000Z" itemprop="datePublished">2019-02-19</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Design-Patterns/" rel="tag">Design Patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="适配器模式-Adapter-Pattern"><a href="#适配器模式-Adapter-Pattern" class="headerlink" title="适配器模式(Adapter Pattern)"></a>适配器模式(Adapter Pattern)</h1><p><img src="/images/W3sDesign_Adapter_Design_Pattern_UML.jpg"></p>
+<blockquote>
+<p>定义: 适配器允许两个不兼容的接口一起工作.<br>Definition: An adapter allows two incompatible interfaces to work together. </p>
+</blockquote>
+<blockquote>
+<p>类型: 结构型</p>
+</blockquote>
+<h4 id="用法"><a href="#用法" class="headerlink" title="用法:"></a>用法:</h4><p><strong><strong>When?</strong></strong>: An adapter can be used when the wrapper must respect(遵循) a particular(特定) interface and must support polymorphic(多态) behavior. </p>
+<ul>
+<li>当包装器(wrapper)必须遵循特定接口并且必须支持多态行为时，可以使用适配器模式。</li>
+<li>装饰器模式可以在运行时添加或更改接口的行为</li>
+<li>在需要更简单或更简单的基础对象接口时使用外观模式。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Pattern</th>
+<th align="right">Intent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Adapter or Wrapper</td>
+<td align="right">Converts one interface to another so that it matches what the client is expecting</td>
+</tr>
+<tr>
+<td align="left">Decorator</td>
+<td align="right">Dynamically adds responsibility to the interface by wrapping the original code</td>
+</tr>
+<tr>
+<td align="left">Delegation(委派模式)</td>
+<td align="right">Support “composition over inheritance”</td>
+</tr>
+<tr>
+<td align="left">Facade</td>
+<td align="right">Provides a simplified interface</td>
+</tr>
+</tbody></table>
+<h3 id="对象适配器模式-Object-adapter-pattern"><a href="#对象适配器模式-Object-adapter-pattern" class="headerlink" title="对象适配器模式(Object adapter pattern)"></a>对象适配器模式(Object adapter pattern)</h3><p>在此适配器模式中，适配器包含它包装的类的实例。在这种情况下，适配器调用包装对象的实例。</p>
+<p><strong><strong>UML</strong></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">@startuml Object adapter pattern</span><br><span class="line">class Adaptee&#123;</span><br><span class="line">    + methodB()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Adaptor&#123;</span><br><span class="line">    + adaptee: Adaptee</span><br><span class="line">    + methodA()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Client&#123;</span><br><span class="line">    + adaptor: Adaptor</span><br><span class="line">    + doWork()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">note bottom of Adaptor </span><br><span class="line"> ...</span><br><span class="line"> adpatee.methodB()</span><br><span class="line"> ...</span><br><span class="line">end note</span><br><span class="line"></span><br><span class="line">note bottom of Client </span><br><span class="line"> ...</span><br><span class="line"> adpator.methodA()</span><br><span class="line"> ...</span><br><span class="line">end note</span><br><span class="line">Adaptee --&gt; Adaptor</span><br><span class="line">Adaptor &lt;-- Client</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/object-adapter.png"></p>
+<h3 id="类适配器模式-Class-adapter-pattern"><a href="#类适配器模式-Class-adapter-pattern" class="headerlink" title="类适配器模式(Class adapter pattern)"></a>类适配器模式(Class adapter pattern)</h3><p>此适配器模式使用多个多态接口实现或继承预期的接口和预先存在的接口。通常将期望的接口创建为纯接口类，尤其是在不支持类的多重继承的Java（JDK 1.8之前）等语言中。</p>
+<p><strong><strong>UML</strong></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">class Adaptee1&#123;</span><br><span class="line">    + method1()</span><br><span class="line">&#125;</span><br><span class="line">class AdapteeN&#123;</span><br><span class="line">    + method2()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Adaptor&#123;</span><br><span class="line">    + methodA()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Client&#123;</span><br><span class="line">    + adaptor: Adaptor</span><br><span class="line">    + doWork()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Client --&gt; Adaptor</span><br><span class="line">Adaptor --|&gt; Adaptee1</span><br><span class="line">Adaptor --|&gt; AdapteeN</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">note right of Adaptor </span><br><span class="line"> ...</span><br><span class="line"> adpatee.methodB()</span><br><span class="line"> ...</span><br><span class="line">end note</span><br><span class="line"></span><br><span class="line">note right of Client </span><br><span class="line"> ...</span><br><span class="line"> adpatee.methodB()</span><br><span class="line"> ...</span><br><span class="line">end note</span><br><span class="line"></span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/class-adapter.png"></p>
+<h2 id="适配器模式实例"><a href="#适配器模式实例" class="headerlink" title="适配器模式实例"></a>适配器模式实例</h2><p><em><strong>UML</strong></em></p>
+<p><img src="/images/adapter_pattern_uml_diagram.jpg"></p>
+<p><strong><strong>适配器接口</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 媒体播放器可能包含多种类型(本系统中的)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MediaPlayer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">play</span><span class="params">(String audioType, String fileName)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 高级媒体播放器可能包含多种类型(将要调用的外系统中的)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AdvancedMediaPlayer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">playVlc</span><span class="params">(String fileName)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">playMp4</span><span class="params">(String fileName)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><strong>AdvancedMediaPlayer支持的具体类型</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VlcPlayer</span> <span class="keyword">implements</span> <span class="title">AdvancedMediaPlayer</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">playVlc</span><span class="params">(String fileName)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Playing vlc file. file name: &quot;</span>+ fileName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">playMp4</span><span class="params">(String fileName)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// do nothing...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Mp4Player</span> <span class="keyword">implements</span> <span class="title">AdvancedMediaPlayer</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">playVlc</span><span class="params">(String fileName)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// do nothing...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">playMp4</span><span class="params">(String fileName)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Playing mp4 file. file name: &quot;</span>+ fileName);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><strong>润滑油(适配器)</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MediaAdapter</span> <span class="keyword">implements</span> <span class="title">MediaPlayer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> AdvancedMediaPlayer advancedMediaPlayer;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MediaAdapter</span><span class="params">(String audioType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="string">&quot;vlc&quot;</span>.equalsIgnoreCase(audioType)) &#123;</span><br><span class="line">            advancedMediaPlayer = <span class="keyword">new</span> VlcPlayer();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;mp4&quot;</span>.equalsIgnoreCase(audioType)) &#123;</span><br><span class="line">            advancedMediaPlayer = <span class="keyword">new</span> Mp4Player();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">(String audioType, String fileName)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 适配器支持两种 vlc 和 mp4格式</span></span><br><span class="line">        <span class="keyword">if</span>(audioType.equalsIgnoreCase(<span class="string">&quot;vlc&quot;</span>))&#123;</span><br><span class="line">            advancedMediaPlayer.playVlc(fileName);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(audioType.equalsIgnoreCase(<span class="string">&quot;mp4&quot;</span>))&#123;</span><br><span class="line">            advancedMediaPlayer.playMp4(fileName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><strong>具体调用类(自生产品功能类)</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AudioPlayer</span> <span class="keyword">implements</span> <span class="title">MediaPlayer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> MediaAdapter mediaAdapter;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">(String audioType, String fileName)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 内置类型</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="string">&quot;mp3&quot;</span>.equalsIgnoreCase(audioType))&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;Playing mp3 file. file name: &quot;</span>+ fileName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 适配器提供的支持的其他类型</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;vlc&quot;</span>.equalsIgnoreCase(audioType)|| <span class="string">&quot;mp4&quot;</span>.equalsIgnoreCase(audioType))&#123;</span><br><span class="line">            mediaAdapter = <span class="keyword">new</span> MediaAdapter(audioType);</span><br><span class="line">            mediaAdapter.play(audioType,fileName);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;Invalid media. &quot;</span> + audioType + <span class="string">&quot; format not supported&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><strong>使用场景</strong></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AdapterPatternDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        AudioPlayer audioPlayer = <span class="keyword">new</span> AudioPlayer();</span><br><span class="line">        audioPlayer.play(<span class="string">&quot;mp3&quot;</span>,<span class="string">&quot;hello.mp3&quot;</span>);</span><br><span class="line">        audioPlayer.play(<span class="string">&quot;mp4&quot;</span>,<span class="string">&quot;hello.mp4&quot;</span>);</span><br><span class="line">        audioPlayer.play(<span class="string">&quot;vlc&quot;</span>,<span class="string">&quot;hello.vlc&quot;</span>);</span><br><span class="line">        audioPlayer.play(<span class="string">&quot;avi&quot;</span>,<span class="string">&quot;hello.avi&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Adapter-Pattern的优缺点"><a href="#Adapter-Pattern的优缺点" class="headerlink" title="Adapter Pattern的优缺点"></a>Adapter Pattern的优缺点</h2><p><strong><strong>优点:</strong></strong></p>
+<ul>
+<li>可以让任何两个没有关联的类一起运行</li>
+<li>提高了类的复用</li>
+<li>增加了类的透明度</li>
+</ul>
+<p><strong><strong>缺点:</strong></strong></p>
+<ul>
+<li>过度使用会造成系统混乱零散</li>
+<li>由于 JAVA 至多继承一个类，所以至多只能适配一个适配者类，而且目标类必须是抽象类</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter-Pattern"><span class="toc-number">1.</span> <span class="toc-text">适配器模式(Adapter Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%B3%95"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">用法:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Object-adapter-pattern"><span class="toc-number">1.0.1.</span> <span class="toc-text">对象适配器模式(Object adapter pattern)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Class-adapter-pattern"><span class="toc-number">1.0.2.</span> <span class="toc-text">类适配器模式(Class adapter pattern)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">适配器模式实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adapter-Pattern%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">Adapter Pattern的优缺点</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】适配器模式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】适配器模式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】适配器模式&body=Check out this article: http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】适配器模式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】适配器模式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/02/19/%E3%80%90Design%20Patterns%E3%80%91%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】适配器模式"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

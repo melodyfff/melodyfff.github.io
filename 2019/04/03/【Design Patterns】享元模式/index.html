@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="享元模式(Flyweight Pattern)  定义： 享元模式（Flyweight Pattern），又称轻量级模式（这也是其英文名为FlyWeight的原因），通过共享技术有效地实现了大量细粒度对象的复用。  类型： 结构型模式 UML 1234567891011121314151617181920212223@startumlinterface FlyWeight&amp;#123;    + o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Design Patterns】享元模式">
+<meta property="og:url" content="http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="享元模式(Flyweight Pattern)  定义： 享元模式（Flyweight Pattern），又称轻量级模式（这也是其英文名为FlyWeight的原因），通过共享技术有效地实现了大量细粒度对象的复用。  类型： 结构型模式 UML 1234567891011121314151617181920212223@startumlinterface FlyWeight&amp;#123;    + o">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/W3sDesign_Flyweight_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://example.com/images/flyweight_uml.png">
+<meta property="article:published_time" content="2019-04-03T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.514Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Design Patterns">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/W3sDesign_Flyweight_Design_Pattern_UML.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Design Patterns】享元模式</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/04/09/%E3%80%90Java%E3%80%91%20Java%E4%B8%AD%E7%9A%84volatile%E5%85%B3%E9%94%AE%E5%AD%97/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】享元模式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】享元模式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】享元模式&body=Check out this article: http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】享元模式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】享元模式"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F-Flyweight-Pattern"><span class="toc-number">1.</span> <span class="toc-text">享元模式(Flyweight Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E7%BA%AF%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">单纯享元模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%90%88%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">复合享元模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E7%A4%BA%E4%BE%8B%E4%B8%80"><span class="toc-number">1.3.</span> <span class="toc-text">享元模式示例一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E7%A4%BA%E4%BE%8B%E4%BA%8C"><span class="toc-number">1.4.</span> <span class="toc-text">享元模式示例二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.5.</span> <span class="toc-text">享元模式的优缺点</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Design Patterns】享元模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-04-03T00:00:00.000Z" itemprop="datePublished">2019-04-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Design-Patterns/" rel="tag">Design Patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="享元模式-Flyweight-Pattern"><a href="#享元模式-Flyweight-Pattern" class="headerlink" title="享元模式(Flyweight Pattern)"></a>享元模式(Flyweight Pattern)</h1><p><img src="/images/W3sDesign_Flyweight_Design_Pattern_UML.jpg"></p>
+<blockquote>
+<p>定义： 享元模式（Flyweight Pattern），又称轻量级模式（这也是其英文名为FlyWeight的原因），通过共享技术有效地实现了大量细粒度对象的复用。</p>
+</blockquote>
+<p><strong>类型：</strong> 结构型模式</p>
+<p><strong>UML</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface FlyWeight&#123;</span><br><span class="line">    + operation()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ConcreteFlyWeight&#123;</span><br><span class="line">    + operation()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class UnSharedFlyWeight&#123;</span><br><span class="line">    + operation()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class FlyWeightFactory&#123;</span><br><span class="line">    + getFlyWeight(key): FlyWeight</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">FlyWeightFactory *- FlyWeight</span><br><span class="line"></span><br><span class="line">FlyWeight &lt;|- ConcreteFlyWeight</span><br><span class="line">FlyWeight &lt;|-- UnSharedFlyWeight</span><br><span class="line"></span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/flyweight_uml.png"></p>
+<p><strong>角色说明</strong></p>
+<ul>
+<li><strong>FlyWeight:</strong> 抽象接口或者抽象享元类，定义共享接口</li>
+<li><strong>ConcreteFlyWeight:</strong> 具体享元类（或称为单纯享元模式）</li>
+<li><strong>UnSharedFlyWeight:</strong> 非共享享元实现类（或称为复合享元模式）</li>
+<li><strong>FlyWeightFactory:</strong> 享元工厂类，控制实例的创建和共享</li>
+</ul>
+<p>在<code>Java</code>语言中，<code>String</code>类型就是使用了享元模式。</p>
+<p><code>String</code>对象是<code>final</code>类型，对象一旦创建就不可改变。在Java中字符串常量都是存储在常量池中的，<code>Java</code>会确保一个字符串常量在常量池中只有一个拷贝。</p>
+<p>在<code>Integer.valueOf()</code>中有一个<code>IntegerCache</code> [-128, 127] ,同理<code>Long</code>中也一样</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(Integer.valueOf(<span class="number">122</span>)==Integer.valueOf(<span class="number">122</span>));   <span class="comment">// true</span></span><br><span class="line">System.out.println(Integer.valueOf(<span class="number">128</span>)==Integer.valueOf(<span class="number">128</span>));  <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>内部状态和外部状态</strong></p>
+<ul>
+<li><strong>内部状态(Internal State)：</strong> 是存储在享元对象内部，一般在构造时确定或通过setter设置，并且不会随环境改变而改变的状态，因此内部状态可以共享</li>
+<li><strong>外部状态(External State)：</strong> 是随环境改变而改变、不可以共享的状态。外部状态在需要使用时通过客户端传入享元对象。外部状态必须由客户端保存</li>
+</ul>
+<h2 id="单纯享元模式"><a href="#单纯享元模式" class="headerlink" title="单纯享元模式"></a>单纯享元模式</h2><p>在单纯享元模式中，所有的享元对象都是可以共享的。</p>
+<h2 id="复合享元模式"><a href="#复合享元模式" class="headerlink" title="复合享元模式"></a>复合享元模式</h2><p>复合享元对象是由单纯享元对象通过复合而成的，因此可以提供<code>add()</code>这样的聚集管理方法。</p>
+<p>由于一个复合享元对象具有不同的聚集元素，这些聚集元素在复合享元对象被创建之后加入，这本身就意味着复合享元对象的状态是会改变的，因此复合享元对象是不能共享的。 </p>
+<p>复合享元角色实现了抽象享元角色所规定的接口，也就是<code>operation()</code>方法，这个方法有一个参数，代表复合享元对象的外蕴状态。</p>
+<p>一个复合 享元对象的所有单纯享元对象元素的外蕴状态都是与复合享元对象的外蕴状态相等的；而一个复合享元对象所含有的单纯享元对象的内蕴状态一般是不相等的，不然 就没有使用价值了。</p>
+<h2 id="享元模式示例一"><a href="#享元模式示例一" class="headerlink" title="享元模式示例一"></a>享元模式示例一</h2><p><strong>FlyWeight</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FlyWeight</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">operation</span><span class="params">(String external)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>ConcreteFlyWeight/UnSharedFlyWeight</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFlyWeight</span> <span class="keyword">implements</span> <span class="title">FlyWeight</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteFlyWeight</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 外部状态处理</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> external 外部状态</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operation</span><span class="params">( String external)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;ConcreteFlyWeight Object = &quot;</span>+ <span class="keyword">this</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;Internal Status = &quot;</span> + name);</span><br><span class="line">        System.out.println(<span class="string">&quot;External Status = &quot;</span> + external);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnSharedFlyWeight</span> <span class="keyword">implements</span> <span class="title">FlyWeight</span></span>&#123;</span><br><span class="line">    <span class="comment">/** 使用弱引用，充当缓存，当发生gc的时候直接回收 */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> WeakHashMap&lt;String, FlyWeight&gt; CACHE = <span class="keyword">new</span> WeakHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(String internal,FlyWeight flyWeight)</span></span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (CACHE)&#123;</span><br><span class="line">            CACHE.put(internal, flyWeight);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operation</span><span class="params">(<span class="keyword">final</span> String external)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (CACHE)&#123;</span><br><span class="line">            CACHE.values().forEach((flyWeight)-&gt; flyWeight.operation(external));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当前缓存CACHE的大小</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">UnSharedFlyWeightInCache</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (CACHE)&#123;</span><br><span class="line">            <span class="keyword">return</span> CACHE.size();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>FlyWeightFactory</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">FlyWeightFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, FlyWeight&gt; pool = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;(<span class="number">16</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">FlyWeightFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取复合享元</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> list 内部状态列表</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> UnSharedFlyWeight</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> FlyWeight <span class="title">getCompositeFlyweight</span><span class="params">(List&lt;String&gt; list)</span></span>&#123;</span><br><span class="line">        UnSharedFlyWeight unSharedFlyWeight = <span class="keyword">new</span> UnSharedFlyWeight();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">final</span> String internal:list)&#123;</span><br><span class="line">            unSharedFlyWeight.add(internal,getFlyWeight(internal));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> unSharedFlyWeight;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取单纯享元</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> internal 内部状态</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> FlyWeight</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> FlyWeight <span class="title">getFlyWeight</span><span class="params">(String internal)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 根据key获取value，如果不存在则put</span></span><br><span class="line">        <span class="keyword">return</span> pool.computeIfAbsent(internal, ConcreteFlyWeight::<span class="keyword">new</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">poolSize</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> pool.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Client</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; internals = Arrays.asList(<span class="string">&quot;test1&quot;</span>, <span class="string">&quot;test2&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 单纯享元</span></span><br><span class="line">        <span class="keyword">final</span> FlyWeight concreteFlyWeight1 = FlyWeightFactory.getFlyWeight(internals.get(<span class="number">0</span>));</span><br><span class="line">        concreteFlyWeight1.operation(<span class="string">&quot;concreteFlyWeight1&quot;</span>);</span><br><span class="line">        <span class="keyword">final</span> FlyWeight concreteFlyWeight2 = FlyWeightFactory.getFlyWeight(internals.get(<span class="number">0</span>));</span><br><span class="line">        concreteFlyWeight2.operation(<span class="string">&quot;concreteFlyWeight2&quot;</span>);</span><br><span class="line">        System.out.println(concreteFlyWeight1 == concreteFlyWeight2);</span><br><span class="line">        System.out.println(FlyWeightFactory.poolSize());</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;\n\n\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 复合享元</span></span><br><span class="line">        <span class="keyword">final</span> FlyWeight compositeFlyweight1 = FlyWeightFactory.getCompositeFlyweight(internals);</span><br><span class="line">        <span class="keyword">final</span> FlyWeight compositeFlyweight2 = FlyWeightFactory.getCompositeFlyweight(internals);</span><br><span class="line">        compositeFlyweight1.operation(<span class="string">&quot;compositeFlyweight1&quot;</span>);</span><br><span class="line">        compositeFlyweight2.operation(<span class="string">&quot;compositeFlyweight2&quot;</span>);</span><br><span class="line">        System.out.println(compositeFlyweight1);</span><br><span class="line">        System.out.println(compositeFlyweight2);</span><br><span class="line">        System.out.println(compositeFlyweight1 == compositeFlyweight2);</span><br><span class="line">        System.out.println(UnSharedFlyWeight.UnSharedFlyWeightInCache());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="享元模式示例二"><a href="#享元模式示例二" class="headerlink" title="享元模式示例二"></a>享元模式示例二</h2><p>模拟一家咖啡馆正常经营的情况</p>
+<p><strong>咖啡口味</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CoffeeFlavour</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** name可认为是内部状态，在构造时确定 */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 使用弱引用，充当缓存，当发生gc的时候直接回收 */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> WeakHashMap&lt;String, CoffeeFlavour&gt; CACHE = <span class="keyword">new</span> WeakHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** only intern() can call this */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">CoffeeFlavour</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据key从CACHE中获取value</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> name key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> CoffeeFlavour</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CoffeeFlavour <span class="title">intern</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (CACHE)&#123;</span><br><span class="line">            <span class="keyword">return</span> CACHE.computeIfAbsent(name, CoffeeFlavour::<span class="keyword">new</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当前缓存CACHE的大小</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">flavoursInCache</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (CACHE)&#123;</span><br><span class="line">            <span class="keyword">return</span> CACHE.size();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>订单处理类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Order</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 服务</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">serve</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 接收处理订单</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> flavourName 口味 （可认为是内部状态Internal State）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> taleNumber 桌号 （可认为是外部状态External State）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> Order <span class="title">of</span><span class="params">(String flavourName,<span class="keyword">int</span> taleNumber)</span></span>&#123;</span><br><span class="line">        CoffeeFlavour flavour = CoffeeFlavour.intern(flavourName);</span><br><span class="line">        <span class="keyword">return</span> () -&gt; System.out.println(<span class="string">&quot;Serving &quot;</span> + flavour + <span class="string">&quot; to table &quot;</span> + taleNumber);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>咖啡馆</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CoffeeShop</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;Order&gt; orders = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 接收订单</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> flavour 口味</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> tableNumber 座位号</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">takeOrder</span><span class="params">(String flavour,<span class="keyword">int</span> tableNumber)</span></span>&#123;</span><br><span class="line">        orders.add(Order.of(flavour, tableNumber));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理订单</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">()</span></span>&#123;</span><br><span class="line">        orders.forEach(Order::serve);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>客户端</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlyWeightExample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1. 咖啡馆开始营业</span></span><br><span class="line">        <span class="keyword">final</span> CoffeeShop shop = <span class="keyword">new</span> CoffeeShop();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 接收订单</span></span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Cappuccino&quot;</span>, <span class="number">2</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Frappe&quot;</span>, <span class="number">1</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Espresso&quot;</span>, <span class="number">1</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Frappe&quot;</span>, <span class="number">897</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Cappuccino&quot;</span>, <span class="number">97</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Frappe&quot;</span>, <span class="number">3</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Espresso&quot;</span>, <span class="number">3</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Cappuccino&quot;</span>, <span class="number">3</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Espresso&quot;</span>, <span class="number">96</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Frappe&quot;</span>, <span class="number">552</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Cappuccino&quot;</span>, <span class="number">121</span>);</span><br><span class="line">        shop.takeOrder(<span class="string">&quot;Espresso&quot;</span>, <span class="number">121</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 处理订单</span></span><br><span class="line">        shop.service();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 查看缓存</span></span><br><span class="line">        System.out.println(<span class="string">&quot;CoffeeFlavor objects in cache: &quot;</span> + CoffeeFlavour.flavoursInCache());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果为:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Serving Cappuccino to table 2</span><br><span class="line">Serving Frappe to table 1</span><br><span class="line">Serving Espresso to table 1</span><br><span class="line">Serving Frappe to table 897</span><br><span class="line">Serving Cappuccino to table 97</span><br><span class="line">Serving Frappe to table 3</span><br><span class="line">Serving Espresso to table 3</span><br><span class="line">Serving Cappuccino to table 3</span><br><span class="line">Serving Espresso to table 96</span><br><span class="line">Serving Frappe to table 552</span><br><span class="line">Serving Cappuccino to table 121</span><br><span class="line">Serving Espresso to table 121</span><br><span class="line">CoffeeFlavor objects <span class="keyword">in</span> cache: 3</span><br></pre></td></tr></table></figure>
+
+<h2 id="享元模式的优缺点"><a href="#享元模式的优缺点" class="headerlink" title="享元模式的优缺点"></a>享元模式的优缺点</h2><p><strong>优点：</strong></p>
+<ul>
+<li>享元模式的外部状态相对独立，使得对象可以在不同的环境中被复用（共享对象可以适应不同的外部环境）</li>
+<li>享元模式可共享相同或相似的细粒度对象，从而减少了内存消耗，同时降低了对象创建与垃圾回收的开销</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>外部状态由客户端保存，共享对象读取外部状态的开销可能比较大</li>
+<li>享元模式要求将内部状态与外部状态分离，这使得程序的逻辑复杂化，同时也增加了状态维护成本</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F-Flyweight-Pattern"><span class="toc-number">1.</span> <span class="toc-text">享元模式(Flyweight Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E7%BA%AF%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">单纯享元模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%90%88%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">复合享元模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E7%A4%BA%E4%BE%8B%E4%B8%80"><span class="toc-number">1.3.</span> <span class="toc-text">享元模式示例一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E7%A4%BA%E4%BE%8B%E4%BA%8C"><span class="toc-number">1.4.</span> <span class="toc-text">享元模式示例二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.5.</span> <span class="toc-text">享元模式的优缺点</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】享元模式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】享元模式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】享元模式&body=Check out this article: http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】享元模式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】享元模式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】享元模式"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

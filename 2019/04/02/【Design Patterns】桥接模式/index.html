@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="桥接模式(Bridge Pattern)  定义： 将抽象部分与实现部分分离，使他们可以独立的变化。  类型： 结构型模式 UML 12345678910111213141516171819202122232425@startumlabstract class Abstraction&amp;#123;    - impl: Implementor    + function()&amp;#125;class A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Design Patterns】桥接模式">
+<meta property="og:url" content="http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="桥接模式(Bridge Pattern)  定义： 将抽象部分与实现部分分离，使他们可以独立的变化。  类型： 结构型模式 UML 12345678910111213141516171819202122232425@startumlabstract class Abstraction&amp;#123;    - impl: Implementor    + function()&amp;#125;class A">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/W3sDesign_Bridge_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://example.com/images/bridge_uml.png">
+<meta property="og:image" content="http://example.com/images/bridge_uml2.png">
+<meta property="article:published_time" content="2019-04-02T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.514Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Design Patterns">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/W3sDesign_Bridge_Design_Pattern_UML.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Design Patterns】桥接模式</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/04/03/%E3%80%90Design%20Patterns%E3%80%91%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/04/02/%E3%80%90Java%E3%80%91Java%E7%9A%84%E5%9B%9B%E7%A7%8D%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】桥接模式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】桥接模式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】桥接模式&body=Check out this article: http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】桥接模式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】桥接模式"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F-Bridge-Pattern"><span class="toc-number">1.</span> <span class="toc-text">桥接模式(Bridge Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B%E4%B8%80"><span class="toc-number">1.1.</span> <span class="toc-text">桥接模式实例一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B%E4%BA%8C"><span class="toc-number">1.2.</span> <span class="toc-text">桥接模式实例二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.3.</span> <span class="toc-text">桥接模式的优缺点</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Design Patterns】桥接模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-04-02T00:00:00.000Z" itemprop="datePublished">2019-04-02</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Design-Patterns/" rel="tag">Design Patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="桥接模式-Bridge-Pattern"><a href="#桥接模式-Bridge-Pattern" class="headerlink" title="桥接模式(Bridge Pattern)"></a>桥接模式(Bridge Pattern)</h1><p><img src="/images/W3sDesign_Bridge_Design_Pattern_UML.jpg"></p>
+<blockquote>
+<p>定义： 将抽象部分与实现部分分离，使他们可以独立的变化。</p>
+</blockquote>
+<p><strong>类型：</strong> 结构型模式</p>
+<p><strong>UML</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">abstract class Abstraction&#123;</span><br><span class="line">    - impl: Implementor</span><br><span class="line">    + function()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Abstraction</span><br><span class="line">note bottom: function() : impl.implementation()</span><br><span class="line"></span><br><span class="line">interface Implementor&#123;</span><br><span class="line">    + implementation()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class RefinedAbstraction&#123;</span><br><span class="line">    + refinedFunction()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ConcreteImplementor&#123;</span><br><span class="line">    + implementation()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Abstraction *- Implementor</span><br><span class="line">RefinedAbstraction --|&gt; Abstraction</span><br><span class="line">Implementor &lt;|- ConcreteImplementor</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/bridge_uml.png"></p>
+<p><strong>角色定义</strong></p>
+<ul>
+<li><strong>Abstraction(abstract class)-抽象类：</strong> 定义抽象接口，持有/维持 implementor 的引用</li>
+<li><strong>RefinedAbstraction(normal class)-正常的类：</strong> 拓展由Abstraction定义的接口</li>
+<li><strong>Implementor(interface)-执行者：</strong> 定义执行者的接口</li>
+<li><strong>ConcreteImplementor(normal class)-具体类:</strong> 实现Implementor接口</li>
+</ul>
+<p><strong>Bridge设计模式可以解决哪些问题？</strong></p>
+<ul>
+<li>抽象及其实现应该彼此独立地定义和扩展。</li>
+<li>避免抽象及其实现之间的编译时绑定，以便可以在运行时选择实现。</li>
+</ul>
+<p>使用子类时，不同的子类以不同的方式实现抽象类。但是实现在编译时绑定到抽象，并且不能在运行时更改。</p>
+<h2 id="桥接模式实例一"><a href="#桥接模式实例一" class="headerlink" title="桥接模式实例一"></a>桥接模式实例一</h2><p>模拟账号操作记录日志</p>
+<p><strong>Implementor(Logger.java)</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Logger</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 打印日志</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message message</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">log</span><span class="params">(String message)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * info级别日志</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> LOGGER</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> Logger <span class="title">info</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> message -&gt; System.out.println(<span class="string">&quot;info: &quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * warn级别日志</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> LOGGER</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> Logger <span class="title">warning</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> message -&gt; System.out.println(<span class="string">&quot;warning: &quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Abstraction(AbstractAccount.java)</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractAccount</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** 自定义日志 支持 info/warn */</span></span><br><span class="line">    <span class="keyword">private</span> Logger logger = Logger.info();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置打印的日志</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> logger Logger</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLogger</span><span class="params">(Logger logger)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 操作记录</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message 信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> action 结果</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">(String message, BooleanSupplier action)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> result = action.getAsBoolean();</span><br><span class="line">        logger.log(message + <span class="string">&quot; result &quot;</span> + result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>RefinedAbstraction(SimpleAccount.java)</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleAccount</span> <span class="keyword">extends</span> <span class="title">AbstractAccount</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 余额</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> balance;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 初始化账号余额</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> balance balance</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleAccount</span><span class="params">(<span class="keyword">int</span> balance)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.balance = balance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 判断是否快余额不足</span></span><br><span class="line"><span class="comment">     * 判断条件为小于50</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> boolean</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isBalanceLow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.balance &lt; <span class="number">50</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 取出余额</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> amount 数量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">withdraw</span><span class="params">(<span class="keyword">int</span> amount)</span> </span>&#123;</span><br><span class="line">        operate(<span class="string">&quot;withdraw &quot;</span> + amount, () -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.balance &gt;= amount) &#123;</span><br><span class="line">                <span class="keyword">this</span>.balance -= amount;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Client</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BridgeDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1. 初始化账号</span></span><br><span class="line">        SimpleAccount account = <span class="keyword">new</span> SimpleAccount(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 取出75</span></span><br><span class="line">        account.withdraw(<span class="number">75</span>);</span><br><span class="line">        <span class="comment">// info: withdraw 75 result true</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 判断余额是否已经到警戒值，切换日志级别</span></span><br><span class="line">        <span class="keyword">if</span> (account.isBalanceLow())&#123;</span><br><span class="line">            account.setLogger(Logger.warning());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 取出10</span></span><br><span class="line">        account.withdraw(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">// warning: withdraw 10 result true</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5. 取出100</span></span><br><span class="line">        account.withdraw(<span class="number">100</span>);</span><br><span class="line">        <span class="comment">// warning: withdraw 100 result false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="桥接模式实例二"><a href="#桥接模式实例二" class="headerlink" title="桥接模式实例二"></a>桥接模式实例二</h2><p>模拟消息的发送</p>
+<p><strong>UML</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">interface MessageImplementor&#123;</span><br><span class="line">    + send()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MessageEmail&#123;</span><br><span class="line">    + send()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MessageSMS&#123;</span><br><span class="line">    + send()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">abstract class AbstractMessage&#123;</span><br><span class="line">    - messageImplementor: MessageImplementor</span><br><span class="line">    + AbstractMessage(MessageImplementor)</span><br><span class="line"></span><br><span class="line">    + sendMessage()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class CommonMessage&#123;</span><br><span class="line">    + CommonMessage(MessageImplementor)</span><br><span class="line">    + sendMessage()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class UrgencyMessage&#123;</span><br><span class="line">    + UrgencyMessage(MessageImplementor)</span><br><span class="line">    + sendMessage()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">MessageImplementor &lt;|-- MessageEmail</span><br><span class="line">MessageImplementor &lt;|-- MessageSMS</span><br><span class="line"></span><br><span class="line">AbstractMessage *- MessageImplementor</span><br><span class="line"></span><br><span class="line">AbstractMessage &lt;|-- CommonMessage</span><br><span class="line">AbstractMessage &lt;|-- UrgencyMessage</span><br><span class="line"></span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/bridge_uml2.png"></p>
+<p><strong>Implementor接口</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MessageImplementor</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送消息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message 消息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> to 发送对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">send</span><span class="params">(String message, String to)</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>ConcreteImplementor具体实现</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageEmail</span> <span class="keyword">implements</span> <span class="title">MessageImplementor</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(String message, String to)</span> </span>&#123;</span><br><span class="line">        System.out.println(String.format(<span class="string">&quot;发送邮件消息 &#123;%s&#125; to &#123;%s&#125;&quot;</span>, message, to));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageSMS</span> <span class="keyword">implements</span> <span class="title">MessageImplementor</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(String message, String to)</span> </span>&#123;</span><br><span class="line">        System.out.println(String.format(<span class="string">&quot;发送短信消息 &#123;%s&#125; to &#123;%s&#125;&quot;</span>, message, to));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Abstraction</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractMessage</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** 消息发送接口 */</span></span><br><span class="line">    MessageImplementor messageImplementor;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 初始化时传入具体实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> messageImplementor 消息发送</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AbstractMessage</span><span class="params">(MessageImplementor messageImplementor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.messageImplementor = messageImplementor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送消息，委派给MessageImplementor的具体实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message 消息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> to 发送对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(String message,String to)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.messageImplementor.send(message,to);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>RefinedAbstraction</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonMessage</span> <span class="keyword">extends</span> <span class="title">AbstractMessage</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 初始化时传入具体实现</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> messageImplementor 消息发送</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CommonMessage</span><span class="params">(MessageImplementor messageImplementor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(messageImplementor);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(String message, String to)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 调用父方法发送</span></span><br><span class="line">        <span class="keyword">super</span>.sendMessage(message, to);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UrgencyMessage</span> <span class="keyword">extends</span> <span class="title">AbstractMessage</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 初始化时传入具体实现</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> messageImplementor 消息发送</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UrgencyMessage</span><span class="params">(MessageImplementor messageImplementor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(messageImplementor);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(String message, String to)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 加入自己的处理逻辑</span></span><br><span class="line">        message = <span class="string">&quot;[加急] &quot;</span> + message;</span><br><span class="line">        <span class="keyword">super</span>.sendMessage(message, to);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 拓展自己功能，获取某个消息的状态</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> messageId messageId</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Object</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">call</span><span class="params">(String messageId)</span></span>&#123;</span><br><span class="line">        <span class="comment">// 加入具体业务逻辑</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Client</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1. 发送普通短信消息</span></span><br><span class="line">        MessageImplementor sms = <span class="keyword">new</span> MessageSMS();</span><br><span class="line">        AbstractMessage messageSMS = <span class="keyword">new</span> CommonMessage(sms);</span><br><span class="line">        messageSMS.sendMessage(<span class="string">&quot;test&quot;</span>,<span class="string">&quot;sam&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 发送加急邮件消息</span></span><br><span class="line">        MessageImplementor email = <span class="keyword">new</span> MessageEmail();</span><br><span class="line">        AbstractMessage messageEmail = <span class="keyword">new</span> UrgencyMessage(email);</span><br><span class="line">        messageEmail.sendMessage(<span class="string">&quot;test&quot;</span>,<span class="string">&quot;sam&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="桥接模式的优缺点"><a href="#桥接模式的优缺点" class="headerlink" title="桥接模式的优缺点"></a>桥接模式的优缺点</h2><p><strong>优点：</strong></p>
+<ul>
+<li>分离抽象和实现</li>
+<li>更好的拓展性</li>
+</ul>
+<p>桥接模式将继承关系转化成关联关系，它降低了类与类之间的耦合度</p>
+<p><code>JVM</code>的平台无关性其实也运用了桥接模式</p>
+<p>在<code>Java</code>的<code>JDBC驱动器</code>中就应用了桥接模式。</p>
+<p>一个应用系统动态的选择一个合适的驱动器，然后通过驱动器向数据库引擎发出指令。这个过程就是将抽象角色的行为委派给实现角色的过程。</p>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>桥接模式的引入会增加系统的理解与设计难度，由于聚合关联关系建立在抽象层，要求开发者针对抽象进行设计与编程。</li>
+<li>桥接模式要求正确识别出系统中两个独立变化的维度，因此其使用范围具有一定的局限性。</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F-Bridge-Pattern"><span class="toc-number">1.</span> <span class="toc-text">桥接模式(Bridge Pattern)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B%E4%B8%80"><span class="toc-number">1.1.</span> <span class="toc-text">桥接模式实例一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B%E4%BA%8C"><span class="toc-number">1.2.</span> <span class="toc-text">桥接模式实例二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.3.</span> <span class="toc-text">桥接模式的优缺点</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】桥接模式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】桥接模式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】桥接模式&body=Check out this article: http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】桥接模式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】桥接模式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/04/02/%E3%80%90Design%20Patterns%E3%80%91%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】桥接模式"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

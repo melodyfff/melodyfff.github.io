@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="JUC - ThreadPoolExecutor 创建一个ThreadPoolExecutor123456789ThreadPoolExecutor(int corePoolSize, &#x2F;&#x2F; 保留在池中的线程数,即使空闲了也保留(除非设置了&amp;#123;@code allowCoreThreadTimeOut&amp;#125;)int maximumPoolSize, &#x2F;&#x2F; 池中允许的最大线程数long">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Java】JUC - ThreadPoolExecutor">
+<meta property="og:url" content="http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="JUC - ThreadPoolExecutor 创建一个ThreadPoolExecutor123456789ThreadPoolExecutor(int corePoolSize, &#x2F;&#x2F; 保留在池中的线程数,即使空闲了也保留(除非设置了&amp;#123;@code allowCoreThreadTimeOut&amp;#125;)int maximumPoolSize, &#x2F;&#x2F; 池中允许的最大线程数long">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/ThreadPoolExecutor.png">
+<meta property="article:published_time" content="2019-10-31T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/ThreadPoolExecutor.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Java】JUC - ThreadPoolExecutor</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/10/31/%E3%80%90Java%E3%80%91Gson%E5%90%AB%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/10/30/%E3%80%90Linux%E3%80%91Privoxy%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&text=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&is_video=false&description=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】JUC - ThreadPoolExecutor&body=Check out this article: http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&name=【Java】JUC - ThreadPoolExecutor&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&t=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JUC-ThreadPoolExecutor"><span class="toc-number">1.</span> <span class="toc-text">JUC - ThreadPoolExecutor</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAThreadPoolExecutor"><span class="toc-number">1.1.</span> <span class="toc-text">创建一个ThreadPoolExecutor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E9%99%90%E5%88%B6"><span class="toc-number">1.1.1.</span> <span class="toc-text">参数限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.2.</span> <span class="toc-text">参数补充说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">1.1.3.</span> <span class="toc-text">执行过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Executors%E4%B8%AD%E5%B8%B8%E8%A7%81%E7%9A%84ThreadPoolExecutor"><span class="toc-number">1.2.</span> <span class="toc-text">Executors中常见的ThreadPoolExecutor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%98%85%E8%AF%BB"><span class="toc-number">1.3.</span> <span class="toc-text">参考阅读</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Java】JUC - ThreadPoolExecutor
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-10-31T00:00:00.000Z" itemprop="datePublished">2019-10-31</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/java/" rel="tag">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="JUC-ThreadPoolExecutor"><a href="#JUC-ThreadPoolExecutor" class="headerlink" title="JUC - ThreadPoolExecutor"></a>JUC - ThreadPoolExecutor</h1><p><img src="/images/ThreadPoolExecutor.png"></p>
+<h2 id="创建一个ThreadPoolExecutor"><a href="#创建一个ThreadPoolExecutor" class="headerlink" title="创建一个ThreadPoolExecutor"></a>创建一个ThreadPoolExecutor</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ThreadPoolExecutor(</span><br><span class="line"><span class="keyword">int</span> corePoolSize, <span class="comment">// 保留在池中的线程数,即使空闲了也保留(除非设置了&#123;@code allowCoreThreadTimeOut&#125;)</span></span><br><span class="line"><span class="keyword">int</span> maximumPoolSize, <span class="comment">// 池中允许的最大线程数</span></span><br><span class="line"><span class="keyword">long</span> keepAliveTime, <span class="comment">// 当maximumPoolSize&gt;corePoolSize时,多余空闲线程等待任务的时间</span></span><br><span class="line">TimeUnit unit, <span class="comment">// &#123;@code keepAliveTime&#125;参数的时间单位</span></span><br><span class="line">BlockingQueue&lt;Runnable&gt; workQueue, <span class="comment">// 在task执行之前暂存task.队列只接纳被 &#123;@code execute&#125;方法提交的&#123;@code Runnable&#125;task</span></span><br><span class="line">ThreadFactory threadFactory, <span class="comment">// 创建执行task线程的工厂</span></span><br><span class="line">RejectedExecutionHandler handler <span class="comment">// 如果达到线程界限或者队列容量,拒绝任务执行的处理</span></span><br><span class="line">) </span><br></pre></td></tr></table></figure>
+
+<h3 id="参数限制"><a href="#参数限制" class="headerlink" title="参数限制"></a>参数限制</h3><ul>
+<li>满足以下条件之一则抛出<strong>IllegalArgumentException</strong><ul>
+<li>corePoolSize &lt; 0</li>
+<li>keepAliveTime &lt; 0</li>
+<li>maximumPoolSize &lt;= 0</li>
+<li>maximumPoolSize &lt; corePoolSize</li>
+</ul>
+</li>
+<li>抛出<strong>NullPointerException</strong>  <ul>
+<li>threadFactory == null</li>
+<li>handler  == null</li>
+</ul>
+</li>
+</ul>
+<h3 id="参数补充说明"><a href="#参数补充说明" class="headerlink" title="参数补充说明"></a>参数补充说明</h3><ul>
+<li>corePoolSize : 如果当前线程总数小于<code>corePoolSize</code>，则新建的是<strong>核心线程</strong>，如果超过<code>corePoolSize</code>，则新建的是<strong>非核心线程</strong></li>
+<li>keepAliveTime : 指该线程池中<strong>非核心线程</strong>闲置超时时长, 超过这个参数所设定的时长，就会被销毁掉, 如果设置<code>allowCoreThreadTimeOut = true</code>，则会作用于<strong>核心线程</strong></li>
+<li>unit : TimeUnit时间</li>
+<li>maximumPoolSize : 线程总数 = 核心线程数 + 非核心线程数</li>
+<li>workQueue : 当<strong>核心线程</strong>都在工作时,新添加的任务会被添加到这个队列中等待处理，如果<strong>队列满了</strong>，则新建<strong>非核心线</strong>程执行任务<ul>
+<li>ArrayBlockingQueue : 构造函数一定要传大小</li>
+<li>LinkedBlockingQueue : 构造函数不传大小会默认为<code>Integer.MAX_VALUE</code>，当大量请求任务时，容易造成内存耗尽.由于这个队列没有最大值限制，即所有超过核心线程数的任务都将被添加到队列中，这也就导致了maximumPoolSize的设定失效，因为总线程数永远不会超过corePoolSize</li>
+<li>SynchronousQueue : 同步队列，一个没有存储空间的阻塞队列 ，将任务同步交付给工作线程.此队列通常要求无界 maximumPoolSizes 以避免拒绝新提交的任务</li>
+<li>PriorityBlockingQueue : 优先队列</li>
+<li>DelayQueue : 传进去的任务必须先实现Delayed接口。这个队列接收到任务时，首先先入队，只有达到了指定的延时时间，才会执行任务</li>
+</ul>
+</li>
+<li>threadFactory : 线程工厂(默认值<code>Executors.defaultThreadFactory()</code>)</li>
+<li>handler  : 拒绝策略<ul>
+<li>AbortPolicy(默认) : 直接抛弃</li>
+<li>CallerRunsPolicy : 拒绝这个任务，不在ThreadPoolExecutor线程池中的线程中运行，而是调用当前线程池的所在的线程去执行被拒绝的任务</li>
+<li>DiscardOldestPolicy : 抛弃队列中最久的任务（最先加入队列的任务）,再把这个新任务添加到队列中去。</li>
+<li>DiscardPolicy : 线程池默默丢弃这个被拒绝的任务，不会抛出异常。</li>
+</ul>
+</li>
+</ul>
+<h3 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h3><ul>
+<li>1.当线程池小于corePoolSize时，新提交任务将创建一个新线程执行任务，即使此时线程池中存在空闲线程。 </li>
+<li>2.当线程池达到corePoolSize时，新提交任务将被放入workQueue中，等待线程池中任务调度执行 </li>
+<li>3.当workQueue已满，且maximumPoolSize&gt;corePoolSize时，新提交任务会创建新线程执行任务 </li>
+<li>4.当提交任务数超过maximumPoolSize时，新提交任务由RejectedExecutionHandler处理 </li>
+<li>5.当线程池中超过corePoolSize线程，空闲时间达到keepAliveTime时，关闭空闲线程 </li>
+<li>6.当设置allowCoreThreadTimeOut(true)时，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭 </li>
+</ul>
+<hr>
+<h2 id="Executors中常见的ThreadPoolExecutor"><a href="#Executors中常见的ThreadPoolExecutor" class="headerlink" title="Executors中常见的ThreadPoolExecutor"></a>Executors中常见的ThreadPoolExecutor</h2><ul>
+<li>单个线程池: <strong>Executors.newSingleThreadExecutor()</strong> || <strong>Executors.newSingleThreadExecutor(ThreadFactory threadFactory)</strong><ul>
+<li>new ThreadPoolExecutor(1, 1,<pre><code>                            0L, TimeUnit.MILLISECONDS,
+                            new LinkedBlockingQueue&lt;Runnable&gt;())
+</code></pre>
+</li>
+<li>new ThreadPoolExecutor(1, 1,<pre><code>                            0L, TimeUnit.MILLISECONDS,
+                            new LinkedBlockingQueue&lt;Runnable&gt;(),
+                            threadFactory)                       
+</code></pre>
+</li>
+<li>创建单个线程                                                 </li>
+</ul>
+</li>
+<li>固定线程池: <strong>Executors.newFixedThreadPool(int nThreads)</strong> || <strong>Executors.newFixedThreadPool(int nThreads, ThreadFactory threadFactory)</strong><ul>
+<li>new ThreadPoolExecutor(nThreads, nThreads,<pre><code>                              0L, TimeUnit.MILLISECONDS,
+                              new LinkedBlockingQueue&lt;Runnable&gt;())
+</code></pre>
+</li>
+<li>new ThreadPoolExecutor(nThreads, nThreads,<pre><code>                              0L, TimeUnit.MILLISECONDS,
+                              new LinkedBlockingQueue&lt;Runnable&gt;(),
+                              threadFactory);                                      
+</code></pre>
+</li>
+<li>核心线程和最大线程相同,并且不过期                                      </li>
+</ul>
+</li>
+<li>缓存线程池: <strong>Executors.newCachedThreadPool()</strong> || <strong>Executors.newCachedThreadPool(ThreadFactory threadFactory)</strong><ul>
+<li>new ThreadPoolExecutor(0, Integer.MAX_VALUE,<pre><code>                              60L, TimeUnit.SECONDS,
+                              new SynchronousQueue&lt;Runnable&gt;())
+</code></pre>
+</li>
+<li>new ThreadPoolExecutor(0, Integer.MAX_VALUE,<pre><code>                              60L, TimeUnit.SECONDS,
+                              new SynchronousQueue&lt;Runnable&gt;(),
+                              threadFactory)
+</code></pre>
+</li>
+<li>核心线程为0,并且阻塞队列为SynchronousQueue,按需创建线程,默认过期时间60s                      </li>
+</ul>
+</li>
+<li>调度线程池: <strong>Executors.newScheduledThreadPool(int corePoolSize)</strong> || <strong>Executors.newScheduledThreadPool(int corePoolSize, ThreadFactory threadFactory)</strong> <ul>
+<li>new ThreadPoolExecutor(corePoolSize, Integer.MAX_VALUE,<pre><code>                              0, TimeUnit.NANOSECONDS,
+                              new DelayedWorkQueue())   
+</code></pre>
+</li>
+<li>new ThreadPoolExecutor(corePoolSize, Integer.MAX_VALUE,<pre><code>                              0, TimeUnit.NANOSECONDS,
+                              new DelayedWorkQueue(),
+                              threadFactory)  
+</code></pre>
+</li>
+<li>可以调度命令以在给定延迟后运行或定期执行   </li>
+</ul>
+</li>
+<li>窃取线程池: <strong>Executors.newWorkStealingPool()</strong> || <strong>Executors.newWorkStealingPool(int parallelism)</strong> <ul>
+<li>new ForkJoinPool<pre><code>    (Runtime.getRuntime().availableProcessors(),
+     ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+     null, true);
+</code></pre>
+</li>
+<li>new ForkJoinPool<pre><code>    (parallelism,
+     ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+     null, true)
+</code></pre>
+</li>
+<li>窃取线程是ForkJoinPool的拓展(分治算法),创建一个拥有多个任务队列的线程池，可以减少连接数，创建当前可用cpu数量的线程来并行执行,适合很耗时间的任务                                                       </li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://howtodoinjava.com/java/multi-threading/java-thread-pool-executor-example/">Java Thread Pool – ThreadPoolExecutor Example</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.journaldev.com/1069/threadpoolexecutor-java-thread-pool-example-executorservice">ThreadPoolExecutor – Java Thread Pool Example</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000008140126">Java 多线程（5）：Fork/Join 型线程池与 Work-Stealing 算法</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JUC-ThreadPoolExecutor"><span class="toc-number">1.</span> <span class="toc-text">JUC - ThreadPoolExecutor</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAThreadPoolExecutor"><span class="toc-number">1.1.</span> <span class="toc-text">创建一个ThreadPoolExecutor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E9%99%90%E5%88%B6"><span class="toc-number">1.1.1.</span> <span class="toc-text">参数限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.2.</span> <span class="toc-text">参数补充说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">1.1.3.</span> <span class="toc-text">执行过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Executors%E4%B8%AD%E5%B8%B8%E8%A7%81%E7%9A%84ThreadPoolExecutor"><span class="toc-number">1.2.</span> <span class="toc-text">Executors中常见的ThreadPoolExecutor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%98%85%E8%AF%BB"><span class="toc-number">1.3.</span> <span class="toc-text">参考阅读</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&text=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&is_video=false&description=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】JUC - ThreadPoolExecutor&body=Check out this article: http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&title=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&name=【Java】JUC - ThreadPoolExecutor&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/10/31/%E3%80%90Java%E3%80%91JUC%20-%20ThreadPoolExecutor/&t=【Java】JUC - ThreadPoolExecutor"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

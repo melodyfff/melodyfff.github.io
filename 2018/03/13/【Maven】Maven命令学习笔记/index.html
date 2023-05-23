@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Maven Help usage: mvn [options] [&lt;goal(s)&gt;] [&lt;phase(s)&gt;]     Options Description Note    -am,–also-make If project list is specified, also build projects required by the list 同时处理选定模块所依赖的模">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Maven】Maven命令学习笔记">
+<meta property="og:url" content="http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Maven Help usage: mvn [options] [&lt;goal(s)&gt;] [&lt;phase(s)&gt;]     Options Description Note    -am,–also-make If project list is specified, also build projects required by the list 同时处理选定模块所依赖的模">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-03-13T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Maven">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Maven】Maven命令学习笔记</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2018/03/29/%E3%80%90docker%E3%80%91docker%E6%B8%85%E7%90%86%E7%A9%BA%E9%97%B4/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2018/03/07/%E3%80%90Java%E3%80%91%20Maven%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0Sonar%E6%89%AB%E6%8F%8F%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&text=【Maven】Maven命令学习笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&is_video=false&description=【Maven】Maven命令学习笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Maven】Maven命令学习笔记&body=Check out this article: http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&name=【Maven】Maven命令学习笔记&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&t=【Maven】Maven命令学习笔记"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven-Help"><span class="toc-number">1.</span> <span class="toc-text">Maven Help</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Maven】Maven命令学习笔记
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-03-13T00:00:00.000Z" itemprop="datePublished">2018-03-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Maven/" rel="tag">Maven</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Maven-Help"><a href="#Maven-Help" class="headerlink" title="Maven Help"></a>Maven Help</h2><blockquote>
+<p>usage: mvn [options] [&lt;goal(s)&gt;] [&lt;phase(s)&gt;]</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">Options</th>
+<th align="left">Description</th>
+<th align="left">Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">-am,–also-make</td>
+<td align="left">If project list is specified, also build projects required by the list</td>
+<td align="left">同时处理选定模块所依赖的模块 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/29bb16755883">参考</a></td>
+</tr>
+<tr>
+<td align="left">-amd,–also-make-dependents</td>
+<td align="left">If project list is specified, also build projects that depend on projects on the list</td>
+<td align="left">同时处理依赖选定模块的模块 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/29bb16755883">参考</a></td>
+</tr>
+<tr>
+<td align="left">-B,–batch-mode</td>
+<td align="left">Run in non-interactive (batch) mode</td>
+<td align="left">在非交互（批处理）模式下运行,能够避免一些需要人工参与交互而造成的挂起状态 <a target="_blank" rel="noopener" href="http://blog.csdn.net/lovesomnus/article/details/50150011">参考</a></td>
+</tr>
+<tr>
+<td align="left">-b,–builder <code>&lt;arg&gt;</code></td>
+<td align="left">The id of the build strategy to use</td>
+<td align="left">被使用的构建策略的id</td>
+</tr>
+<tr>
+<td align="left">-C,–strict-checksums</td>
+<td align="left">Fail the build if checksums don’t match</td>
+<td align="left">如果校验(checksums)不匹配的话,构建失败 <a target="_blank" rel="noopener" href="https://www.baidu.com/link?url=_xfOc7VywHu2QNuxroSiMgRm3qCKDXA7K7Wm2v8Br6m10sOR6_QXEvxlnewN6t1m44y_5V5cv4mGkuY4gowab_&wd=&eqid=ea3cc4b80004b659000000035aa76309">参考</a></td>
+</tr>
+<tr>
+<td align="left">-c,–lax-checksums</td>
+<td align="left">Warn if checksums don’t match</td>
+<td align="left">如果校验(checksums)不匹配的话,产生告警 <a target="_blank" rel="noopener" href="https://www.baidu.com/link?url=_xfOc7VywHu2QNuxroSiMgRm3qCKDXA7K7Wm2v8Br6m10sOR6_QXEvxlnewN6t1m44y_5V5cv4mGkuY4gowab_&wd=&eqid=ea3cc4b80004b659000000035aa76309">参考</a></td>
+</tr>
+<tr>
+<td align="left">-cpu,–check-plugin-updates</td>
+<td align="left">Ineffective, only kept for backward compatibility</td>
+<td align="left">对任何相关的注册插件,强制进行最新检查(即使项目POM里明确规定了Maven插件版本,还是会强制更新)</td>
+</tr>
+<tr>
+<td align="left">-D,–define <code>&lt;arg&gt;</code></td>
+<td align="left">Define a system property</td>
+<td align="left">定义一个系统属性</td>
+</tr>
+<tr>
+<td align="left">-e,–errors</td>
+<td align="left">Produce execution error messages</td>
+<td align="left">控制Maven的日志级别,产生执行错误消息</td>
+</tr>
+<tr>
+<td align="left">-emp,–encrypt-master-password <code>&lt;arg&gt;</code></td>
+<td align="left">Encrypt master security password</td>
+<td align="left">加密主安全密码 加密主安全密码,存储到Maven settings文件里</td>
+</tr>
+<tr>
+<td align="left">-ep,–encrypt-password <code>&lt;arg&gt;</code></td>
+<td align="left">Encrypt server password</td>
+<td align="left">加密服务器密码,存储到Maven settings文件里</td>
+</tr>
+<tr>
+<td align="left">-f,–file <code>&lt;arg&gt;</code></td>
+<td align="left">Force the use of an alternate POM file (or directory with pom.xml).</td>
+<td align="left">强制使用备用POM文件（或使用pom.xml的目录）</td>
+</tr>
+<tr>
+<td align="left">-fae,–fail-at-end</td>
+<td align="left">Only fail the build afterwards;allow all non-impacted builds to continue</td>
+<td align="left">仅影响构建结果,允许不受影响的构建继续</td>
+</tr>
+<tr>
+<td align="left">-ff,–fail-fast</td>
+<td align="left">Stop at first failure in reactorized builds</td>
+<td align="left">遇到构建失败就直接退出</td>
+</tr>
+<tr>
+<td align="left">-fn,–fail-never</td>
+<td align="left">NEVER fail the build, regardless of project result</td>
+<td align="left">不管项目结果如何，永远不要让构建失败</td>
+</tr>
+<tr>
+<td align="left">-gs,–global-settings <code>&lt;arg&gt;</code></td>
+<td align="left">Alternate path for the global settings file</td>
+<td align="left">全局设置文件的备用路径</td>
+</tr>
+<tr>
+<td align="left">-h,–help</td>
+<td align="left">Display help information</td>
+<td align="left">显示帮助信息</td>
+</tr>
+<tr>
+<td align="left">-l,–log-file <code>&lt;arg&gt;</code></td>
+<td align="left">Log file to where all build output will go</td>
+<td align="left">配置构建日志输出路径</td>
+</tr>
+<tr>
+<td align="left">-llr,–legacy-local-repository</td>
+<td align="left">Use Maven 2 Legacy Local Repository behaviour, ie no use of remote.repositories. Can also be activated by using -Dmaven.legacyLocalRepo=true</td>
+<td align="left">使用Maven 2 Legacy Local Repository行为，即不使用remote.repositories,也可使用 -Dmaven.legacyLocalRepo = true</td>
+</tr>
+<tr>
+<td align="left">-N,–non-recursive</td>
+<td align="left">Do not recurse into sub-projects</td>
+<td align="left">不递归子模块</td>
+</tr>
+<tr>
+<td align="left">-npr,–no-plugin-registry</td>
+<td align="left">Ineffective, only kept for backward compatibility</td>
+<td align="left">对插件版本不使用~/.m2/plugin-registry.xml(插件注册表)里的配置</td>
+</tr>
+<tr>
+<td align="left">-npu,–no-plugin-updates</td>
+<td align="left">Ineffective, only kept for backward compatibility</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">-o,–offline</td>
+<td align="left">Work offline</td>
+<td align="left">不联网更新依赖</td>
+</tr>
+<tr>
+<td align="left">-P,–activate-profiles <code>&lt;arg&gt;</code></td>
+<td align="left">Comma-delimited list of profiles to activate</td>
+<td align="left">用逗号分隔的激活配置文件列表</td>
+</tr>
+<tr>
+<td align="left">-pl,–projects <code>&lt;arg&gt;</code></td>
+<td align="left">Comma-delimited list of specified reactor projects to build instead of all projects. A project can be specified by [groupId]:artifactId or by its relative path</td>
+<td align="left">在指定模块上执行命令</td>
+</tr>
+<tr>
+<td align="left">-q,–quiet</td>
+<td align="left">Quiet output - only show errors</td>
+<td align="left">只输出错误日志</td>
+</tr>
+<tr>
+<td align="left">-rf,–resume-from <code>&lt;arg&gt;</code></td>
+<td align="left">Resume reactor from specified project</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">-s,–settings <code>&lt;arg&gt;</code></td>
+<td align="left">Alternate path for the user settings file</td>
+<td align="left">用户配置文件的备用路径</td>
+</tr>
+<tr>
+<td align="left">-T,–threads <code>&lt;arg&gt;</code></td>
+<td align="left">Thread count, for instance 2.0C where C is core multiplied</td>
+<td align="left">多线程构建,线程数，例如2.0C，其中C是内核的乘积</td>
+</tr>
+<tr>
+<td align="left">-t,–toolchains <code>&lt;arg&gt;</code></td>
+<td align="left">Alternate path for the user toolchains file</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">-U,–update-snapshots</td>
+<td align="left">Forces a check for missing releases and updated snapshots on remote repositories</td>
+<td align="left">强制检查远程存储库中的缺失版本和更新快照</td>
+</tr>
+<tr>
+<td align="left">-up,–update-plugins</td>
+<td align="left">Ineffective, only kept for backward compatibility</td>
+<td align="left">强制更新插件</td>
+</tr>
+<tr>
+<td align="left">-V,–show-version</td>
+<td align="left">Display version information WITHOUT stopping build</td>
+<td align="left">显示版本信息而不停止构建</td>
+</tr>
+<tr>
+<td align="left">-v,–version</td>
+<td align="left">Display version information</td>
+<td align="left">显示版本信息</td>
+</tr>
+<tr>
+<td align="left">-X,–debug</td>
+<td align="left">Produce execution debug output</td>
+<td align="left">输出DEBUG日志</td>
+</tr>
+</tbody></table>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven-Help"><span class="toc-number">1.</span> <span class="toc-text">Maven Help</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&text=【Maven】Maven命令学习笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&is_video=false&description=【Maven】Maven命令学习笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Maven】Maven命令学习笔记&body=Check out this article: http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Maven】Maven命令学习笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&name=【Maven】Maven命令学习笔记&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/03/13/%E3%80%90Maven%E3%80%91Maven%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&t=【Maven】Maven命令学习笔记"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

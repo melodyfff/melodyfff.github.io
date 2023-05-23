@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="近期由于需要对SonarQube进行升级到6.6以后的版本,发现6.6之后,sonar的run.sh不支持root用户启动,而是以sonarqube用户启动,导致1024以下的端口无法占用。因此特在原sonarqube镜像的基础上,加入nginx进行端口转发 制作sonarqube镜像从官方镜像仓库下载1$ docker pull sonarqube:6.7 build新镜像加入nginx将以下文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【docker】SonarQube6.6后无法占用80端口问题">
+<meta property="og:url" content="http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="近期由于需要对SonarQube进行升级到6.6以后的版本,发现6.6之后,sonar的run.sh不支持root用户启动,而是以sonarqube用户启动,导致1024以下的端口无法占用。因此特在原sonarqube镜像的基础上,加入nginx进行端口转发 制作sonarqube镜像从官方镜像仓库下载1$ docker pull sonarqube:6.7 build新镜像加入nginx将以下文">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-11-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="SonarQube">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【docker】SonarQube6.6后无法占用80端口问题</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2017/12/26/%E3%80%90Python%E3%80%91%E5%AE%89%E8%A3%85pywin32%E6%89%BE%E4%B8%8D%E5%88%B0%E8%B7%AF%E5%BE%84/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2017/09/28/%E3%80%90Java%E3%80%91%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E8%A6%86%E7%9B%96%E7%8E%87%E6%8F%90%E5%8D%87%E5%B7%A5%E5%85%B7/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&text=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&is_video=false&description=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【docker】SonarQube6.6后无法占用80端口问题&body=Check out this article: http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&name=【docker】SonarQube6.6后无法占用80端口问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&t=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9Csonarqube%E9%95%9C%E5%83%8F"><span class="toc-number">1.</span> <span class="toc-text">制作sonarqube镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%AE%98%E6%96%B9%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93%E4%B8%8B%E8%BD%BD"><span class="toc-number">1.1.</span> <span class="toc-text">从官方镜像仓库下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#build%E6%96%B0%E9%95%9C%E5%83%8F%E5%8A%A0%E5%85%A5nginx"><span class="toc-number">1.2.</span> <span class="toc-text">build新镜像加入nginx</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Dockerfile"><span class="toc-number">1.2.1.</span> <span class="toc-text">Dockerfile</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#my-sh"><span class="toc-number">1.2.2.</span> <span class="toc-text">my.sh</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sources-list"><span class="toc-number">1.2.3.</span> <span class="toc-text">sources.list</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nginx-conf"><span class="toc-number">1.2.4.</span> <span class="toc-text">nginx.conf</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2"><span class="toc-number">2.</span> <span class="toc-text">部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0"><span class="toc-number">3.</span> <span class="toc-text">挂载本地</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">nginx 常用命令</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【docker】SonarQube6.6后无法占用80端口问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-11-23T00:00:00.000Z" itemprop="datePublished">2017-11-23</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/SonarQube/" rel="tag">SonarQube</a>, <a class="tag-link-link" href="/tags/docker/" rel="tag">docker</a>, <a class="tag-link-link" href="/tags/linux/" rel="tag">linux</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>近期由于需要对SonarQube进行升级到6.6以后的版本,发现6.6之后,sonar的<code>run.sh</code>不支持<code>root</code>用户启动,而是以<code>sonarqube</code>用户启动,导致1024以下的端口无法占用。<br>因此特在原sonarqube镜像的基础上,加入nginx进行端口转发</p>
+<h2 id="制作sonarqube镜像"><a href="#制作sonarqube镜像" class="headerlink" title="制作sonarqube镜像"></a>制作sonarqube镜像</h2><h3 id="从官方镜像仓库下载"><a href="#从官方镜像仓库下载" class="headerlink" title="从官方镜像仓库下载"></a>从官方镜像仓库下载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull sonarqube:6.7</span><br></pre></td></tr></table></figure>
+<h3 id="build新镜像加入nginx"><a href="#build新镜像加入nginx" class="headerlink" title="build新镜像加入nginx"></a>build新镜像加入nginx</h3><p>将以下文件放置统一目录下</p>
+<h4 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">FROM sonarqube:6.7</span><br><span class="line">ENV SONAR_VERSION=6.7 \</span><br><span class="line">    SONARQUBE_HOME=/opt/sonarqube </span><br><span class="line">MAINTAINER xinchen</span><br><span class="line">ADD my.sh /bin/</span><br><span class="line">ADD nginx.conf /bin/</span><br><span class="line">RUN chmod +x /bin/my.sh</span><br><span class="line">RUN /bin/my.sh</span><br><span class="line">RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="line">ADD sources.list /etc/apt/sources.list</span><br><span class="line">RUN apt-get update</span><br><span class="line">RUN apt-get install nginx</span><br><span class="line">RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak</span><br><span class="line">RUN mv /bin/nginx.conf /etc/nginx/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line">EXPOSE 9000</span><br><span class="line"></span><br><span class="line">WORKDIR <span class="variable">$SONARQUBE_HOME</span></span><br><span class="line">ENTRYPOINT [<span class="string">&quot;./bin/run.sh&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<h4 id="my-sh"><a href="#my-sh" class="headerlink" title="my.sh"></a>my.sh</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加入代理 </span></span><br><span class="line">sudo su -</span><br><span class="line">cat &lt;&lt; <span class="string">EOF &gt; /etc/apt/apt.conf</span></span><br><span class="line"><span class="string">Acquire::http::Proxy &quot;http://172.x.x.x:8080&quot;;</span></span><br><span class="line"><span class="string">Acquire::https::Proxy &quot;http://172.x.x.x:8080&quot;;</span></span><br><span class="line"><span class="string">Acquire::http::Proxy::172.x.x.x &quot;DIRECT&quot;;</span></span><br><span class="line"><span class="string">Acquire::http::Proxy::ftp.x.x &quot;DIRECT&quot;;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="sources-list"><a href="#sources-list" class="headerlink" title="sources.list"></a>sources.list</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sonar镜像由debian 打包</span></span><br><span class="line">deb http://mirrors.cloud.aliyuncs.com/debian stable main contrib non-free</span><br><span class="line">deb http://mirrors.cloud.aliyuncs.com/debian stable-proposed-updates main contrib non-free</span><br><span class="line">deb http://mirrors.cloud.aliyuncs.com/debian stable-updates main contrib non-free</span><br><span class="line">deb-src http://mirrors.cloud.aliyuncs.com/debian stable main contrib non-free</span><br><span class="line">deb-src http://mirrors.cloud.aliyuncs.com/debian stable-proposed-updates main contrib non-free</span><br><span class="line">deb-src http://mirrors.cloud.aliyuncs.com/debian stable-updates main contrib non-free</span><br><span class="line"></span><br><span class="line">deb http://mirrors.aliyun.com/debian stable main contrib non-free</span><br><span class="line">deb http://mirrors.aliyun.com/debian stable-proposed-updates main contrib non-free</span><br><span class="line">deb http://mirrors.aliyun.com/debian stable-updates main contrib non-free</span><br><span class="line">deb-src http://mirrors.aliyun.com/debian stable main contrib non-free</span><br><span class="line">deb-src http://mirrors.aliyun.com/debian stable-proposed-updates main contrib non-free</span><br><span class="line">deb-src http://mirrors.aliyun.com/debian stable-updates main contrib non-free</span><br></pre></td></tr></table></figure>
+<h4 id="nginx-conf"><a href="#nginx-conf" class="headerlink" title="nginx.conf"></a>nginx.conf</h4><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">worker_processes</span>  <span class="number">1</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line"><span class="string">events</span> &#123;</span><br><span class="line">    <span class="string">worker_connections</span>  <span class="number">1024</span><span class="string">;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="string">http</span> &#123;</span><br><span class="line">    <span class="string">include</span>       <span class="string">mime.types;</span></span><br><span class="line">    <span class="string">default_type</span>  <span class="string">application/octet-stream;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">sendfile</span>        <span class="string">on;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">keepalive_timeout</span>  <span class="number">65</span><span class="string">;</span></span><br><span class="line">    <span class="string">server</span> &#123;</span><br><span class="line">        <span class="string">listen</span>       <span class="number">80</span><span class="string">;</span></span><br><span class="line">        <span class="string">server_name</span>  <span class="string">localhost;</span></span><br><span class="line">        <span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">           <span class="string">proxy_pass</span>   <span class="string">http://localhost:9000;</span> </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><h2 id="挂载本地"><a href="#挂载本地" class="headerlink" title="挂载本地"></a>挂载本地</h2><blockquote>
+<p>当 -v 绑定本地目录时<br>需要先 -v /opt/bin/run.sh:/opt/sonarqube/bin 运行启动脚本</p>
+</blockquote>
+<p>run.sh</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$&#123;1:0:1&#125;</span>&quot;</span> != <span class="string">&#x27;-&#x27;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">exec</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br><span class="line">  <span class="comment"># run nginx</span></span><br><span class="line">  /usr/sbin/nginx</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> SONAR_VERSION=6.7</span><br><span class="line"><span class="built_in">export</span> SONARQUBE_HOME=/opt/sonarqube</span><br><span class="line"><span class="built_in">export</span> SONARQUBE_JDBC_USERNAME=</span><br><span class="line"><span class="built_in">export</span> SONARQUBE_JDBC_PASSWORD=</span><br><span class="line"><span class="built_in">export</span> SONARQUBE_JDBC_URL=</span><br><span class="line"></span><br><span class="line">chown -R sonarqube:sonarqube <span class="variable">$SONARQUBE_HOME</span></span><br><span class="line"><span class="built_in">exec</span> gosu sonarqube \</span><br><span class="line">  java -jar lib/sonar-application-<span class="variable">$SONAR_VERSION</span>.jar \</span><br><span class="line">  -Dsonar.log.console=<span class="literal">true</span> \</span><br><span class="line">  -Dsonar.jdbc.username=<span class="string">&quot;<span class="variable">$SONARQUBE_JDBC_USERNAME</span>&quot;</span> \</span><br><span class="line">  -Dsonar.jdbc.password=<span class="string">&quot;<span class="variable">$SONARQUBE_JDBC_PASSWORD</span>&quot;</span> \</span><br><span class="line">  -Dsonar.jdbc.url=<span class="string">&quot;<span class="variable">$SONARQUBE_JDBC_URL</span>&quot;</span> \</span><br><span class="line">  -Dsonar.web.javaAdditionalOpts=<span class="string">&quot;<span class="variable">$SONARQUBE_WEB_JVM_OPTS</span> -Djava.security.egd=file:/dev/./urandom&quot;</span> \</span><br><span class="line">  -Dsonar.web.javaOpts=<span class="string">&quot;-Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -server&quot;</span> \</span><br><span class="line">  -Dsonar.ce.javaOpts=<span class="string">&quot;-Xmx1536m -Xms512m -Djava.net.preferIPv4Stack=true -server&quot;</span> \</span><br><span class="line">  -Dsonar.search.javaOpts=<span class="string">&quot;-Xmx512m -Xms256m -Xss1m -Djava.net.preferIPv4Stack=true&quot;</span> \</span><br><span class="line">  <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<p>如果需要加入代理</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Dsonar.web.javaAdditionalOpts=<span class="string">&quot;<span class="variable">$SONARQUBE_WEB_JVM_OPTS</span> -Djava.security.egd=file:/dev/./urandom -Dhttp.proxyHost=172.x.x.x -Dhttp.proxyPort=8080 -Dhttps.proxyHost=172.x.x.x -Dhttps.proxyPort=8080&quot;</span> \</span><br></pre></td></tr></table></figure>
+
+<p>运行实例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name sonarqube \ </span><br><span class="line">-p 9000:9000 \</span><br><span class="line">-v /opt/sonarqube/sonar_bin/:/opt/sonarqube/bin \</span><br><span class="line">-v /opt/sonarqube/sonar_plugs:/opt/sonarqube/extensions/plugins \ </span><br><span class="line">-v /opt/sonarqube/sonar_conf:/opt/sonarqube/conf 9a23ac22b32b</span><br></pre></td></tr></table></figure>
+
+<h2 id="nginx-常用命令"><a href="#nginx-常用命令" class="headerlink" title="nginx 常用命令"></a>nginx 常用命令</h2><ul>
+<li> /usr/sbin/nginx -s stop  停止</li>
+<li> /usr/sbin/nginx -s reload  重新加载</li>
+<li> /usr/sbin/nginx -c /etc/nginx/nginx.conf  加载指定配置文件</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9Csonarqube%E9%95%9C%E5%83%8F"><span class="toc-number">1.</span> <span class="toc-text">制作sonarqube镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%AE%98%E6%96%B9%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93%E4%B8%8B%E8%BD%BD"><span class="toc-number">1.1.</span> <span class="toc-text">从官方镜像仓库下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#build%E6%96%B0%E9%95%9C%E5%83%8F%E5%8A%A0%E5%85%A5nginx"><span class="toc-number">1.2.</span> <span class="toc-text">build新镜像加入nginx</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Dockerfile"><span class="toc-number">1.2.1.</span> <span class="toc-text">Dockerfile</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#my-sh"><span class="toc-number">1.2.2.</span> <span class="toc-text">my.sh</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sources-list"><span class="toc-number">1.2.3.</span> <span class="toc-text">sources.list</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nginx-conf"><span class="toc-number">1.2.4.</span> <span class="toc-text">nginx.conf</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2"><span class="toc-number">2.</span> <span class="toc-text">部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0"><span class="toc-number">3.</span> <span class="toc-text">挂载本地</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">nginx 常用命令</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&text=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&is_video=false&description=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【docker】SonarQube6.6后无法占用80端口问题&body=Check out this article: http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&title=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&name=【docker】SonarQube6.6后无法占用80端口问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/11/23/%E3%80%90docker%E3%80%91sonarqube6.6%E5%90%8E%E6%97%A0%E6%B3%95%E5%8D%A0%E7%94%A880%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98/&t=【docker】SonarQube6.6后无法占用80端口问题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

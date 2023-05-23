@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="在Openshift上通过yaml部署应用1.通过直接执行yaml通过如下命令直接执行 1oc create -f nginx.yml  nginx.yml 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【openshift】在Openshift上通过yaml部署应用">
+<meta property="og:url" content="http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="在Openshift上通过yaml部署应用1.通过直接执行yaml通过如下命令直接执行 1oc create -f nginx.yml  nginx.yml 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-08-20T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="openshift">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【openshift】在Openshift上通过yaml部署应用</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/07/25/%E3%80%90Java%E3%80%91%E4%BD%BF%E7%94%A8JAVA%E6%A0%A1%E9%AA%8CXML%20Schema/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&text=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&is_video=false&description=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【openshift】在Openshift上通过yaml部署应用&body=Check out this article: http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&name=【openshift】在Openshift上通过yaml部署应用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&t=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">在Openshift上通过yaml部署应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%80%9A%E8%BF%87%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8Cyaml"><span class="toc-number">1.1.</span> <span class="toc-text">1.通过直接执行yaml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%80%9A%E8%BF%87%E5%88%9B%E5%BB%BAtemplate"><span class="toc-number">1.2.</span> <span class="toc-text">2. 通过创建template</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%BF%9B%E5%85%A5%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text">3. 进入运行的容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89"><span class="toc-number">1.4.</span> <span class="toc-text">4. 删除所有</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【openshift】在Openshift上通过yaml部署应用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-08-20T00:00:00.000Z" itemprop="datePublished">2019-08-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/openshift/" rel="tag">openshift</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="在Openshift上通过yaml部署应用"><a href="#在Openshift上通过yaml部署应用" class="headerlink" title="在Openshift上通过yaml部署应用"></a>在Openshift上通过yaml部署应用</h1><h2 id="1-通过直接执行yaml"><a href="#1-通过直接执行yaml" class="headerlink" title="1.通过直接执行yaml"></a>1.通过直接执行yaml</h2><p>通过如下命令直接执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oc create -f nginx.yml</span><br></pre></td></tr></table></figure>
+
+<p><strong>nginx.yml</strong></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">items:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">apiVersion:</span> <span class="string">apps.openshift.io/v1</span></span><br><span class="line">  <span class="comment"># okd 部署配置(dc)，与 k8s Deployment 资源对象类似，以启动多个容器的方式生成 pod</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">DeploymentConfig</span></span><br><span class="line">  <span class="attr">metadata:</span></span><br><span class="line">    <span class="comment"># 标签，在查询时具体资源对象时非常重要，如：&gt;oc get dc -l app=nginx</span></span><br><span class="line">    <span class="attr">labels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="comment"># 选定项目空间</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">test</span></span><br><span class="line">  <span class="attr">spec:</span></span><br><span class="line">    <span class="comment"># 副本数，即 nginx app 部署的实例数</span></span><br><span class="line">    <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">    <span class="comment"># pod 的计算资源配额</span></span><br><span class="line">    <span class="attr">resources:</span></span><br><span class="line">      <span class="comment"># pod 能分配的最大计算资源</span></span><br><span class="line">      <span class="attr">limits:</span></span><br><span class="line">        <span class="attr">cpu:</span> <span class="string">300m</span></span><br><span class="line">        <span class="attr">memory:</span> <span class="string">1024Mi</span></span><br><span class="line">      <span class="comment"># pod 分配的最少计算资源</span></span><br><span class="line">      <span class="attr">requests:</span></span><br><span class="line">        <span class="attr">cpu:</span> <span class="string">100m</span></span><br><span class="line">        <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">    <span class="comment"># 选择器 Service 根据此项来绑定到 dc</span></span><br><span class="line">    <span class="attr">selector:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">strategy:</span></span><br><span class="line">    <span class="comment">#   type: Recreate</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">Rolling</span></span><br><span class="line">    <span class="comment"># dc 根据模板里内容创建 pod</span></span><br><span class="line">    <span class="attr">template:</span></span><br><span class="line">      <span class="attr">metadata:</span></span><br><span class="line">        <span class="attr">labels:</span></span><br><span class="line">          <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">deploymentconfig:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">spec:</span></span><br><span class="line">        <span class="comment"># 容器集合</span></span><br><span class="line">        <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">capabilities:</span> &#123;&#125;</span><br><span class="line">          <span class="comment"># 容器内环境变量，下文给这个容器设置了时区和语言的环境变量</span></span><br><span class="line">          <span class="attr">env:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">TZ</span></span><br><span class="line">            <span class="attr">value:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">LANG</span></span><br><span class="line">            <span class="attr">value:</span> <span class="string">en_US.UTF-8</span></span><br><span class="line">          <span class="comment"># 容器使用什么镜像部署，在创建时需要替换成实际要部署的镜像</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.16</span></span><br><span class="line">          <span class="comment"># 镜像下载策略，总是下载最新的(Always)</span></span><br><span class="line">          <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line">          <span class="attr">ports:</span> </span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">              <span class="attr">protocol:</span> <span class="string">TCP</span>          </span><br><span class="line"></span><br><span class="line">          <span class="comment"># 健康检查-pod 是否存活</span></span><br><span class="line">          <span class="attr">livenessProbe:</span></span><br><span class="line">            <span class="attr">failureThreshold:</span> <span class="number">2</span></span><br><span class="line">            <span class="comment"># http get 请求的方式验证 pod-ip:80/</span></span><br><span class="line">            <span class="attr">httpGet:</span></span><br><span class="line">              <span class="attr">path:</span> <span class="string">/</span></span><br><span class="line">              <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">            <span class="attr">initialDelaySeconds:</span> <span class="number">60</span></span><br><span class="line">            <span class="attr">periodSeconds:</span> <span class="number">60</span></span><br><span class="line">            <span class="attr">timeoutSeconds:</span> <span class="number">5</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="comment"># 健康检查-pod 是否就绪</span></span><br><span class="line">          <span class="attr">readinessProbe:</span></span><br><span class="line">            <span class="attr">httpGet:</span></span><br><span class="line">              <span class="attr">path:</span> <span class="string">/</span></span><br><span class="line">              <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">            <span class="attr">initialDelaySeconds:</span> <span class="number">3</span></span><br><span class="line">            <span class="attr">timeoutSeconds:</span> <span class="number">5</span></span><br><span class="line">          <span class="comment"># 容器计算资源配额，与 pod 配额类似</span></span><br><span class="line">          <span class="attr">resources:</span></span><br><span class="line">            <span class="attr">limits:</span></span><br><span class="line">              <span class="attr">cpu:</span> <span class="string">300m</span></span><br><span class="line">              <span class="attr">memory:</span> <span class="string">1024Mi</span></span><br><span class="line">            <span class="attr">requests:</span></span><br><span class="line">              <span class="attr">cpu:</span> <span class="string">100m</span></span><br><span class="line">              <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">          <span class="attr">securityContext:</span></span><br><span class="line">            <span class="attr">capabilities:</span> &#123;&#125;</span><br><span class="line">            <span class="comment"># privileged: true</span></span><br><span class="line">          <span class="attr">terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line">          <span class="comment"># 将 pod 中配置的卷挂载到容器内</span></span><br><span class="line">        <span class="comment">#   volumeMounts:</span></span><br><span class="line">        <span class="comment">#   - mountPath: /data</span></span><br><span class="line">        <span class="comment">#     name: nginx</span></span><br><span class="line">        <span class="attr">dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line">        <span class="comment"># 使用节点选择器将应用固定部署到 node1 计算节点上</span></span><br><span class="line">        <span class="comment"># nodeSelector:</span></span><br><span class="line">        <span class="comment">#   kubernetes.io/hostname: node1.app.com</span></span><br><span class="line">        <span class="attr">restartPolicy:</span> <span class="string">Always</span></span><br><span class="line">        <span class="comment"># 配置和定义使用实际计算节点主机文件夹地址这种类型的卷</span></span><br><span class="line">        <span class="comment"># volumes:</span></span><br><span class="line">        <span class="comment"># - persistentVolumeClaim:</span></span><br><span class="line">        <span class="comment">#     claimName: nginx</span></span><br><span class="line">        <span class="comment">#   name: nginx</span></span><br><span class="line">    <span class="comment"># pod 触发器--配置变动触发更新</span></span><br><span class="line">    <span class="attr">triggers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">ConfigChange</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">  <span class="comment"># 服务，与 k8s 中 service 一样，将 dc 上部署的应用暴露给内部(多)或外部(少)</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line">  <span class="attr">metadata:</span></span><br><span class="line">    <span class="attr">labels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">spec:</span></span><br><span class="line">    <span class="comment"># 应用中要暴露的端口信息</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">      <span class="comment"># 对外暴露的端口</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="comment"># 应用实际端口</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">    <span class="comment"># 通过选择器选择 dc</span></span><br><span class="line">    <span class="attr">selector:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">sessionAffinity:</span> <span class="string">None</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">ClusterIP</span></span><br><span class="line">    </span><br><span class="line"><span class="bullet">-</span> <span class="attr">apiVersion:</span> <span class="string">route.openshift.io/v1</span></span><br><span class="line">  <span class="comment"># OKD 平台特有资源，与 k8s 中 ingress 类似，用于将 service 正真暴露给外部使用，但只能使用域名访问</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">Route</span></span><br><span class="line">  <span class="attr">metadata:</span></span><br><span class="line">    <span class="attr">labels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">spec:</span></span><br><span class="line">    <span class="comment"># 配置域名</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">xinchen.app.com</span></span><br><span class="line">    <span class="attr">to:</span></span><br><span class="line">      <span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">List</span></span><br><span class="line"><span class="attr">metadata:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-通过创建template"><a href="#2-通过创建template" class="headerlink" title="2. 通过创建template"></a>2. 通过创建template</h2><p>参考文档: <a target="_blank" rel="noopener" href="https://docs.okd.io/latest/dev_guide/templates.html#writing-templates">https://docs.okd.io/latest/dev_guide/templates.html#writing-templates</a></p>
+<p>相关指令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 上传模板</span></span><br><span class="line">oc create -f &lt;filename&gt; -n &lt;project&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用模板</span></span><br><span class="line">oc process -f nginx-template -p IMAGE_NAME=nginx:1.6 -p REPLICA_COUNT=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑模板</span></span><br><span class="line">oc edit template &lt;templateName&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导出模板</span></span><br><span class="line">oc get -o yaml --<span class="built_in">export</span> all &gt; &lt;yaml_filename&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>nginx-template.yml</strong></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">Template</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-template</span></span><br><span class="line"><span class="attr">objects:</span> </span><br><span class="line">  <span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">DeploymentConfig</span></span><br><span class="line">    <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">    <span class="attr">metadata:</span> </span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">namespace:</span> <span class="string">xinchen</span></span><br><span class="line">      <span class="attr">labels:</span> </span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">replicas:</span> <span class="string">$&#123;REPLICA_COUNT&#125;</span></span><br><span class="line">      <span class="attr">selector:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">        </span><br><span class="line">      <span class="attr">resources:</span></span><br><span class="line">        <span class="attr">limits:</span></span><br><span class="line">          <span class="attr">cpu:</span> <span class="string">300m</span></span><br><span class="line">          <span class="attr">memory:</span> <span class="string">1024Mi</span></span><br><span class="line">        <span class="attr">requests:</span></span><br><span class="line">          <span class="attr">cpu:</span> <span class="string">100m</span></span><br><span class="line">          <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">    </span><br><span class="line">      <span class="attr">strategy:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">Rolling</span></span><br><span class="line">    </span><br><span class="line">      <span class="attr">template:</span></span><br><span class="line">        <span class="attr">metadata:</span></span><br><span class="line">          <span class="attr">labels:</span></span><br><span class="line">            <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">            <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">            <span class="attr">deploymentconfig:</span> <span class="string">nginx</span></span><br><span class="line">        <span class="attr">spec:</span></span><br><span class="line">        </span><br><span class="line">          <span class="attr">containers:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">capabilities:</span> &#123;&#125;</span><br><span class="line">          </span><br><span class="line">            <span class="attr">env:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">TZ</span></span><br><span class="line">              <span class="attr">value:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">LANG</span></span><br><span class="line">              <span class="attr">value:</span> <span class="string">en_US.UTF-8</span></span><br><span class="line"></span><br><span class="line">            <span class="attr">image:</span> <span class="string">$&#123;IMAGE_NAME&#125;</span></span><br><span class="line">  </span><br><span class="line">            <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line"></span><br><span class="line">            <span class="attr">ports:</span> </span><br><span class="line">              <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">                <span class="attr">protocol:</span> <span class="string">TCP</span>          </span><br><span class="line">          </span><br><span class="line">            <span class="attr">livenessProbe:</span></span><br><span class="line">              <span class="attr">failureThreshold:</span> <span class="number">2</span></span><br><span class="line">              <span class="attr">httpGet:</span></span><br><span class="line">                <span class="attr">path:</span> <span class="string">/</span></span><br><span class="line">                <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">              <span class="attr">initialDelaySeconds:</span> <span class="number">60</span></span><br><span class="line">              <span class="attr">periodSeconds:</span> <span class="number">60</span></span><br><span class="line">              <span class="attr">timeoutSeconds:</span> <span class="number">5</span></span><br><span class="line">            <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          </span><br><span class="line">            <span class="attr">readinessProbe:</span></span><br><span class="line">              <span class="attr">httpGet:</span></span><br><span class="line">                <span class="attr">path:</span> <span class="string">/</span></span><br><span class="line">                <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">              <span class="attr">initialDelaySeconds:</span> <span class="number">3</span></span><br><span class="line">              <span class="attr">timeoutSeconds:</span> <span class="number">5</span></span><br><span class="line">          </span><br><span class="line">            <span class="attr">resources:</span></span><br><span class="line">              <span class="attr">limits:</span></span><br><span class="line">                <span class="attr">cpu:</span> <span class="string">300m</span></span><br><span class="line">                <span class="attr">memory:</span> <span class="string">1024Mi</span></span><br><span class="line">              <span class="attr">requests:</span></span><br><span class="line">                <span class="attr">cpu:</span> <span class="string">100m</span></span><br><span class="line">                <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line"></span><br><span class="line">            <span class="attr">securityContext:</span></span><br><span class="line">              <span class="attr">capabilities:</span> &#123;&#125;</span><br><span class="line">              <span class="comment"># privileged: true</span></span><br><span class="line">            <span class="attr">terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line">          </span><br><span class="line">          <span class="comment">#   volumeMounts:</span></span><br><span class="line">          <span class="comment">#   - mountPath: /data</span></span><br><span class="line">          <span class="comment">#     name: nginx</span></span><br><span class="line">          <span class="attr">dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line">        </span><br><span class="line">          <span class="attr">restartPolicy:</span> <span class="string">Always</span></span><br><span class="line">        </span><br><span class="line">          <span class="comment"># volumes:</span></span><br><span class="line">          <span class="comment"># - persistentVolumeClaim:</span></span><br><span class="line">          <span class="comment">#     claimName: nginx</span></span><br><span class="line">          <span class="comment">#   name: nginx</span></span><br><span class="line">    <span class="comment"># pod 触发器--配置变动触发更新</span></span><br><span class="line">      <span class="attr">triggers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">ConfigChange</span>  </span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line">    <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span>    </span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">ports:</span> </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="number">80</span><span class="string">-tcp</span></span><br><span class="line">        <span class="attr">port :</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">selector:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">sessionAffinity:</span> <span class="string">None</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">ClusterIP</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">apiVersion:</span> <span class="string">route.openshift.io/v1</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">Route</span></span><br><span class="line">  <span class="attr">metadata:</span></span><br><span class="line">    <span class="attr">labels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">spec:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">$&#123;HOST_NAME&#125;</span></span><br><span class="line">    <span class="attr">port:</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span><span class="string">-tcp</span></span><br><span class="line">    <span class="attr">to:</span></span><br><span class="line">      <span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">weight:</span> <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="attr">parameters:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">HOST_NAME</span></span><br><span class="line">    <span class="attr">displayName:</span> <span class="string">Host</span> <span class="string">Name</span></span><br><span class="line">    <span class="attr">required:</span> <span class="literal">true</span>  </span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">IMAGE_NAME</span></span><br><span class="line">    <span class="attr">displayName:</span> <span class="string">Image</span> <span class="string">Name</span></span><br><span class="line">    <span class="attr">required:</span> <span class="literal">true</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">REPLICA_COUNT</span></span><br><span class="line">    <span class="attr">displayName:</span> <span class="string">Replica</span> <span class="string">Count</span></span><br><span class="line">    <span class="attr">value:</span> <span class="string">&quot;1&quot;</span></span><br><span class="line">    <span class="attr">required:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-进入运行的容器"><a href="#3-进入运行的容器" class="headerlink" title="3. 进入运行的容器"></a>3. 进入运行的容器</h2><p>参考: <a target="_blank" rel="noopener" href="https://docs.okd.io/latest/dev_guide/ssh_environment.html">https://docs.okd.io/latest/dev_guide/ssh_environment.html</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 查看pod名</span></span><br><span class="line">oc get pods</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">oc rsh &lt;pod&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者直接进入dc</span></span><br><span class="line">oc rsh dc/nginx</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-删除所有"><a href="#4-删除所有" class="headerlink" title="4. 删除所有"></a>4. 删除所有</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除所有</span></span><br><span class="line">oc delete all -l app=nginx</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">在Openshift上通过yaml部署应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%80%9A%E8%BF%87%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8Cyaml"><span class="toc-number">1.1.</span> <span class="toc-text">1.通过直接执行yaml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%80%9A%E8%BF%87%E5%88%9B%E5%BB%BAtemplate"><span class="toc-number">1.2.</span> <span class="toc-text">2. 通过创建template</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%BF%9B%E5%85%A5%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text">3. 进入运行的容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89"><span class="toc-number">1.4.</span> <span class="toc-text">4. 删除所有</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&text=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&is_video=false&description=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【openshift】在Openshift上通过yaml部署应用&body=Check out this article: http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&title=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&name=【openshift】在Openshift上通过yaml部署应用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/&t=【openshift】在Openshift上通过yaml部署应用"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

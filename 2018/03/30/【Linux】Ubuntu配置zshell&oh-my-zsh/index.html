@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="zshell：https:&#x2F;&#x2F;archive.codeplex.com&#x2F;?p&#x3D;shell   oh-my-zsh: https:&#x2F;&#x2F;github.com&#x2F;robbyrussell&#x2F;oh-my-zsh 终极 Shell——Zsh: https:&#x2F;&#x2F;linuxtoy.org&#x2F;archives&#x2F;zsh.html Linux终极shell-Z Shell–用强大的zsh &amp; oh-my-zsh把">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux】Ubuntu配置zshell&amp;oh-my-zsh">
+<meta property="og:url" content="http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&oh-my-zsh/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="zshell：https:&#x2F;&#x2F;archive.codeplex.com&#x2F;?p&#x3D;shell   oh-my-zsh: https:&#x2F;&#x2F;github.com&#x2F;robbyrussell&#x2F;oh-my-zsh 终极 Shell——Zsh: https:&#x2F;&#x2F;linuxtoy.org&#x2F;archives&#x2F;zsh.html Linux终极shell-Z Shell–用强大的zsh &amp; oh-my-zsh把">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-03-30T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Linux】Ubuntu配置zshell&amp;oh-my-zsh</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2018/04/06/%E3%80%90algorithm%E3%80%91%E5%89%91%E6%8C%87office%E4%B9%A0%E9%A2%98/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2018/03/29/%E3%80%90docker%E3%80%91docker%E6%B8%85%E7%90%86%E7%A9%BA%E9%97%B4/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&text=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&is_video=false&description=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】Ubuntu配置zshell&amp;oh-my-zsh&body=Check out this article: http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&name=【Linux】Ubuntu配置zshell&amp;oh-my-zsh&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&t=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E7%B3%BB%E7%BB%9F%E7%9A%84shells"><span class="toc-number">1.</span> <span class="toc-text">查看当前系统的shells</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85zsh"><span class="toc-number">2.</span> <span class="toc-text">安装zsh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E6%8D%A2bash%E4%B8%BAzsh"><span class="toc-number">3.</span> <span class="toc-text">切换bash为zsh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85oh-my-zsh"><span class="toc-number">4.</span> <span class="toc-text">安装oh-my-zsh</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%98%E7%BD%91%E6%8E%A8%E8%8D%90"><span class="toc-number">4.1.</span> <span class="toc-text">官网推荐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#github%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.2.</span> <span class="toc-text">github下载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text">主题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%87%E7%BA%A7"><span class="toc-number">7.</span> <span class="toc-text">升级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BD"><span class="toc-number">8.</span> <span class="toc-text">卸载</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Linux】Ubuntu配置zshell&amp;oh-my-zsh
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-03-30T00:00:00.000Z" itemprop="datePublished">2018-03-30</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Linux/" rel="tag">Linux</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>zshell：<a target="_blank" rel="noopener" href="https://archive.codeplex.com/?p=shell">https://archive.codeplex.com/?p=shell</a>  </p>
+<p>oh-my-zsh: <a target="_blank" rel="noopener" href="https://github.com/robbyrussell/oh-my-zsh">https://github.com/robbyrussell/oh-my-zsh</a></p>
+<p>终极 Shell——Zsh: <a target="_blank" rel="noopener" href="https://linuxtoy.org/archives/zsh.html">https://linuxtoy.org/archives/zsh.html</a></p>
+<p>Linux终极shell-Z Shell–用强大的zsh &amp; oh-my-zsh把Bash换掉: <a target="_blank" rel="noopener" href="https://blog.csdn.net/gatieme/article/details/52741221">https://blog.csdn.net/gatieme/article/details/52741221</a></p>
+</blockquote>
+<h2 id="查看当前系统的shells"><a href="#查看当前系统的shells" class="headerlink" title="查看当前系统的shells"></a>查看当前系统的shells</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">xinchen@ubuntu:~$ cat /etc/shells</span><br><span class="line"><span class="comment"># /etc/shells: valid login shells</span></span><br><span class="line">/bin/sh</span><br><span class="line">/bin/dash</span><br><span class="line">/bin/bash</span><br><span class="line">/bin/rbash</span><br><span class="line">/usr/bin/tmux</span><br><span class="line">/usr/bin/screen</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装zsh"><a href="#安装zsh" class="headerlink" title="安装zsh"></a>安装zsh</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install zsh</span><br></pre></td></tr></table></figure>
+
+<h2 id="切换bash为zsh"><a href="#切换bash为zsh" class="headerlink" title="切换bash为zsh"></a>切换bash为zsh</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># usermod命令用于修改用户的基本信息</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># usermod -G staff newuser2  (将newuser2添加到组staff中)</span></span><br><span class="line"><span class="comment"># usermod -l newuser1 newuser (修改newuser的用户名为newuser1)</span></span><br><span class="line"><span class="comment"># usermod -L newuser1 (锁定账号newuser1)</span></span><br><span class="line"><span class="comment"># usermod -U newuser1 (解除对newuser1的锁定)</span></span><br><span class="line">sudo usermod -s /bin/ash <span class="variable">$USERNAME</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">chsh -s /bin/zsh</span><br><span class="line">chsh -s `<span class="built_in">which</span> zsh`</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换回bash</span></span><br><span class="line">chsh -s /bin/bash</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装oh-my-zsh"><a href="#安装oh-my-zsh" class="headerlink" title="安装oh-my-zsh"></a>安装oh-my-zsh</h2><h3 id="官网推荐"><a href="#官网推荐" class="headerlink" title="官网推荐"></a>官网推荐</h3><p>Oh My Zsh is installed by running one of the following commands in your terminal. You can install this via the command-line with either <code>curl</code> or <code>wget</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># curl</span></span><br><span class="line">sh -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># wget</span></span><br><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The default location is ~/.oh-my-zsh (hidden in your home directory)</span></span><br><span class="line"><span class="built_in">export</span> ZSH=<span class="string">&quot;<span class="variable">$HOME</span>/.dotfiles/oh-my-zsh&quot;</span>; sh -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="github下载"><a href="#github下载" class="headerlink" title="github下载"></a>github下载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git clone</span></span><br><span class="line">git <span class="built_in">clone</span> git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 备份已有的zshrc, 替换zshrc, 至此可直接使用</span></span><br><span class="line">cp ~/.zshrc ~/.zshrc.orig</span><br><span class="line">cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 直接使用脚本安装</span></span><br><span class="line"><span class="built_in">cd</span> oh-my-zsh/tools</span><br><span class="line">./install.sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Once you find a theme that you&#x27;d like to use, you will need to edit the ~/.zshrc file. You&#x27;ll see an environment variable (all caps) in there that looks like:</span></span><br><span class="line">ZSH_THEME=<span class="string">&quot;robbyrussell&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If you&#x27;re feeling feisty, you can let the computer select one randomly for you each time you open a new terminal window.</span></span><br><span class="line">ZSH_THEME=<span class="string">&quot;random&quot;</span> <span class="comment"># (...please let it be pie... please be some pie..)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># And if you want to pick random theme from a list of your favorite themes:</span></span><br><span class="line">ZSH_THEME_RANDOM_CANDIDATES=(</span><br><span class="line">  <span class="string">&quot;robbyrussell&quot;</span></span><br><span class="line">  <span class="string">&quot;agnoster&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/.zshrc</span></span><br><span class="line">plugins=(git encode64 urltools)</span><br></pre></td></tr></table></figure>
+
+<h2 id="升级"><a href="#升级" class="headerlink" title="升级"></a>升级</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># By default, you will be prompted to check for upgrades every few weeks. If you would like oh-my-zsh to automatically upgrade itself without prompting you, set the following in your ~/.zshrc:</span></span><br><span class="line"></span><br><span class="line">DISABLE_UPDATE_PROMPT=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># To disable automatic upgrades, set the following in your ~/.zshrc:</span></span><br><span class="line"></span><br><span class="line">DISABLE_AUTO_UPDATE=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If you&#x27;d like to upgrade at any point in time (maybe someone just released a new plugin and you don&#x27;t want to wait a week?) you just need to run:</span></span><br><span class="line"></span><br><span class="line">upgrade_oh_my_zsh</span><br></pre></td></tr></table></figure>
+<h2 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h2><p>If you want to uninstall <code>oh-my-zsh</code>, just run <code>uninstall_oh_my_zsh</code> from the command-line. It will remove itself and revert your previous <code>bash</code> or <code>zsh</code> configuration.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E7%B3%BB%E7%BB%9F%E7%9A%84shells"><span class="toc-number">1.</span> <span class="toc-text">查看当前系统的shells</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85zsh"><span class="toc-number">2.</span> <span class="toc-text">安装zsh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E6%8D%A2bash%E4%B8%BAzsh"><span class="toc-number">3.</span> <span class="toc-text">切换bash为zsh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85oh-my-zsh"><span class="toc-number">4.</span> <span class="toc-text">安装oh-my-zsh</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%98%E7%BD%91%E6%8E%A8%E8%8D%90"><span class="toc-number">4.1.</span> <span class="toc-text">官网推荐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#github%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.2.</span> <span class="toc-text">github下载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text">主题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%87%E7%BA%A7"><span class="toc-number">7.</span> <span class="toc-text">升级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BD"><span class="toc-number">8.</span> <span class="toc-text">卸载</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&text=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&is_video=false&description=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Linux】Ubuntu配置zshell&amp;oh-my-zsh&body=Check out this article: http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&title=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&name=【Linux】Ubuntu配置zshell&amp;oh-my-zsh&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/03/30/%E3%80%90Linux%E3%80%91Ubuntu%E9%85%8D%E7%BD%AEzshell&amp;oh-my-zsh/&t=【Linux】Ubuntu配置zshell&amp;oh-my-zsh"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

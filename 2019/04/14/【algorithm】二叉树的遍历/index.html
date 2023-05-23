@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="二叉树的遍历二叉树用例  代码解析： 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【algorithm】二叉树的遍历">
+<meta property="og:url" content="http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="二叉树的遍历二叉树用例  代码解析： 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/binary_tree.png">
+<meta property="article:published_time" content="2019-04-14T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="algorithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/binary_tree.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【algorithm】二叉树的遍历</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/04/16/%E3%80%90Java%E3%80%91JVM%E6%9E%B6%E6%9E%84%E5%9B%BE/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/04/11/%E3%80%90Java%E3%80%91%20hashCode()%E5%92%8CSystem.identityHashCode()/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&text=【algorithm】二叉树的遍历"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&is_video=false&description=【algorithm】二叉树的遍历"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【algorithm】二叉树的遍历&body=Check out this article: http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&name=【algorithm】二叉树的遍历&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&t=【algorithm】二叉树的遍历"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86"><span class="toc-number">1.</span> <span class="toc-text">二叉树的遍历</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【algorithm】二叉树的遍历
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-04-14T00:00:00.000Z" itemprop="datePublished">2019-04-14</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/algorithm/" rel="tag">algorithm</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="二叉树的遍历"><a href="#二叉树的遍历" class="headerlink" title="二叉树的遍历"></a>二叉树的遍历</h1><p><strong>二叉树用例</strong></p>
+<p><img src="/images/binary_tree.png"></p>
+<p><strong>代码解析：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BinaryTree</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">        Integer val;</span><br><span class="line">        TreeNode left;</span><br><span class="line">        TreeNode right;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">TreeNode</span><span class="params">(Integer val)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.val = val;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TreeNode <span class="title">init</span><span class="params">(Integer[] arr, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">        TreeNode node = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (index &lt; arr.length) &#123;</span><br><span class="line">            node = <span class="keyword">new</span> TreeNode(arr[index]);</span><br><span class="line">            node.left = init(arr, <span class="number">2</span> * index + <span class="number">1</span>);</span><br><span class="line">            node.right = init(arr, <span class="number">2</span> * index + <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Integer[] arr = <span class="keyword">new</span> Integer[]&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>&#125;;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;递归实现前序遍历：   &quot;</span>+ rootLeftRightRecursive(init(arr,<span class="number">0</span>)));</span><br><span class="line">        list.clear();</span><br><span class="line">        System.out.println(<span class="string">&quot;非递归实现前序遍历： &quot;</span>+ rootLeftRightNonRecursive(init(arr,<span class="number">0</span>)));</span><br><span class="line">        list.clear();</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;递归实现中序遍历：   &quot;</span>+ leftRootRightRecursive(init(arr,<span class="number">0</span>)));</span><br><span class="line">        list.clear();</span><br><span class="line">        System.out.println(<span class="string">&quot;非递归实现中序遍历： &quot;</span>+ leftRootRightNonRecursive(init(arr,<span class="number">0</span>)));</span><br><span class="line">        list.clear();</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;递归实现后序遍历：   &quot;</span>+ leftRightRootRecursive(init(arr,<span class="number">0</span>)));</span><br><span class="line">        list.clear();</span><br><span class="line">        System.out.println(<span class="string">&quot;非递归实现后序遍历： &quot;</span>+ leftRightRootNonRecursive(init(arr,<span class="number">0</span>)));</span><br><span class="line">        list.clear();</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;层次遍历： &quot;</span>+ levelOrder(init(arr,<span class="number">0</span>)));</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;树的深度为： &quot;</span>+ depth(init(arr,<span class="number">0</span>)));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 递归实现前序遍历</span></span><br><span class="line"><span class="comment">     * 中-左-右</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> node TreeNode</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> List</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List <span class="title">rootLeftRightRecursive</span><span class="params">(TreeNode node)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> != node)&#123;</span><br><span class="line">            list.add(node.val);</span><br><span class="line">            rootLeftRightRecursive(node.left);</span><br><span class="line">            rootLeftRightRecursive(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 非递归实现前序遍历</span></span><br><span class="line"><span class="comment">     * 中-左-右</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> node TreeNode</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> List</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List <span class="title">rootLeftRightNonRecursive</span><span class="params">(TreeNode node)</span> </span>&#123;</span><br><span class="line">        Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        TreeNode cur = node;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">null</span> != cur || !stack.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> != cur) &#123;</span><br><span class="line">                list.add(cur.val);</span><br><span class="line">                stack.push(cur);</span><br><span class="line">                cur = cur.left;</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                cur = stack.pop();</span><br><span class="line">                cur = cur.right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 递归实现中序遍历</span></span><br><span class="line"><span class="comment">     * 左-中-右</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> node TreeNode</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> List</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List <span class="title">leftRootRightRecursive</span><span class="params">(TreeNode node)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span>!=node)&#123;</span><br><span class="line">            leftRootRightRecursive(node.left);</span><br><span class="line">            list.add(node.val);</span><br><span class="line">            leftRootRightRecursive(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 非递归实现中序遍历</span></span><br><span class="line"><span class="comment">     * 左-中-右</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> node TreeNode</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> List</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List <span class="title">leftRootRightNonRecursive</span><span class="params">(TreeNode node)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">10</span>);</span><br><span class="line">        Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        TreeNode cur = node;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">null</span> != cur || !stack.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> != cur) &#123;</span><br><span class="line">                stack.push(cur);</span><br><span class="line">                cur = cur.left;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                cur = stack.pop();</span><br><span class="line">                list.add(cur.val);</span><br><span class="line">                cur = cur.right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 递归实现后序遍历</span></span><br><span class="line"><span class="comment">     * 左-右-中</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> node TreeNode</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> List</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List <span class="title">leftRightRootRecursive</span><span class="params">(TreeNode node)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span>!=node)&#123;</span><br><span class="line">            leftRightRootRecursive(node.left);</span><br><span class="line">            leftRightRootRecursive(node.right);</span><br><span class="line">            list.add(node.val);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 非递归实现后序遍历</span></span><br><span class="line"><span class="comment">     * 左-右-中</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> node TreeNode</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> List</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List <span class="title">leftRightRootNonRecursive</span><span class="params">(TreeNode node)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == node)&#123;</span><br><span class="line">            <span class="keyword">return</span> list;</span><br><span class="line">        &#125;</span><br><span class="line">        Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        stack.push(node);</span><br><span class="line">        TreeNode cur;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!stack.isEmpty())&#123;</span><br><span class="line">            cur = stack.pop();</span><br><span class="line">            <span class="keyword">if</span> (cur.left!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                stack.push(cur.left);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (cur.right!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                stack.push(cur.right);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 逆序添加</span></span><br><span class="line">            list.add(<span class="number">0</span>,cur.val);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 层序遍历队列实现（广度优先算法BFS）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> root TreeNode</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> List</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;List&lt;Integer&gt;&gt; levelOrder(TreeNode root)&#123;</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> list;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        queue.add(root);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">            <span class="keyword">int</span> count = queue.size();</span><br><span class="line">            List&lt;Integer&gt; tmpList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">while</span>(count &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                TreeNode node = queue.poll();</span><br><span class="line">                tmpList.add(node.val);</span><br><span class="line">                <span class="keyword">if</span>(node.left!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    queue.add(node.left);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(node.right!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    queue.add(node.right);</span><br><span class="line">                &#125;</span><br><span class="line">                count--;</span><br><span class="line">            &#125;</span><br><span class="line">            list.add(tmpList);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 递归实现获取树的深度</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> node TreeNode</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">depth</span><span class="params">(TreeNode node)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> left = depth(node.left);</span><br><span class="line">        <span class="keyword">int</span> right = depth(node.right);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> left &gt; right ? left + <span class="number">1</span> : right + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>结果为：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">递归实现前序遍历：   [1, 3, 5, 6, 4, 7, 8]</span><br><span class="line">非递归实现前序遍历： [1, 3, 5, 6, 4, 7, 8]</span><br><span class="line"></span><br><span class="line">递归实现中序遍历：   [5, 3, 6, 1, 7, 4, 8]</span><br><span class="line">非递归实现中序遍历： [5, 3, 6, 1, 7, 4, 8]</span><br><span class="line"></span><br><span class="line">递归实现后序遍历：   [5, 6, 3, 7, 8, 4, 1]</span><br><span class="line">非递归实现后序遍历： [5, 6, 3, 7, 8, 4, 1]</span><br><span class="line"></span><br><span class="line">层次遍历： [[1], [3, 4], [5, 6, 7, 8]]</span><br><span class="line"></span><br><span class="line">树的深度为： 3</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86"><span class="toc-number">1.</span> <span class="toc-text">二叉树的遍历</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&text=【algorithm】二叉树的遍历"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&is_video=false&description=【algorithm】二叉树的遍历"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【algorithm】二叉树的遍历&body=Check out this article: http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&title=【algorithm】二叉树的遍历"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&name=【algorithm】二叉树的遍历&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/04/14/%E3%80%90algorithm%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/&t=【algorithm】二叉树的遍历"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

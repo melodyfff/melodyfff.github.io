@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="近期由于要在页面上进行用户自定义绘制操作，需要学习下SVG的相关文档 1、在HTML中使用SVGHTML中直接加入12345&lt;!--画一个 半径为40的圆cx 和 cy 属性定义圆中心的 x 和 y 坐标。如果忽略这两个属性，那么圆点会被设置为 (0, 0)。--&gt;&lt;svg xmlns&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2000&#x2F;svg&quot; version&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【SVG】svg学习笔记">
+<meta property="og:url" content="http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="近期由于要在页面上进行用户自定义绘制操作，需要学习下SVG的相关文档 1、在HTML中使用SVGHTML中直接加入12345&lt;!--画一个 半径为40的圆cx 和 cy 属性定义圆中心的 x 和 y 坐标。如果忽略这两个属性，那么圆点会被设置为 (0, 0)。--&gt;&lt;svg xmlns&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2000&#x2F;svg&quot; version&#x3D;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-02-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="svg">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【SVG】svg学习笔记</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2017/05/14/%E3%80%90mysql%E3%80%91win10%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEmysql-5.7.17-winx64%E5%85%8D%E5%AE%89%E8%A3%85%E7%89%88/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2017/01/13/%E3%80%90mysql%E3%80%91ubuntu16.4%E7%8E%AF%E5%A2%83%E8%A3%85mysql/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&text=【SVG】svg学习笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&is_video=false&description=【SVG】svg学习笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【SVG】svg学习笔记&body=Check out this article: http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&name=【SVG】svg学习笔记&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&t=【SVG】svg学习笔记"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%9C%A8HTML%E4%B8%AD%E4%BD%BF%E7%94%A8SVG"><span class="toc-number">1.</span> <span class="toc-text">1、在HTML中使用SVG</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTML%E4%B8%AD%E7%9B%B4%E6%8E%A5%E5%8A%A0%E5%85%A5"><span class="toc-number">1.1.</span> <span class="toc-text">HTML中直接加入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTML%E4%B8%AD%E8%BF%9E%E6%8E%A5%E5%8A%A0%E5%85%A5"><span class="toc-number">1.2.</span> <span class="toc-text">HTML中连接加入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SVG%E9%A2%84%E8%AE%BE%E5%BD%A2%E7%8A%B6"><span class="toc-number">1.3.</span> <span class="toc-text">SVG预设形状</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%9F%A9%E5%BD%A2-lt-rect-gt"><span class="toc-number">1.4.</span> <span class="toc-text">(1)矩形-&lt;rect&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%9C%86%E5%BD%A2-lt-circle-gt"><span class="toc-number">1.5.</span> <span class="toc-text">(2)圆形-&lt;circle&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A4%AD%E5%9C%86-lt-ellipse-gt"><span class="toc-number">1.6.</span> <span class="toc-text">(3)椭圆 - &lt;ellipse&gt;</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【SVG】svg学习笔记
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-02-23T00:00:00.000Z" itemprop="datePublished">2017-02-23</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/svg/" rel="tag">svg</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>近期由于要在页面上进行用户自定义绘制操作，需要学习下SVG的相关文档</p>
+<h2 id="1、在HTML中使用SVG"><a href="#1、在HTML中使用SVG" class="headerlink" title="1、在HTML中使用SVG"></a>1、在HTML中使用SVG</h2><h3 id="HTML中直接加入"><a href="#HTML中直接加入" class="headerlink" title="HTML中直接加入"></a>HTML中直接加入</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--画一个 半径为40的圆cx 和 cy 属性定义圆中心的 x 和 y 坐标。</span></span><br><span class="line"><span class="comment">如果忽略这两个属性，那么圆点会被设置为 (0, 0)。--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">circle</span> <span class="attr">cx</span>=<span class="string">&quot;100&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;50&quot;</span> <span class="attr">r</span>=<span class="string">&quot;40&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> <span class="attr">stroke-width</span>=<span class="string">&quot;2&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="HTML中连接加入"><a href="#HTML中连接加入" class="headerlink" title="HTML中连接加入"></a>HTML中连接加入</h3><p>链接引入.svg文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; standalone=&quot;no&quot;?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">svg</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD SVG 1.1//EN&quot;</span></span></span><br><span class="line"><span class="meta"><span class="meta-string">&quot;http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">circle</span> <span class="attr">cx</span>=<span class="string">&quot;100&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;50&quot;</span> <span class="attr">r</span>=<span class="string">&quot;40&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">stroke-width</span>=<span class="string">&quot;2&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="SVG预设形状"><a href="#SVG预设形状" class="headerlink" title="SVG预设形状"></a>SVG预设形状</h3><p>SVG有一些预定义的形状元素，可被开发者使用和操作：</p>
+<ul>
+<li>矩形 <code>&lt;rect&gt;</code></li>
+<li>圆形 <code>&lt;circle&gt;</code></li>
+<li>椭圆 <code>&lt;ellipse&gt;</code></li>
+<li>线 <code>&lt;line&gt;</code></li>
+<li>折线 <code>&lt;polyline&gt;</code></li>
+<li>多边形 <code>&lt;polygon&gt;</code></li>
+<li>路径 <code>&lt;path&gt;</code></li>
+</ul>
+<h3 id="1-矩形-lt-rect-gt"><a href="#1-矩形-lt-rect-gt" class="headerlink" title="(1)矩形-&lt;rect&gt;"></a>(1)矩形-<code>&lt;rect&gt;</code></h3><ul>
+<li>rect 元素的 width 和 height 属性可定义矩形的高度和宽度</li>
+<li>style 属性用来定义 CSS 属性<br>CSS 的 fill 属性定义矩形的填充颜色（rgb 值、颜色名或者十六进制值）</li>
+<li>CSS 的 stroke-width 属性定义矩形边框的宽度</li>
+<li>CSS 的 stroke 属性定义矩形边框的颜色</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">&quot;300&quot;</span> <span class="attr">height</span>=<span class="string">&quot;100&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">style</span>=<span class="string">&quot;fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>x 属性定义矩形的左侧位置（例如，x=”0” 定义矩形到浏览器窗口左侧的距离是 0px）</li>
+<li>y 属性定义矩形的顶端位置（例如，y=”0” 定义矩形到浏览器窗口顶端的距离是 0px）</li>
+<li>CSS 的 fill-opacity 属性定义填充颜色透明度（合法的范围是：0 - 1）</li>
+<li>CSS 的 stroke-opacity 属性定义笔触颜色的透明度（合法的范围是：0 - 1）</li>
+<li>CSS opacity 属性用于定义了元素的透明值 (范围: 0 到 1)。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;50&quot;</span> <span class="attr">y</span>=<span class="string">&quot;20&quot;</span> <span class="attr">width</span>=<span class="string">&quot;150&quot;</span> <span class="attr">height</span>=<span class="string">&quot;150&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">style</span>=<span class="string">&quot;fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;</span></span></span><br><span class="line"><span class="string"><span class="tag">  stroke-opacity:0.9&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>圆形矩阵</p>
+<ul>
+<li>rx 和 ry 属性可使矩形产生圆角。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;20&quot;</span> <span class="attr">y</span>=<span class="string">&quot;10&quot;</span> <span class="attr">rx</span>=<span class="string">&quot;10&quot;</span> <span class="attr">ry</span>=<span class="string">&quot;10&quot;</span> <span class="attr">width</span>=<span class="string">&quot;100&quot;</span> <span class="attr">height</span>=<span class="string">&quot;100&quot;</span> <span class="attr">style</span>=<span class="string">&quot;fill:red;stroke:black;stroke-width:5;opacity:0.5&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-圆形-lt-circle-gt"><a href="#2-圆形-lt-circle-gt" class="headerlink" title="(2)圆形-&lt;circle&gt;"></a>(2)圆形-<code>&lt;circle&gt;</code></h3><ul>
+<li>cx和cy属性定义圆点的x和y坐标。如果省略cx和cy，圆的中心会被设置为(0, 0)</li>
+<li>r属性定义圆的半径</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">circle</span> <span class="attr">cx</span>=<span class="string">&quot;100&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;50&quot;</span> <span class="attr">r</span>=<span class="string">&quot;40&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">stroke-width</span>=<span class="string">&quot;2&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-椭圆-lt-ellipse-gt"><a href="#3-椭圆-lt-ellipse-gt" class="headerlink" title="(3)椭圆 - &lt;ellipse&gt;"></a>(3)椭圆 - <code>&lt;ellipse&gt;</code></h3><ul>
+<li>CX属性定义的椭圆中心的x坐标</li>
+<li>CY属性定义的椭圆中心的y坐标</li>
+<li>RX属性定义的水平半径</li>
+<li>RY属性定义的垂直半径</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ellipse</span> <span class="attr">cx</span>=<span class="string">&quot;300&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;80&quot;</span> <span class="attr">rx</span>=<span class="string">&quot;100&quot;</span> <span class="attr">ry</span>=<span class="string">&quot;50&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">style</span>=<span class="string">&quot;fill:yellow;stroke:purple;stroke-width:2&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>三个累叠而上的椭圆</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ellipse</span> <span class="attr">cx</span>=<span class="string">&quot;240&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;100&quot;</span> <span class="attr">rx</span>=<span class="string">&quot;220&quot;</span> <span class="attr">ry</span>=<span class="string">&quot;30&quot;</span> <span class="attr">style</span>=<span class="string">&quot;fill:purple&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ellipse</span> <span class="attr">cx</span>=<span class="string">&quot;220&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;70&quot;</span> <span class="attr">rx</span>=<span class="string">&quot;190&quot;</span> <span class="attr">ry</span>=<span class="string">&quot;20&quot;</span> <span class="attr">style</span>=<span class="string">&quot;fill:lime&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ellipse</span> <span class="attr">cx</span>=<span class="string">&quot;210&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;45&quot;</span> <span class="attr">rx</span>=<span class="string">&quot;170&quot;</span> <span class="attr">ry</span>=<span class="string">&quot;15&quot;</span> <span class="attr">style</span>=<span class="string">&quot;fill:yellow&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%9C%A8HTML%E4%B8%AD%E4%BD%BF%E7%94%A8SVG"><span class="toc-number">1.</span> <span class="toc-text">1、在HTML中使用SVG</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTML%E4%B8%AD%E7%9B%B4%E6%8E%A5%E5%8A%A0%E5%85%A5"><span class="toc-number">1.1.</span> <span class="toc-text">HTML中直接加入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTML%E4%B8%AD%E8%BF%9E%E6%8E%A5%E5%8A%A0%E5%85%A5"><span class="toc-number">1.2.</span> <span class="toc-text">HTML中连接加入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SVG%E9%A2%84%E8%AE%BE%E5%BD%A2%E7%8A%B6"><span class="toc-number">1.3.</span> <span class="toc-text">SVG预设形状</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%9F%A9%E5%BD%A2-lt-rect-gt"><span class="toc-number">1.4.</span> <span class="toc-text">(1)矩形-&lt;rect&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%9C%86%E5%BD%A2-lt-circle-gt"><span class="toc-number">1.5.</span> <span class="toc-text">(2)圆形-&lt;circle&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A4%AD%E5%9C%86-lt-ellipse-gt"><span class="toc-number">1.6.</span> <span class="toc-text">(3)椭圆 - &lt;ellipse&gt;</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&text=【SVG】svg学习笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&is_video=false&description=【SVG】svg学习笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【SVG】svg学习笔记&body=Check out this article: http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【SVG】svg学习笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&name=【SVG】svg学习笔记&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/02/23/%E3%80%90SVG%E3%80%91svg%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&t=【SVG】svg学习笔记"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

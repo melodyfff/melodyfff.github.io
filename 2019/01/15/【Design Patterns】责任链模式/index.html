@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="责任链模式（Chain Of Responsibiltiy） 定义: 使多个对象都有机会处理请求，从而避免了请求的发送者和接收者之间的耦合关系。将这些对象连成一条链(不一定是直线,也可以是环或者其他的)，并沿着这条链传递该请求，直到有对象处理它为止。   责任链模式有点类似于递归,在结构上与装饰器模式几乎相同，不同之处在于对于装饰器，所有类都处理请求，而对于责任链，链中的一个类恰好处理请求。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Design Patterns】责任链模式">
+<meta property="og:url" content="http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="责任链模式（Chain Of Responsibiltiy） 定义: 使多个对象都有机会处理请求，从而避免了请求的发送者和接收者之间的耦合关系。将这些对象连成一条链(不一定是直线,也可以是环或者其他的)，并沿着这条链传递该请求，直到有对象处理它为止。   责任链模式有点类似于递归,在结构上与装饰器模式几乎相同，不同之处在于对于装饰器，所有类都处理请求，而对于责任链，链中的一个类恰好处理请求。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/W3sDesign_Chain_of_Responsibility_Design_Pattern_UML.jpg">
+<meta property="og:image" content="http://example.com/images/chain.png">
+<meta property="og:image" content="http://example.com/images/handler.png">
+<meta property="article:published_time" content="2019-01-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.514Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Design Patterns">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/W3sDesign_Chain_of_Responsibility_Design_Pattern_UML.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Design Patterns】责任链模式</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/01/23/%E3%80%90Design%20Patterns%E3%80%91%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/01/14/%E3%80%90Design%20Patterns%E3%80%91%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】责任链模式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】责任链模式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】责任链模式&body=Check out this article: http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】责任链模式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】责任链模式"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F%EF%BC%88Chain-Of-Responsibiltiy%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">责任链模式（Chain Of Responsibiltiy）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">责任链模式实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="toc-number">1.1.1.</span> <span class="toc-text">实体类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%A4%84%E7%90%86%E7%B1%BB"><span class="toc-number">1.1.2.</span> <span class="toc-text">抽象处理类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="toc-number">1.1.3.</span> <span class="toc-text">具体实现类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF-%E6%89%A7%E8%A1%8C%E8%80%85"><span class="toc-number">1.1.4.</span> <span class="toc-text">客户端(执行者)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">责任链模式的应用</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Design Patterns】责任链模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-15T00:00:00.000Z" itemprop="datePublished">2019-01-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Design-Patterns/" rel="tag">Design Patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="责任链模式（Chain-Of-Responsibiltiy）"><a href="#责任链模式（Chain-Of-Responsibiltiy）" class="headerlink" title="责任链模式（Chain Of Responsibiltiy）"></a>责任链模式（Chain Of Responsibiltiy）</h1><blockquote>
+<p>定义: 使多个对象都有机会处理请求，从而避免了请求的发送者和接收者之间的耦合关系。将这些对象连成一条链(不一定是直线,也可以是环或者其他的)，并沿着这条链传递该请求，直到有对象处理它为止。</p>
+</blockquote>
+<blockquote>
+<p>责任链模式有点类似于递归,在结构上与装饰器模式几乎相同，不同之处在于对于装饰器，所有类都处理请求，而对于责任链，链中的一个类恰好处理请求。</p>
+</blockquote>
+<blockquote>
+<p>类型:行为类模式</p>
+</blockquote>
+<blockquote>
+<p>wiki:<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">https://en.wikipedia.org/wiki/Chain-of-responsibility_pattern</a></p>
+</blockquote>
+<p><img src="/images/W3sDesign_Chain_of_Responsibility_Design_Pattern_UML.jpg"></p>
+<blockquote>
+<p>UML类图</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">@startuml handler</span><br><span class="line">abstract Handler&#123;</span><br><span class="line">    - handler:Handler</span><br><span class="line">    + final void handle()</span><br><span class="line">    # void handleDetail()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ConcreteClassA&#123;</span><br><span class="line">    # void handleDetail()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ConcreteClassB&#123;</span><br><span class="line">    # void handleDetail()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Client&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Client --&gt; Handler</span><br><span class="line"></span><br><span class="line">Handler &lt;|-- ConcreteClassA</span><br><span class="line">Handler &lt;|-- ConcreteClassB</span><br><span class="line"></span><br><span class="line">Handler --&gt; Handler:successor</span><br><span class="line"></span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/chain.png"></p>
+<h2 id="责任链模式实例"><a href="#责任链模式实例" class="headerlink" title="责任链模式实例"></a>责任链模式实例</h2><p><strong>整体结构</strong></p>
+<p><img src="/images/handler.png"></p>
+<h3 id="实体类"><a href="#实体类" class="headerlink" title="实体类"></a>实体类</h3><p><strong>Request(请求实体类)</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Request</span></span>&#123;</span><br><span class="line">    <span class="comment">/** 请求类型 */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> type;</span><br><span class="line">    <span class="comment">/** 请求信息 */</span></span><br><span class="line">    <span class="keyword">private</span> String request;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Request</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Request</span><span class="params">(<span class="keyword">int</span> type, String request)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.type = type;</span><br><span class="line">        <span class="keyword">this</span>.request = request;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getRequest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> request;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Request&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;type=&quot;</span> + type +</span><br><span class="line">                <span class="string">&quot;, request=&#x27;&quot;</span> + request + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>Response(响应实体类)</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Response</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** 请求状态 成功:true 失败:false */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> status = <span class="keyword">false</span>;</span><br><span class="line">    <span class="comment">/** 返回消息 */</span></span><br><span class="line">    <span class="keyword">private</span> String message = <span class="string">&quot;请求失败&quot;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Response</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Response</span><span class="params">(<span class="keyword">boolean</span> status, String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.status = status;</span><br><span class="line">        <span class="keyword">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isStatus</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStatus</span><span class="params">(<span class="keyword">boolean</span> status)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.status = status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMessage</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMessage</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Response&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;status=&quot;</span> + status +</span><br><span class="line">                <span class="string">&quot;, message=&#x27;&quot;</span> + message + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="抽象处理类"><a href="#抽象处理类" class="headerlink" title="抽象处理类"></a>抽象处理类</h3><p><strong>AbstractHandler</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 下一个处理方法 */</span></span><br><span class="line">    <span class="keyword">private</span> AbstractHandler nextHandler;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 定义算法骨架</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> o 请求对象 Request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 响应对象 Response</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Response <span class="title">handle</span><span class="params">(Object o)</span></span>&#123;</span><br><span class="line">        <span class="comment">// 判断当前处理类是否支持该请求的处理</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.isSupport(o))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.handleDetail((Request) o);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 判断是否还有下一处理链,没有则返回默认Response</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span> != <span class="keyword">this</span>.nextHandler ? <span class="keyword">this</span>.nextHandler.handle(o) : <span class="keyword">new</span> Response();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置下一个处理类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> nextHandler nextHandler</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNextHandler</span><span class="params">(AbstractHandler nextHandler)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.nextHandler = nextHandler;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 钩子,判断当前处理类是否支持处理 */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">isSupport</span><span class="params">(Object object)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (object <span class="keyword">instanceof</span> Request);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 处理细节,延到实现类处理 */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> Response <span class="title">handleDetail</span><span class="params">(Request request)</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="具体实现类"><a href="#具体实现类" class="headerlink" title="具体实现类"></a>具体实现类</h3><p><strong>ConcreteHandlerA</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteHandlerA</span> <span class="keyword">extends</span> <span class="title">AbstractHandler</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理细节</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request Request 请求对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Response 响应对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">handleDetail</span><span class="params">(Request request)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;&gt;&gt;&gt; ConcreteHandlerA Accept Request : &quot;</span>+ request.toString());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Response(<span class="keyword">true</span>,<span class="string">&quot;return from ConcreteHandlerA...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 覆盖父类判断是否支持处理方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> object 请求对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> boolean</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">isSupport</span><span class="params">(Object object)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 只处理 request 类型type为 1 的</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.isSupport(object) &amp;&amp; <span class="number">1</span> ==((Request) object).getType();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>ConcreteHandlerB</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteHandlerB</span> <span class="keyword">extends</span> <span class="title">AbstractHandler</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理细节</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request Request 请求对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Response 响应对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">handleDetail</span><span class="params">(Request request)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;&gt;&gt;&gt; ConcreteHandlerB Accept Request : &quot;</span>+ request.toString());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Response(<span class="keyword">true</span>, <span class="string">&quot;return from ConcreteHandlerB...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>ConcreteHandlerC</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteHandlerC</span> <span class="keyword">extends</span> <span class="title">AbstractHandler</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理细节</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request Request 请求对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Response 响应对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">handleDetail</span><span class="params">(Request request)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;&gt;&gt;&gt; ConcreteHandlerC Accept Request : &quot;</span>+ request.toString());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Response(<span class="keyword">true</span>, <span class="string">&quot;return from ConcreteHandlerC...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="客户端-执行者"><a href="#客户端-执行者" class="headerlink" title="客户端(执行者)"></a>客户端(执行者)</h3><p><strong>Client</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 声明处理节点</span></span><br><span class="line">        AbstractHandler handlerA = <span class="keyword">new</span> ConcreteHandlerA();</span><br><span class="line">        AbstractHandler handlerB = <span class="keyword">new</span> ConcreteHandlerB();</span><br><span class="line">        AbstractHandler handlerC = <span class="keyword">new</span> ConcreteHandlerC();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置处理顺序 A-&gt;B-&gt;C</span></span><br><span class="line">        handlerA.setNextHandler(handlerB);</span><br><span class="line">        handlerB.setNextHandler(handlerC);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 发起请求</span></span><br><span class="line">        Request request = <span class="keyword">new</span> Request(<span class="number">3</span>, <span class="string">&quot;hello&quot;</span>);</span><br><span class="line">        <span class="keyword">final</span> Response handle = handlerA.handle(request);</span><br><span class="line">        System.out.println(<span class="string">&quot;&gt;&gt;&gt; Response: &quot;</span>+handle);</span><br><span class="line">        <span class="comment">// &gt;&gt;&gt; ConcreteHandlerB Accept Request : Request&#123;type=3, request=&#x27;hello&#x27;&#125;</span></span><br><span class="line">        <span class="comment">// &gt;&gt;&gt; Response: Response&#123;status=true, message=&#x27;return from ConcreteHandlerB...&#x27;&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> Response handle1 = handlerA.handle(<span class="keyword">new</span> Object());</span><br><span class="line">        System.out.println(<span class="string">&quot;&gt;&gt;&gt; Response: &quot;</span>+handle1);</span><br><span class="line">        <span class="comment">// &gt;&gt;&gt; Response: Response&#123;status=false, message=&#x27;请求失败&#x27;&#125;</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="责任链模式的应用"><a href="#责任链模式的应用" class="headerlink" title="责任链模式的应用"></a>责任链模式的应用</h2><p><strong>优点</strong></p>
+<ul>
+<li>将请求和处理分开解耦</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>递归结构,调试可能比较麻烦</li>
+<li>如果链很长可能会有性能问题</li>
+</ul>
+<p><strong>注意事项</strong></p>
+<ul>
+<li>为了避免链过长,可以在<code>setNextHandler</code>设置链路的时候,增加一个阈值,控制链大小</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F%EF%BC%88Chain-Of-Responsibiltiy%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">责任链模式（Chain Of Responsibiltiy）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">责任链模式实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="toc-number">1.1.1.</span> <span class="toc-text">实体类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%A4%84%E7%90%86%E7%B1%BB"><span class="toc-number">1.1.2.</span> <span class="toc-text">抽象处理类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="toc-number">1.1.3.</span> <span class="toc-text">具体实现类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF-%E6%89%A7%E8%A1%8C%E8%80%85"><span class="toc-number">1.1.4.</span> <span class="toc-text">客户端(执行者)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">责任链模式的应用</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&text=【Design Patterns】责任链模式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&is_video=false&description=【Design Patterns】责任链模式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Design Patterns】责任链模式&body=Check out this article: http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&title=【Design Patterns】责任链模式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&name=【Design Patterns】责任链模式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/01/15/%E3%80%90Design%20Patterns%E3%80%91%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/&t=【Design Patterns】责任链模式"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

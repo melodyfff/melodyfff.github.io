@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="K8S相关介绍十分钟带你理解Kubernetes核心概念 部署rancher12345678910111213141516171819202122232425262728293031# 更新操作系统软件包yum update -y# 删除历史容器及数据docker rm -f $(docker ps -aq)docker volume rm $(docker volume list -q)rm -">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【kubernetes】通过rancher2部署k8s.md">
+<meta property="og:url" content="http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="K8S相关介绍十分钟带你理解Kubernetes核心概念 部署rancher12345678910111213141516171819202122232425262728293031# 更新操作系统软件包yum update -y# 删除历史容器及数据docker rm -f $(docker ps -aq)docker volume rm $(docker volume list -q)rm -">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-09-24T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【kubernetes】通过rancher2部署k8s.md</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/09/25/%E3%80%90openshift%E3%80%91OC%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2Openshift/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/08/20/%E3%80%90openshift%E3%80%91%E5%9C%A8Openshift%E4%B8%8A%E9%80%9A%E8%BF%87yaml%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&text=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&is_video=false&description=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】通过rancher2部署k8s.md&body=Check out this article: http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&name=【kubernetes】通过rancher2部署k8s.md&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&t=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#K8S%E7%9B%B8%E5%85%B3%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">K8S相关介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2rancher"><span class="toc-number">2.</span> <span class="toc-text">部署rancher</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【kubernetes】通过rancher2部署k8s.md
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-09-24T00:00:00.000Z" itemprop="datePublished">2019-09-24</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="K8S相关介绍"><a href="#K8S相关介绍" class="headerlink" title="K8S相关介绍"></a>K8S相关介绍</h2><p><a target="_blank" rel="noopener" href="http://dockone.io/article/932">十分钟带你理解Kubernetes核心概念</a></p>
+<h2 id="部署rancher"><a href="#部署rancher" class="headerlink" title="部署rancher"></a>部署rancher</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新操作系统软件包</span></span><br><span class="line">yum update -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除历史容器及数据</span></span><br><span class="line">docker rm -f $(docker ps -aq)</span><br><span class="line">docker volume rm $(docker volume list -q)</span><br><span class="line">rm -rf /var/lib/rancher /opt/cni /opt/containerd /opt/rke</span><br><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建 rancher</span></span><br><span class="line"><span class="comment"># /var/lib/rancher: etcd 数据存储</span></span><br><span class="line">docker volume create rancher-data --label app=rancher</span><br><span class="line">docker volume create rancher-log --label app=rancher</span><br><span class="line">docker run -d --name=rancher-v2 --restart=unless-stopped \</span><br><span class="line">    -p 8080:80 -p 8443:443 \</span><br><span class="line">    -v rancher-data:/var/lib/rancher \</span><br><span class="line">    -v rancher-log:/var/<span class="built_in">log</span>/auditlog \</span><br><span class="line">    -e AUDIT_LEVEL=3 \</span><br><span class="line">    rancher/rancher:v2.2.8</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义 k8s 集群</span></span><br><span class="line"><span class="comment"># 基于 webconsole 进行 &quot;Add Cluster&quot;, 只配置集群名称即可, 其它选默认配置</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 注册一个节点, 角色划分如下:</span></span><br><span class="line"><span class="comment"># - controlplane: master 节点, 即主控节点</span></span><br><span class="line"><span class="comment"># - etcd: etcd 节点, 即存储节点</span></span><br><span class="line"><span class="comment"># - worker: node 节点, 即计算节点</span></span><br><span class="line">sudo docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.2.8 --server <span class="variable">$&#123;IP&#125;</span> --token 8szs8xxgct5nmkl4dj9mqxpx4zrkf8c6j2blgb4jnj2kt5gp68cd9l --ca-checksum 14fc99cae672173b41e564f9389d1ef57dfcb5fdb1d204c615dcf01b5bb6575c --etcd --controlplane --worker</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#K8S%E7%9B%B8%E5%85%B3%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">K8S相关介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2rancher"><span class="toc-number">2.</span> <span class="toc-text">部署rancher</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&text=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&is_video=false&description=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】通过rancher2部署k8s.md&body=Check out this article: http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&title=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&name=【kubernetes】通过rancher2部署k8s.md&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/09/24/%E3%80%90kubernetes%E3%80%91%E9%80%9A%E8%BF%87rancher2%E9%83%A8%E7%BD%B2k8s/&t=【kubernetes】通过rancher2部署k8s.md"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

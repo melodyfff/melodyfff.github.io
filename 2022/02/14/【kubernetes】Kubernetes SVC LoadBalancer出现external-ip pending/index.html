@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Kubernetes SVC LoadBalancer出现external-ip pending问题概述部署nginx.yaml 12345678910111213141516171819202122232425262728293031323334apiVersion: v1kind: Servicemetadata:  name: nginx-svc  labels:    app: nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending">
+<meta property="og:url" content="http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Kubernetes SVC LoadBalancer出现external-ip pending问题概述部署nginx.yaml 12345678910111213141516171819202122232425262728293031323334apiVersion: v1kind: Servicemetadata:  name: nginx-svc  labels:    app: nginx">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-14T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.522Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2022/02/15/%E3%80%90kubernetes%E3%80%91Minikube-Istio%E5%88%9D%E6%8E%A2/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20Template%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&text=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&is_video=false&description=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending&body=Check out this article: http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&name=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&t=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kubernetes-SVC-LoadBalancer%E5%87%BA%E7%8E%B0external-ip-pending"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes SVC LoadBalancer出现external-ip pending</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">问题概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="toc-number">1.2.</span> <span class="toc-text">问题解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#minikube"><span class="toc-number">1.2.1.</span> <span class="toc-text">minikube</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubeadm"><span class="toc-number">1.2.2.</span> <span class="toc-text">kubeadm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#patch%E6%89%8B%E5%8A%A8%E6%8C%87%E5%AE%9A"><span class="toc-number">1.2.3.</span> <span class="toc-text">patch手动指定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">1.3.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-02-14T00:00:00.000Z" itemprop="datePublished">2022-02-14</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Kubernetes-SVC-LoadBalancer出现external-ip-pending"><a href="#Kubernetes-SVC-LoadBalancer出现external-ip-pending" class="headerlink" title="Kubernetes SVC LoadBalancer出现external-ip pending"></a>Kubernetes SVC LoadBalancer出现external-ip pending</h1><h2 id="问题概述"><a href="#问题概述" class="headerlink" title="问题概述"></a>问题概述</h2><p><strong>部署nginx.yaml</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-svc</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">LoadBalancer</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-dc</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">nginx:1.21.6-alpine</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+
+<p>观察<code>svc</code>,发现<code>EXTERNAL-IP</code>一直处于<code>pending</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get svc                                                             </span><br><span class="line">NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE </span><br><span class="line">kubernetes   ClusterIP      10.96.0.1       &lt;none&gt;        443/TCP        38m </span><br><span class="line">nginx-svc    LoadBalancer   10.106.164.16   &lt;pending&gt;     80:32403/TCP   11s </span><br></pre></td></tr></table></figure>
+
+<p>如果你使用自建的 Kubernetes 集群（minikube、kubeadm 等）。在这种情况下，没有集成 LoadBalancer（与 AWS、Google Cloud、阿里云等云厂商不同）。使用此默认设置，你只能使用 NodePort 或 Ingress Controller。</p>
+<p>这时，如果你部署 LoadBalancer 则会出现 External-IP 一直处于 pending 的问题。</p>
+<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><h3 id="minikube"><a href="#minikube" class="headerlink" title="minikube"></a>minikube</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://minikube.sigs.k8s.io/docs/start/#loadbalancer-deployments">https://minikube.sigs.k8s.io/docs/start/#loadbalancer-deployments</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube tunnel</span><br></pre></td></tr></table></figure>
+
+<p>观察SVC</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get svc                                                               </span><br><span class="line">NAME         TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE </span><br><span class="line">kubernetes   ClusterIP      10.96.0.1       &lt;none&gt;          443/TCP        39m </span><br><span class="line">nginx-svc    LoadBalancer   10.106.164.16   10.106.164.16   80:32403/TCP   74s </span><br></pre></td></tr></table></figure>
+
+<p>访问</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://10.106.164.16</span><br></pre></td></tr></table></figure>
+
+<h3 id="kubeadm"><a href="#kubeadm" class="headerlink" title="kubeadm"></a>kubeadm</h3><p>如果是使用的是 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/">kubeadm</a>，可以参考 <a target="_blank" rel="noopener" href="https://makeoptim.com/service-mesh/kubeadm-kubernetes-istio-setup#metallb">使用 kubeadm 和 MetalLB 搭建 Kubernetes &amp; Istio 环境</a> 使用 <a target="_blank" rel="noopener" href="https://metallb.universe.tf/">MetalLB</a> 来解决本问题。</p>
+<h3 id="patch手动指定"><a href="#patch手动指定" class="headerlink" title="patch手动指定"></a>patch手动指定</h3><p>添加<code>patch</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl patch svc nginx-svc -n default -p <span class="string">&#x27;&#123;&quot;spec&quot;: &#123;&quot;type&quot;: &quot;LoadBalancer&quot;, &quot;externalIPs&quot;:[&quot;10.106.164.16&quot;]&#125;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f42e00f8773c">Service Mesh - Kubernetes LoadBalancer Service External IP 一直处于 pending 状态</a></p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/44110876/kubernetes-service-external-ip-pending">stack overflow: Kubernetes service external ip pending</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kubernetes-SVC-LoadBalancer%E5%87%BA%E7%8E%B0external-ip-pending"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes SVC LoadBalancer出现external-ip pending</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">问题概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="toc-number">1.2.</span> <span class="toc-text">问题解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#minikube"><span class="toc-number">1.2.1.</span> <span class="toc-text">minikube</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubeadm"><span class="toc-number">1.2.2.</span> <span class="toc-text">kubeadm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#patch%E6%89%8B%E5%8A%A8%E6%8C%87%E5%AE%9A"><span class="toc-number">1.2.3.</span> <span class="toc-text">patch手动指定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">1.3.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&text=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&is_video=false&description=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending&body=Check out this article: http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&title=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&name=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/02/14/%E3%80%90kubernetes%E3%80%91Kubernetes%20SVC%20LoadBalancer%E5%87%BA%E7%8E%B0external-ip%20pending/&t=【kubernetes】Kubernetes SVC LoadBalancer出现external-ip pending"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

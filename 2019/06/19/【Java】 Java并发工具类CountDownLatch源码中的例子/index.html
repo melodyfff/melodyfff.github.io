@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Java并发工具类CountDownLatch源码中的例子实例一原文描述12345678910&#x2F;** * &lt;p&gt;&lt;b&gt;Sample usage:&lt;&#x2F;b&gt; Here is a pair of classes in which a group * of worker threads use two countdown latches: * &lt;ul&gt; *">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Java】 Java并发工具类CountDownLatch源码中的例子">
+<meta property="og:url" content="http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Java并发工具类CountDownLatch源码中的例子实例一原文描述12345678910&#x2F;** * &lt;p&gt;&lt;b&gt;Sample usage:&lt;&#x2F;b&gt; Here is a pair of classes in which a group * of worker threads use two countdown latches: * &lt;ul&gt; *">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-06-19T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Java】 Java并发工具类CountDownLatch源码中的例子</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/06/20/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCyclicBarrier%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2019/06/18/%E3%80%90Design%20Patterns%E3%80%91%E7%9B%91%E5%90%AC%E5%99%A8%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&text=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&is_video=false&description=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】 Java并发工具类CountDownLatch源码中的例子&body=Check out this article: http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&name=【Java】 Java并发工具类CountDownLatch源码中的例子&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&t=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-number">1.</span> <span class="toc-text">Java并发工具类CountDownLatch源码中的例子</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E4%B8%80"><span class="toc-number">1.1.</span> <span class="toc-text">实例一</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E6%96%87%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">原文描述</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E4%BA%8C"><span class="toc-number">1.2.</span> <span class="toc-text">实例二</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E6%96%87%E6%8F%8F%E8%BF%B0-1"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">原文描述</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Java】 Java并发工具类CountDownLatch源码中的例子
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-06-19T00:00:00.000Z" itemprop="datePublished">2019-06-19</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/java/" rel="tag">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Java并发工具类CountDownLatch源码中的例子"><a href="#Java并发工具类CountDownLatch源码中的例子" class="headerlink" title="Java并发工具类CountDownLatch源码中的例子"></a>Java并发工具类CountDownLatch源码中的例子</h1><h2 id="实例一"><a href="#实例一" class="headerlink" title="实例一"></a>实例一</h2><h4 id="原文描述"><a href="#原文描述" class="headerlink" title="原文描述"></a>原文描述</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;&lt;b&gt;Sample usage:&lt;/b&gt; Here is a pair of classes in which a group</span></span><br><span class="line"><span class="comment"> * of worker threads use two countdown latches:</span></span><br><span class="line"><span class="comment"> * &lt;ul&gt;</span></span><br><span class="line"><span class="comment"> * &lt;li&gt;The first is a start signal that prevents any worker from proceeding</span></span><br><span class="line"><span class="comment"> * until the driver is ready for them to proceed;</span></span><br><span class="line"><span class="comment"> * &lt;li&gt;The second is a completion signal that allows the driver to wait</span></span><br><span class="line"><span class="comment"> * until all workers have completed.</span></span><br><span class="line"><span class="comment"> * &lt;/ul&gt;</span></span><br><span class="line"><span class="comment"> **/</span></span><br></pre></td></tr></table></figure>
+
+<p>样本用法：这是一对组中的一个类工作线程使用两个倒计时锁存器：</p>
+<p>第一个是启动信号，阻止任何工作人员继续进行直到司机准备好继续进行;</p>
+<p>第二个是完成信号，允许驾驶员等待直到所有工人完成。</p>
+<p><strong>实例代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        CountDownLatch startSignal = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</span><br><span class="line">        CountDownLatch doneSignal = <span class="keyword">new</span> CountDownLatch(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;++i)&#123;</span><br><span class="line">            <span class="keyword">new</span> Thread(<span class="keyword">new</span> Worker(startSignal, doneSignal)).start();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;ALL THREAD START UP.&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 任务开始信号</span></span><br><span class="line">        startSignal.countDown();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot; startSignal count down. &quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 等待所有线程执行完成后才执行后续代码</span></span><br><span class="line">        doneSignal.await();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot; ALL THREAD END UP. &quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行结果</span></span><br><span class="line">        <span class="comment">// ALL THREAD START UP.</span></span><br><span class="line">        <span class="comment">// startSignal count down. </span></span><br><span class="line">        <span class="comment">// Hello World!</span></span><br><span class="line">        <span class="comment">// Hello World!</span></span><br><span class="line">        <span class="comment">// Hello World!</span></span><br><span class="line">        <span class="comment">// Hello World!</span></span><br><span class="line">        <span class="comment">// Hello World!</span></span><br><span class="line">        <span class="comment">// ALL THREAD END UP.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Worker</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> CountDownLatch startSignal;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> CountDownLatch doneSignal;</span><br><span class="line"></span><br><span class="line">    Worker(CountDownLatch startSignal, CountDownLatch doneSignal) &#123;</span><br><span class="line">        <span class="keyword">this</span>.startSignal = startSignal;</span><br><span class="line">        <span class="keyword">this</span>.doneSignal = doneSignal;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 阻止线程执行，直到startSignal.countDown()后开始执行</span></span><br><span class="line">            startSignal.await();</span><br><span class="line">            doWork();</span><br><span class="line">            doneSignal.countDown();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doWork</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="实例二"><a href="#实例二" class="headerlink" title="实例二"></a>实例二</h2><h4 id="原文描述-1"><a href="#原文描述-1" class="headerlink" title="原文描述"></a>原文描述</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Another typical usage would be to divide a problem into N parts,</span></span><br><span class="line"><span class="comment"> * describe each part with a Runnable that executes that portion and</span></span><br><span class="line"><span class="comment"> * counts down on the latch, and queue all the Runnables to an</span></span><br><span class="line"><span class="comment"> * Executor.  When all sub-parts are complete, the coordinating thread</span></span><br><span class="line"><span class="comment"> * will be able to pass through await. (When threads must repeatedly</span></span><br><span class="line"><span class="comment"> * count down in this way, instead use a &#123;@link CyclicBarrier&#125;.)</span></span><br><span class="line"><span class="comment"> **/</span></span><br></pre></td></tr></table></figure>
+
+<p>另一种典型用法是将问题分成N个部分，用执行该部分的<code>Runnable</code>描述每个部分倒计时锁定，并将所有<code>Runnables</code>排队到执行人。 </p>
+<p>当所有子部件完成时，协调线程将能够通过等待。(当线程必须重复时以这种方式倒数，而不是使用<code>&#123;@link CyclicBarrier&#125;</code>)</p>
+<p><strong>实例代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        CountDownLatch doneSignal = <span class="keyword">new</span> CountDownLatch(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建线程池</span></span><br><span class="line">        Executor executor = Executors.newSingleThreadExecutor();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;<span class="number">5</span>;++i)&#123;</span><br><span class="line">            <span class="comment">// create and start threads</span></span><br><span class="line">            executor.execute(<span class="keyword">new</span> WorkerRunnable(doneSignal,i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 等待所有线程任务执行完成</span></span><br><span class="line">        doneSignal.await();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;EXECUTOR DOWN.&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 关闭线程池</span></span><br><span class="line">        ((ExecutorService) executor).shutdown();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出结果</span></span><br><span class="line">        <span class="comment">//  Hello World! : 0</span></span><br><span class="line">        <span class="comment">//  Hello World! : 1</span></span><br><span class="line">        <span class="comment">//  Hello World! : 2</span></span><br><span class="line">        <span class="comment">//  Hello World! : 3</span></span><br><span class="line">        <span class="comment">//  Hello World! : 4</span></span><br><span class="line">        <span class="comment">//  EXECUTOR DOWN.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WorkerRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> CountDownLatch doneSignal;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">    WorkerRunnable(CountDownLatch doneSignal, <span class="keyword">int</span> i) &#123;</span><br><span class="line">        <span class="keyword">this</span>.doneSignal = doneSignal;</span><br><span class="line">        <span class="keyword">this</span>.i = i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        doWork(i);</span><br><span class="line">        doneSignal.countDown();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doWork</span><span class="params">(<span class="keyword">int</span> count)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World! : &quot;</span> + count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-number">1.</span> <span class="toc-text">Java并发工具类CountDownLatch源码中的例子</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E4%B8%80"><span class="toc-number">1.1.</span> <span class="toc-text">实例一</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E6%96%87%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">原文描述</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E4%BA%8C"><span class="toc-number">1.2.</span> <span class="toc-text">实例二</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E6%96%87%E6%8F%8F%E8%BF%B0-1"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">原文描述</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&text=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&is_video=false&description=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】 Java并发工具类CountDownLatch源码中的例子&body=Check out this article: http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&title=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&name=【Java】 Java并发工具类CountDownLatch源码中的例子&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/06/19/%E3%80%90Java%E3%80%91%20Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90/&t=【Java】 Java并发工具类CountDownLatch源码中的例子"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

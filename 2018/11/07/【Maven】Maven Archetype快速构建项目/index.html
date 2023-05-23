@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Maven模块快速构建项目 官方: http:&#x2F;&#x2F;maven.apache.org&#x2F;guides&#x2F;introduction&#x2F;introduction-to-archetypes.htmlhttp:&#x2F;&#x2F;maven.apache.org&#x2F;archetype&#x2F;maven-archetype-plugin&#x2F;plugin-info.html参考: https:&#x2F;&#x2F;www.yiibai.com&#x2F;maven&#x2F;c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Maven】Maven Archetype快速构建项目">
+<meta property="og:url" content="http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Maven模块快速构建项目 官方: http:&#x2F;&#x2F;maven.apache.org&#x2F;guides&#x2F;introduction&#x2F;introduction-to-archetypes.htmlhttp:&#x2F;&#x2F;maven.apache.org&#x2F;archetype&#x2F;maven-archetype-plugin&#x2F;plugin-info.html参考: https:&#x2F;&#x2F;www.yiibai.com&#x2F;maven&#x2F;c">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-11-07T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="Maven">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Maven】Maven Archetype快速构建项目</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2018/12/05/%E3%80%90docker%E3%80%91docker%20redis%20%E4%BD%BF%E7%94%A8/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2018/10/30/%E3%80%90Linux%E3%80%91docker%20registry%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93%E6%90%AD%E5%BB%BA/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&text=【Maven】Maven Archetype快速构建项目"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&is_video=false&description=【Maven】Maven Archetype快速构建项目"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Maven】Maven Archetype快速构建项目&body=Check out this article: http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&name=【Maven】Maven Archetype快速构建项目&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&t=【Maven】Maven Archetype快速构建项目"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E6%A8%A1%E5%9D%97%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">Maven模块快速构建项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF"><span class="toc-number">2.</span> <span class="toc-text">常用模板</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%8C%87%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">构建指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%8F%90%E7%A4%BA%E6%9E%84%E5%BB%BA"><span class="toc-number">3.1.</span> <span class="toc-text">根据提示构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BAjar%E6%A8%A1%E6%9D%BF%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.2.</span> <span class="toc-text">快速构建jar模板项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BAwar%E6%A8%A1%E6%9D%BF%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.3.</span> <span class="toc-text">快速构建war模板项目</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Maven】Maven Archetype快速构建项目
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-11-07T00:00:00.000Z" itemprop="datePublished">2018-11-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Maven/" rel="tag">Maven</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Maven模块快速构建项目"><a href="#Maven模块快速构建项目" class="headerlink" title="Maven模块快速构建项目"></a>Maven模块快速构建项目</h2><blockquote>
+<p>官方: <a target="_blank" rel="noopener" href="http://maven.apache.org/guides/introduction/introduction-to-archetypes.html">http://maven.apache.org/guides/introduction/introduction-to-archetypes.html</a><br><a target="_blank" rel="noopener" href="http://maven.apache.org/archetype/maven-archetype-plugin/plugin-info.html">http://maven.apache.org/archetype/maven-archetype-plugin/plugin-info.html</a><br>参考: <a target="_blank" rel="noopener" href="https://www.yiibai.com/maven/create-a-project-with-maven-template.html">https://www.yiibai.com/maven/create-a-project-with-maven-template.html</a></p>
+</blockquote>
+<h2 id="常用模板"><a href="#常用模板" class="headerlink" title="常用模板"></a>常用模板</h2><ul>
+<li><code>maven-archetype-webapp -&gt; Java Web Project</code>  </li>
+<li><code>maven-archetype-quickstart -&gt; Java Project</code></li>
+</ul>
+<h2 id="构建指令"><a href="#构建指令" class="headerlink" title="构建指令"></a>构建指令</h2><h3 id="根据提示构建"><a href="#根据提示构建" class="headerlink" title="根据提示构建"></a>根据提示构建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">$ mvn archetype:generate</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出如下,根据提示创建即可 常用为 7 、 10</span></span><br><span class="line">[INFO] Scanning <span class="keyword">for</span> projects...</span><br><span class="line">[INFO]</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] Building Maven Stub Project (No POM) 1</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO]</span><br><span class="line">[INFO] &gt;&gt;&gt; maven-archetype-plugin:3.0.1:generate (default-cli) &gt; generate-sources @ standalone-pom &gt;&gt;&gt;</span><br><span class="line">[INFO]</span><br><span class="line">[INFO] &lt;&lt;&lt; <span class="string">maven-archetype-plugin:3.0.1:generate (default-cli) &lt; generate-sources @ standalone-pom &lt;&lt;&lt;</span></span><br><span class="line"><span class="string">[INFO]</span></span><br><span class="line"><span class="string">[INFO]</span></span><br><span class="line"><span class="string">[INFO] --- maven</span>-archetype-plugin:3.0.1:generate (default-cli) @ standalone-pom ---</span><br><span class="line">[INFO] Generating project <span class="keyword">in</span> Interactive mode</span><br><span class="line">[WARNING] No archetype found <span class="keyword">in</span> remote catalog. Defaulting to internal catalog</span><br><span class="line">[INFO] No archetype defined. Using maven-archetype-quickstart (org.apache.maven.archetypes:maven-archetype-quickstart:1.0)</span><br><span class="line">Choose archetype:</span><br><span class="line">1: internal -&gt; org.apache.maven.archetypes:maven-archetype-archetype (An archetype <span class="built_in">which</span> contains a sample archetype.)</span><br><span class="line">2: internal -&gt; org.apache.maven.archetypes:maven-archetype-j2ee-simple (An archetype <span class="built_in">which</span> contains a simplifed sample J2EE application.)</span><br><span class="line">3: internal -&gt; org.apache.maven.archetypes:maven-archetype-plugin (An archetype <span class="built_in">which</span> contains a sample Maven plugin.)</span><br><span class="line">4: internal -&gt; org.apache.maven.archetypes:maven-archetype-plugin-site (An archetype <span class="built_in">which</span> contains a sample Maven plugin site.</span><br><span class="line">      This archetype can be layered upon an existing Maven plugin project.)</span><br><span class="line">5: internal -&gt; org.apache.maven.archetypes:maven-archetype-portlet (An archetype <span class="built_in">which</span> contains a sample JSR-268 Portlet.)</span><br><span class="line">6: internal -&gt; org.apache.maven.archetypes:maven-archetype-profiles ()</span><br><span class="line">7: internal -&gt; org.apache.maven.archetypes:maven-archetype-quickstart (An archetype <span class="built_in">which</span> contains a sample Maven project.)</span><br><span class="line">8: internal -&gt; org.apache.maven.archetypes:maven-archetype-site (An archetype <span class="built_in">which</span> contains a sample Maven site <span class="built_in">which</span> demonstrates</span><br><span class="line">      some of the supported document types like APT, XDoc, and FML and demonstrates how</span><br><span class="line">      to i18n your site. This archetype can be layered upon an existing Maven project.)</span><br><span class="line">9: internal -&gt; org.apache.maven.archetypes:maven-archetype-site-simple (An archetype <span class="built_in">which</span> contains a sample Maven site.)</span><br><span class="line">10: internal -&gt; org.apache.maven.archetypes:maven-archetype-webapp (An archetype <span class="built_in">which</span> contains a sample Maven Webapp project.)</span><br><span class="line">Choose a number or apply filter (format: [groupId:]artifactId, <span class="keyword">case</span> sensitive contains): 7: </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="快速构建jar模板项目"><a href="#快速构建jar模板项目" class="headerlink" title="快速构建jar模板项目"></a>快速构建jar模板项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mvn archetype:generate -DgroupId=com.test -DartifactId=<span class="built_in">test</span> -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="快速构建war模板项目"><a href="#快速构建war模板项目" class="headerlink" title="快速构建war模板项目"></a>快速构建war模板项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mvn archetype:generate -DgroupId=com.test -DartifactId=<span class="built_in">test</span> -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E6%A8%A1%E5%9D%97%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">Maven模块快速构建项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF"><span class="toc-number">2.</span> <span class="toc-text">常用模板</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%8C%87%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">构建指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%8F%90%E7%A4%BA%E6%9E%84%E5%BB%BA"><span class="toc-number">3.1.</span> <span class="toc-text">根据提示构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BAjar%E6%A8%A1%E6%9D%BF%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.2.</span> <span class="toc-text">快速构建jar模板项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BAwar%E6%A8%A1%E6%9D%BF%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.3.</span> <span class="toc-text">快速构建war模板项目</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&text=【Maven】Maven Archetype快速构建项目"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&is_video=false&description=【Maven】Maven Archetype快速构建项目"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Maven】Maven Archetype快速构建项目&body=Check out this article: http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&title=【Maven】Maven Archetype快速构建项目"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&name=【Maven】Maven Archetype快速构建项目&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2018/11/07/%E3%80%90Maven%E3%80%91Maven%20Archetype%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/&t=【Maven】Maven Archetype快速构建项目"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

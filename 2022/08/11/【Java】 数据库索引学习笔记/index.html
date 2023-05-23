@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Mysql索引学习笔记索引本质：数据结构（平衡树[B tree,B+ tree]、哈希桶） 索引特点  避免进行数据库全表扫描   哪些列上创建索引?  经常需要搜索的列上 作为主键的列上 经常用在连接的列上,这些列主要是一些外键,可以加快连接的速度 经常需要根据范围进行搜索的列上 经常需要排序的列上 经常使用在where子句上面的列上  不应该在哪些列上创建索引?  ①查询中很少用到的列 ②对于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Java】 数据库索引学习笔记">
+<meta property="og:url" content="http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Melody">
+<meta property="og:description" content="Mysql索引学习笔记索引本质：数据结构（平衡树[B tree,B+ tree]、哈希桶） 索引特点  避免进行数据库全表扫描   哪些列上创建索引?  经常需要搜索的列上 作为主键的列上 经常用在连接的列上,这些列主要是一些外键,可以加快连接的速度 经常需要根据范围进行搜索的列上 经常需要排序的列上 经常使用在where子句上面的列上  不应该在哪些列上创建索引?  ①查询中很少用到的列 ②对于">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-08-11T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-23T23:02:03.518Z">
+<meta property="article:author" content="Xin Chen">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Java】 数据库索引学习笔记</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2022/08/25/%E3%80%90mysql%E3%80%91%E4%B8%80%E6%AC%A1%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E9%AA%8C/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2022/08/06/%E3%80%90Java%E3%80%91%20Kafka%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&text=【Java】 数据库索引学习笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&is_video=false&description=【Java】 数据库索引学习笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】 数据库索引学习笔记&body=Check out this article: http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&name=【Java】 数据库索引学习笔记&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&t=【Java】 数据库索引学习笔记"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Mysql%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="toc-number">1.</span> <span class="toc-text">Mysql索引学习笔记</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【Java】 数据库索引学习笔记
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xin Chen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-08-11T00:00:00.000Z" itemprop="datePublished">2022-08-11</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/java/" rel="tag">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Mysql索引学习笔记"><a href="#Mysql索引学习笔记" class="headerlink" title="Mysql索引学习笔记"></a>Mysql索引学习笔记</h1><p>索引本质：数据结构（平衡树[B tree,B+ tree]、哈希桶）</p>
+<p>索引特点</p>
+<ul>
+<li>避免进行数据库全表扫描</li>
+<li></li>
+</ul>
+<p>哪些列上创建索引?</p>
+<ul>
+<li>经常需要搜索的列上</li>
+<li>作为主键的列上</li>
+<li>经常用在连接的列上,这些列主要是一些外键,可以加快连接的速度</li>
+<li>经常需要根据范围进行搜索的列上</li>
+<li>经常需要排序的列上</li>
+<li>经常使用在where子句上面的列上</li>
+</ul>
+<p>不应该在哪些列上创建索引?</p>
+<ul>
+<li>①查询中很少用到的列</li>
+<li>②对于那些具有很少数据值的列.比如人事表的性别列,bit数据类型的列</li>
+<li>③对于那些定义为text,image的列.因为这些列的数据量相当大</li>
+<li>④当对修改性能的要求远远大于搜索性能时.因为当增加索引时,会提高搜索性能,但是会降低修改性能</li>
+</ul>
+<p>索引的分类</p>
+<p>物理存储：</p>
+<p><strong>聚集索引</strong>: </p>
+<ul>
+<li><p>表记录的排列顺序和索引的排列顺序一致,所以查询效率快,只要找到第一个索引值记录,其余连续性的记录在物理上一样连续存放.聚集索引的缺点就是修改慢,因为为了使表记录和索引的排列顺序一致,在插入记录的时候,会对数据页重新排序</p>
+</li>
+<li><p>我们平时建表的时候都会为表加上主键， 在某些关系数据库中， 如果建表时不指定主键，数据库会拒绝建表的语句执行。 事实上， 一个加了主键的表，并不能被称之为「表」。一个没加主键的表，它的数据无序的放置在磁盘存储器上，一行一行的排列的很整齐， 跟我认知中的「表」很接近。如果给表上了主键，那么表在磁盘上的存储结构就由整齐排列的结构转变成了树状结构，也就是上面说的「平衡树」结构，换句话说，就是整个表就变成了一个索引。没错， 再说一遍， 整个表变成了一个索引，也就是所谓的「聚集索引」。这就是为什么一个表只能有一个主键， 一个表只能有一个「聚集索引」，因为主键的作用就是把「表」的数据格式转换成「索引（平衡树）」的格式放置。</p>
+</li>
+</ul>
+<p><strong>非聚集索引</strong>:</p>
+<ul>
+<li><p>表记录和索引的排列顺序不一定一致,两种索引都采用B+树的结构,非聚集索引的叶子层并不和实际数据页相重叠,而采用叶子层包含一个指向表记录的指针.非聚集索引层次多,不会造成数据重排</p>
+</li>
+<li><p>非聚集索引和聚集索引一样， 同样是采用平衡树作为索引的数据结构。索引树结构中各节点的值来自于表中的索引字段， 假如给user表的name字段加上索引 ， 那么索引就是由name字段中的值构成，在数据改变时， DBMS需要一直维护索引结构的正确性。如果给表中多个字段加上索引 ， 那么就会出现多个独立的索引结构，每个索引（非聚集索引）互相之间不存在关联。</p>
+</li>
+<li><p>每次给字段建一个新索引， 字段中的数据就会被复制一份出来， 用于生成索引。 因此， 给表添加索引，会增加表的体积， 占用磁盘存储空间。</p>
+</li>
+</ul>
+<p>逻辑角度：</p>
+<p><strong>主键索引</strong>：特殊的唯一索引，不允许有NULL。一般是在建表的时候同时创建主键索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">user</span>(</span><br><span class="line">    id <span class="type">int</span> unsigned <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">    name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    age  <span class="type">int</span>(<span class="number">3</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    email <span class="type">varchar</span>(<span class="number">40</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    <span class="keyword">primary</span> key (id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>普通索引</strong>：最基本的索引，没有任何限制</p>
+<p><strong>唯一索引</strong>：与普通索引类似，不同点在于：索引列的值必须唯一，但允许有NULL</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX idx_email <span class="keyword">ON</span> <span class="keyword">user</span>(email);</span><br></pre></td></tr></table></figure>
+
+<p>**复合索引(多列索引，联合索引)**：多个字段上建立的索引，提高复合条件查询的速度</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> index idx_name_age <span class="keyword">on</span> <span class="keyword">user</span>(name,age);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>索引失效</p>
+<ul>
+<li>条件中使用or(如果想使其生效则or条件中每列都要加上索引)</li>
+<li>最左匹配：如索引包含(a,b,c)三列，查询条件如bc,c,acb,bac都不行。abc则生效</li>
+<li>使用不等式 (!=或者&lt;&gt;)</li>
+<li>使用is null 或者is not null</li>
+<li>like以通配符%开头，左模糊匹配</li>
+<li>如果全表扫描比使用索引快，则不使用索引</li>
+<li>对索引列进行运算（+-*/）或者函数操作</li>
+</ul>
+<p>④合理使用联合索引的最左前缀原则</p>
+<p>如果在(a,b,c)三个字段上建立联合索引，那么它能够加快 a | (a,b) | (a,b,c) 三组查询速度。</p>
+<p>比如说把(username,password)建立了联合索引，因为业务上几乎没有password的单条件查询，而有很多username的单条件查询需求，所以应该建立(username,password)的联合索引，而不要建立(password,username)的联合索引</p>
+<blockquote>
+<p>参考<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36071795/article/details/83956068">https://blog.csdn.net/qq_36071795/article/details/83956068</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34777600/article/details/81513401">https://blog.csdn.net/qq_34777600/article/details/81513401</a></p>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Mysql%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="toc-number">1.</span> <span class="toc-text">Mysql索引学习笔记</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&text=【Java】 数据库索引学习笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&is_video=false&description=【Java】 数据库索引学习笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Java】 数据库索引学习笔记&body=Check out this article: http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&title=【Java】 数据库索引学习笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&name=【Java】 数据库索引学习笔记&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/08/11/%E3%80%90Java%E3%80%91%20%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/&t=【Java】 数据库索引学习笔记"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2023
+    Xin Chen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/melodyfff">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
